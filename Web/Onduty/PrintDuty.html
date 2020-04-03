@@ -1,0 +1,229 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">-->
+    <!--content属性值 :
+
+    width:可视区域的宽度，值可为数字或关键词device-width
+
+    height:同width
+
+    intial-scale:页面首次被显示是可视区域的缩放级别，取值1.0则页面按实际尺寸显示，无任何缩放
+
+    maximum-scale=1.0, minimum-scale=1.0;可视区域的缩放级别，
+
+    maximum-scale用户可将页面放大的程序，1.0将禁止用户放大到实际尺寸之上。
+
+    user-scalable:是否可对页面进行缩放，no 禁止缩放-->
+    <title></title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/jquerysession.js"></script>
+    <script src="../js/Common.js"></script>
+    <script src="../js/TrunOverOnesDuty.js"></script>
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <style>
+        @media print {
+            @page {
+                size: A4 landscape;
+                margin: 0;
+            }
+
+            table {
+                page-break-after: always;
+            }
+        }
+
+        @media screen {
+            @page {
+                size: A4 landscape;
+                margin: 0;
+            }
+        }
+        .datagrid-header .datagrid-cell span {
+            font-size:18px
+        }
+        .datagrid-cell {
+            font-size: 18px;
+        }
+        .lines-right .datagrid-body td {
+            border-bottom: 1px dotted transparent;
+        }
+
+        .lines-bottom .datagrid-body td {
+            border-right: 1px dotted transparent;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            var date = new Date();
+            $('#txtDate').datebox('setValue', '2020-3-10');
+            $('#TbShift').datagrid({
+                style: { 'text-align': 'center', 'vertical-align': 'center'},
+                singleSelect: false,
+                nowrap: false, 
+            })
+            $('#TbTongJi').datagrid({
+                style: { 'text-align': 'center', 'vertical-align': 'center' },
+                singleSelect: false,
+                nowrap: false,
+            })
+            $('#TbShift').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-right");
+            var HosName = document.getElementById("HospitalName");
+            HosName.innerHTML=PrintData.HospitalName;
+            checkSum();
+            InitInputData();
+        });
+        function doPrint() {
+            bdhtml = window.document.body.innerHTML;
+            sprnstr = "<!--startprint-->";
+            eprnstr = "<!--endprint-->";
+            prnhtml = bdhtml.substr(bdhtml.indexOf(sprnstr) + 17);
+            prnhtml = prnhtml.substring(0, prnhtml.indexOf(eprnstr));
+            window.document.body.innerHTML = prnhtml;
+            document.getElementsByTagName("body")[0].style.zoom = 1;
+            window.print();
+        }
+        //获取交班统计信息
+        function checkSum() {
+            var Date = $("#txtDate").datebox("getValue");
+            var Banci = "1";
+            $.ajax({
+                url: BaseData.WebApiUrl + "TurnDuty/CheckOnTudy",
+                data: "Date=" + Date + "&Banci=" + Banci,
+                type: "get",
+                success: (function (data) {
+                    if (data) {
+                        $("#TbTongJi").datagrid('loadData', data["Table"]);
+                    }
+                })
+            });
+        }
+        //获取该病人当班信息
+        function InitInputData() {
+            var recording_Date = $("#txtDate").datebox("getValue");
+            $.ajax({
+                url: BaseData.WebApiUrl + "TurnDuty/getData",
+                data: "recording_Date=" + recording_Date,
+                type: "get",
+                success: (function (data) {
+                    if (data && data != "null")
+                    {
+                        var jsonData = $.parseJSON(data);
+                        for (var i in jsonData) {
+                            jsonData[i].Pat_Info = jsonData[i].Bed_no + ' ' + jsonData[i].Name + ' \n ' + (jsonData[i].Diagnosis!=null?jsonData[i].Diagnosis:'') + ' \n ' + jsonData[i].Status;
+                        }
+                        $("#TbShift").datagrid("loadData", jsonData);
+                    }
+                })
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <div style="width:100%">
+        日期：<input id="txtDate" class="easyui-datebox" style="width: 130px;" data-options="formatter:dateFormatter,parser:dateParser" />
+        <button style="font-size:15px" type="button" onclick="doPrint()">打印</button>
+    </div>
+    <!--startprint--><!--注意要加上html里star和end的这两个标记-->
+    <div>
+        <div>
+            <div>
+                <table style="width:96%;"align="center">
+                    
+                    <tr style="text-align: center; font-size: 30px">
+                        <td colspan="2" id="HospitalName"></td>
+                    </tr>
+                    <tr style="text-align: center; font-size: 30px">
+                        <td colspan="2">护士值班报告单</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left; font-size: 20px;margin-right:200px">科室：全科医学科</td>
+                        <td style="text-align: right; font-size: 20px;margin-right:20px">日期：2020/3/6</td>
+                    </tr>
+                </table>
+            </div>
+            <div style="width:96%;">
+                <table id="TbTongJi" class="datagrid" style="width: 100%; height: auto;text-align:center;" >
+                    <thead>
+                        <tr>
+                            <th style="width:16%" data-options="field:'BC',width:'9%'">
+                                班别
+                            </th>
+                            <th style="width:7%;" data-options="field:'XYS',width:'5%',editor:'text' ">
+                                病人总数
+                            </th>
+                            <th style="width:7%;" data-options="field:'RYS',width:'6%',editor:'text','text-align': 'center' ">
+                                入院
+                            </th>
+
+                            <th style="width:7%;" data-options="field:'CYS',width:'6%',editor:'text','text-align': 'center' ">
+                                出院
+                            </th>
+                            <th style="width:7%;" data-options="field:'ZRS',width:'6%',editor:'text','text-align': 'center' ">
+                                转入
+                            </th>
+                            <th style="width:7%;" data-options="field:'ZCS',width:'6%',editor:'text','text-align': 'center' ">
+                                转出
+                            </th>
+                            <th style="width:7%;" data-options="field:'BWS',width:'6%',editor:'text','text-align': 'center' ">
+                                病危
+                            </th>
+                            <th style="width:7%;" data-options="field:'BZBR',width:'6%',editor:'text','text-align': 'center' ">
+                                病重
+                            </th>
+                            <th style="width:7%;" data-options="field:'FMS',width:'6%',editor:'text','text-align': 'center' ">
+                                分娩
+                            </th>
+                            <th style="width:7%;" data-options="field:'YJHL',width:'8%',editor:'text','text-align': 'center' ">
+                                一级护理
+                            </th>
+                            <th style="width:7%;" data-options="field:'TJHL',width:'6%',editor:'text','text-align': 'center' ">
+                                特护
+                            </th>
+                            <th style="width:7%;" data-options="field:'SSS',width:'6%',editor:'text','text-align': 'center' ">
+                                手术
+                            </th>
+                            <th style="width:7%;" data-options="field:'SWS',width:'6%',editor:'text','text-align': 'center' ">
+                                死亡
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
+                <table id="TbShift" class="datagrid" style="width: 100%; height:auto;table-layout:fixed;" border="1">
+                    <thead style="display:table-header-group;font-weight:bold">
+                        <tr>
+                            <th style="width:16%;" data-options="field:'Pat_Info',width:'13%'">
+                                病人信息
+                            </th>
+                            <th style="width:28%;" data-options="field:'A',width:'29%',editor:'text','text-align': 'center' ">
+                                白班
+                            </th>
+                            <th style="width:28%" data-options="field:'P',width:'29%',editor:'text','text-align': 'center' ">
+                                小夜班
+                            </th>
+                            <th style="width:28%" data-options="field:'N',width:'29%',editor:'text','text-align': 'center' ">
+                                大夜班
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot style="display:table-footer-group;font-weight:bold">
+                        <tr>
+                            <td colspan="2" align="center" style="font-weight:bold;border:3px double blue">每页都有的表尾</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!--endprint-->
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/jquerysession.js"></script>
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <script src="../js/Common.js"></script>
+    <script src="../js/Print/CriticalCare.js"></script>
+    <script src="../js/publicInfo.js"></script>
+    <style type="text/css">
+        @media print {
+            @page {
+                size: A4 landscape;
+                margin: 0;
+            }
+
+            table {
+                page-break-after: always;
+            }
+        }
+
+        @media screen {
+            @page {
+                size: A4 landscape;
+                margin: 0;
+            }
+        }
+
+        .divfloat {
+            height: auto;
+        }
+
+        body {
+            margin: 0;
+            font-size: 16px
+        }
+
+        .datagrid-header td,
+        .datagrid-body td,
+        .datagrid-footer td {
+            border: #000 1px solid;
+        }
+
+        .datagrid-header .datagrid-cell span {
+            font-size: 16px
+        }
+
+        .datagrid-cell,
+        .datagrid-cell-group,
+        .datagrid-header-rownumber,
+        .datagrid-cell-rownumber {
+            font-size: 16px
+        }
+
+        #titleInfo {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        #titleInfo span {
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        .datagrid-cell {
+            white-space: normal !important;
+            word-wrap: normal !important;
+            word-break: break-all;
+        }
+        .datagrid-header td, .datagrid-body td, .datagrid-footer td{
+            text-align: -webkit-center;
+        }
+    </style>
+</head>
+
+<body style="font-size:20px;" id="body">
+    <div id="page_print">
+        <a href="#" style="width:60px;margin-left:30px;margin-top:30px;" class="easyui-linkbutton"
+            onclick="page_print()" iconcls="icon-huayi-print">打印</a>
+    </div>
+    <div id="titleInfo"">
+        <h2 style=" text-align: center;height:25px;" class="hosName"></h2>
+        <h3 style=" text-align: center;">危重护理记录单</h3>
+        <div style="margin-bottom:15px;text-align: center;">
+            <span class="name"></span>
+            <span class="sex"></span>
+            <span class="age"></span>
+            <span class="inpatient"></span>
+            <span class="bed_number"></span>
+            <span class="patient_number"></span>
+            <span class="diagn"></span>
+        </div>
+    </div>
+
+</body>
+
+</html>

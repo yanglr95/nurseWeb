@@ -1,0 +1,355 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>压疮评估风险表</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/jquerysession.js"></script>
+    <script src="../js/Common.js"></script>
+    <script src="../js/easyui-extends.js"></script>
+    <script src="../js/publicPatient.js"></script>
+    <script src="../js/PatientInfo.js"></script>
+    <script src="../../JavaScript/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <script src="../../JavaScript/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../js/NursingCare/SRecord_NurseRecordPressure.js"></script>
+</head>
+<body>
+    <div>
+        <table style="width:98%">
+            <tr>
+                <td><input id="ccPatients" name="ccPatients" style="width:120px" class="easyui-combobox" data-options="valueField:'Patient_id',textField:'Name'" /></td>
+                <td>
+                    日期<input id="txtDate" class="easyui-datebox" style="width:180px;" data-options="formatter:dateFormatter,parser:dateParser" />
+                    <a href="#" id="btnQuery" class="easyui-linkbutton" iconcls="icon-huayi-search">查询</a>
+                    <a href="#" class="easyui-linkbutton" iconcls="icon-huayi-print" onclick="print()">打印</a>
+                </td>
+            </tr>
+        </table>
+        <table id="tabPatientInfo" class="patientTable" style="width:98%;background: #fff;margin-top:5px;">
+        </table>
+        <div class="mcr_wc_cont">
+            <table id="tbNurseRecordPressureList" class="easyui-datagrid" style="width:98%;height:auto" data-options="singleSelect:true">
+                <thead>
+                    <tr>
+                        <th data-options="field:'Datetimes',width:'20%',align:'center',formatter:formatterTime" class="auto-style1">
+                            记录日期
+                        </th>
+                        <th data-options="field:'Countsum',width:'20%',align:'center'" class="auto-style1">
+                            总评分
+                        </th>
+                        <th data-options="field:'Measure',width:'20%',align:'center'" class="auto-style1" hidden="hidden">
+                            护理措施
+                        </th>
+                        <th data-options="field:'Sign',width:'30%',align:'center'" class="auto-style1">
+                            记录人
+                        </th>
+                        <th data-options="field:'Pid',width:'25%',align:'center'" class="auto-style1" hidden="hidden">
+                        <th data-options="field:'Vid',width:'25%',align:'center'" class="auto-style1" hidden="hidden">
+                        </th>
+                        <th data-options="width:'20%', field:'Id',align:'center',formatter:InputListOperateField" class=" auto-style1">
+                            操作
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+            <table id="tbNursingCare" class="inputTable" style="width:98%;height:auto;">
+                <tr>
+                    <td>请选择日期</td>
+                    <td>
+                        <input class="easyui-datebox" id="dtInput" style="width:180px;" data-options="formatter:dateFormatter,parser:dateParser" />
+                        &nbsp;&nbsp;&nbsp; <a href="#" id="btnSaveInput" style="margin-right:20px" class="easyui-linkbutton" iconcls="icon-huayi-save">保存</a>
+                    </td>
+                </tr>
+            </table>
+            <table class="inputTable" width="98%" id="inputTabs">
+                <tr>
+                    <td align="center" style="font-weight: 800" colspan="4">
+                        感觉
+                    </td>
+                    <td align="center" style="font-weight: 800" colspan="4">
+                        潮湿
+                    </td>
+                    <td colspan="4" align="center" style="font-weight: 800">
+                        活动力
+                    </td>
+                    <td align="center" style="font-weight: 800" colspan="4">
+                        移动力
+                    </td>
+                    <td align="center" style="font-weight: 800" colspan="4">
+                        营养
+                    </td>
+                    <td align="center" style="font-weight: 800" colspan="3">
+                        摩擦力<br />剪切力
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        安<br />
+                        全<br />
+                        受<br />
+                        限
+                    </td>
+                    <td align="center">
+                        非<br />
+                        常<br />
+                        受<br />
+                        限
+                    </td>
+                    <td align="center">
+                        轻<br />
+                        度<br />
+                        受<br />
+                        限
+                    </td>
+                    <td align="center">
+                        未<br />
+                        受<br />
+                        损
+                    </td>
+                    <td align="center">
+                        持<br />
+                        续<br />
+                        潮<br />
+                        湿
+                    </td>
+                    <td align="center">
+                        潮<br />
+                        <br />
+                        <br />
+                        湿
+                    </td>
+                    <td align="center">
+                        有<br />
+                        时<br />
+                        潮<br />
+                        湿
+                    </td>
+                    <td align="center">
+                        很<br />
+                        少<br />
+                        潮<br />
+                        湿
+                    </td>
+                    <td align="center">
+                        限<br />
+                        制<br />
+                        卧<br />
+                        位
+                    </td>
+                    <td align="center">
+                        可<br />
+                        坐<br />
+                        椅<br />
+                        子
+                    </td>
+                    <td align="center">
+                        偶<br />
+                        尔<br />
+                        行<br />
+                        走
+                    </td>
+                    <td align="center">
+                        经<br />
+                        常<br />
+                        行<br />
+                        走
+                    </td>
+                    <td align="center">
+                        无<br />
+                        法<br />
+                        移<br />
+                        动
+                    </td>
+                    <td align="center">
+                        严<br />
+                        重<br />
+                        受<br />
+                        限
+                    </td>
+                    <td align="center">
+                        轻<br />
+                        度<br />
+                        受<br />
+                        限
+                    </td>
+                    <td align="center">
+                        未<br />
+                        受<br />
+                        限
+                    </td>
+                    <td align="center">非<br />常<br />差</td>
+                    <td align="center">可<br />能<br />不<br />足</td>
+                    <td align="center">足<br />够</td>
+                    <td align="center">非<br />常<br />好</td>
+                    <td align="center">有<br />问<br />题</td>
+                    <td align="center">潜<br />在<br />问<br />题</td>
+                    <td align="center">无<br />明<br />显<br />问<br />题</td>
+                </tr>
+                <tr>
+                    <td style="height: 50px;text-align:center;">
+                        <input type="checkbox" value="1" title="1" id="Feelscore1" name="Feelscore" /><br />&nbsp;1分
+                    </td>
+                    <td style="height: 50px;text-align:center;">
+                        <input type="checkbox" value="2" title="2" id="Feelscore2" name="Feelscore" /> <br />&nbsp;2分
+                    </td>
+                    <td style="height: 50px;text-align:center;">
+                        <input type="checkbox" value="3" title="3" id="Feelscore3" name="Feelscore" /><br />&nbsp;3分
+                    </td>
+                    <td style="height: 50px;text-align:center;">
+                        <input type="checkbox" value="4" title="4" id="Feelscore4" name="Feelscore" /><br />&nbsp;4分
+                    </td>
+                    <td style="height: 50px;text-align:center;">
+                        <input type="checkbox" value="1" title="1" id="Humidscore1" name="Humidscore" /><br />&nbsp;1分
+                    </td>
+                    <td style="height: 50px;text-align:center;">
+                        <input type="checkbox" value="2" title="2" id="Humidscore2" name="Humidscore" /><br />&nbsp;2分
+                    </td>
+                    <td style="height: 50px;text-align:center;">
+                        <input type="checkbox" value="3" title="3" id="Humidscore3" name="Humidscore" /><br />&nbsp;3分
+                    </td>
+                    <td style="height: 50px;text-align:center;">
+                        <input type="checkbox" value="4" title="4" id="Humidscore4" name="Humidscore" /><br />&nbsp;4分
+                    </td>
+                    <td style="height: 50px;text-align:center;">
+                        <input type="checkbox" value="1" title="1" id="Energyscore1" name="Energyscore" /><br />&nbsp;1分
+                    </td>
+                    <td style="height: 50px;text-align:center;">
+                        <input type="checkbox" value="2" title="2" id="Energyscore2" name="Energyscore" /><br />&nbsp;2分
+                    </td>
+                    <td style="height: 50px;text-align:center;">
+                        <input type="checkbox" value="3" title="3" id="Energyscore3" name="Energyscore" /><br />&nbsp;3分
+                    </td>
+                    <td style="height: 50px;text-align:center;">
+                        <input type="checkbox" value="4" title="4" id="Energyscore4" name="Energyscore" /><br />&nbsp;4分
+                    </td>
+                    <td style="height: 50px;text-align:center;">
+                        <input type="checkbox" value="1" title="1" id="Locomotivityscore1" name="Locomotivityscore" /><br />&nbsp;1分
+                    </td>
+                    <td style="height: 50px;text-align:center;">
+                        <input type="checkbox" value="2" title="2" id="Locomotivityscore2" name="Locomotivityscore" /><br />&nbsp;2分
+                    </td>
+                    <td style="height: 50px;text-align:center;">
+                        <input type="checkbox" value="3" title="3" id="Locomotivityscore3" name="Locomotivityscore" /><br />&nbsp;3分
+                    </td>
+                    <td style="height: 50px;text-align:center;">
+                        <input type="checkbox" value="4" title="4" id="Locomotivityscore4" name="Locomotivityscore" /><br />&nbsp;4分
+                    </td>
+                    <td style="height: 50px;text-align:center;">
+                        <input type="checkbox" value="1" title="1" id="Nutritionscore1" name="Nutritionscore" /><br />&nbsp;1分
+                    </td>
+                    <td style="height: 50px;text-align:center;">
+                        <input type="checkbox" value="2" title="2" id="Nutritionscore2" name="Nutritionscore" /><br />&nbsp;2分
+                    </td>
+                    <td style="height: 50px;text-align:center;">
+                        <input type="checkbox" value="3" title="3" id="Nutritionscore3" name="Nutritionscore" /><br />&nbsp;3分
+                    </td>
+                    <td style="height: 50px;text-align:center;">
+                        <input type="checkbox" value="4" title="4" id="Nutritionscore4" name="Nutritionscore" /><br />&nbsp;4分
+                    </td>
+                    <td style="height: 50px;text-align:center;">
+                        <input type="checkbox" value="1" title="1" id="Shearforcescore1" name="Shearforcescore" /><br />&nbsp;1分
+                    </td>
+                    <td style="height: 50px;text-align:center;">
+                        <input type="checkbox" value="2" title="2" id="Shearforcescore2" name="Shearforcescore" /><br />&nbsp;2分
+                    </td>
+                    <td style="height: 50px;text-align:center;">
+                        <input type="checkbox" value="3" title="3" id="Shearforcescore3" name="Shearforcescore" /><br />&nbsp;3分
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold; height:40px;" colspan="23">
+                        护理措施
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-size:15px; height:20px;" colspan="23">
+                        <input type="checkbox" value="1" title="1" id="Measure1" name="Measure" />
+                        ①翻身1/2h；
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-size:15px; height:20px;" colspan="23">
+                        <input type="checkbox" value="2" title="2" id="Measure2" name="Measure" />
+                        ②气垫床
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-size:15px; height:20px;" colspan="23">
+                        <input type="checkbox" value="3" title="3" id="Measure3" name="Measure" />
+                        ③保持床单位平整干燥；
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-size:15px; height:20px;" colspan="23">
+                        <input type="checkbox" value="4" title="4" id="Measure4" name="Measure" />
+                        ④加垫避免局部受压；
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-size:15px; height:20px;" colspan="23">
+                        <input type="checkbox" value="5" title="5" id="Measure5" name="Measure" />
+                        ⑤交替卧位；
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-size:15px; height:20px;" colspan="23">
+                        <input type="checkbox" value="6" title="6" id="Measure6" name="Measure" />
+                        ⑥保持皮肤局 部干燥；
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-size:15px; height:20px;" colspan="23">
+                        <input type="checkbox" value="7" title="7" id="Measure7" name="Measure" />
+                        ⑦告知患者及家属可能出现压疮的危险性，讲解注意事项；
+                    </td>
+                </tr>
+                <tr style="display:none">
+                    <td style="font-size:15px; height:20px;" colspan="23">
+                        <input type="checkbox" value="8" title="8" id="Measure8" name="Measure" />
+                        ⑧着防滑鞋；
+                    </td>
+                </tr>
+                <tr style="display:none">
+                    <td style="font-size:15px; height:20px;" colspan="23">
+                        <input type="checkbox" value="9" title="9" id="Measure9" name="Measure" />
+                        ⑨保持地面无水渍、障碍物，病室及活动区域灯光充足；
+                    </td>
+                </tr>
+                <tr style="display:none">
+                    <td style="font-size:15px; height:20px;" colspan="23">
+                        <input type="checkbox" value="10" title="10" id="Measure10" name="Measure" />
+                        ⑩患者日常用物放于可及处；<br />
+                    </td>
+                </tr>
+                <tr style="display:none;">
+                    <td style="font-size:15px; " class="style1" colspan="23">
+                        效果评价：
+                        <!--<asp:DropDownList ID="XGPJ" runat="server">
+                         <asp:listitem value=""></asp:listitem>
+                         <asp:listitem value="√">好</asp:listitem>
+                         <asp:listitem value="乄">一般</asp:listitem>
+                         <asp:listitem value="×">差</asp:listitem>
+                        </asp:DropDownList>-->
+                    </td>
+                </tr>
+            </table>
+            <div style="margin-top:10px;width:98%;text-align:right">
+                签名:<input id="txtSignatory" style="width:120px" class="easyui-textbox" data-options="panelHeight:'auto'">
+            </div>
+        </div>
+        <div style="visibility:hidden;" id="checks">
+            <input nurse_pressure="vital_sign:Feelscore" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtFeelscore" />感觉
+            <input nurse_pressure="vital_sign:Humidscore" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtHumidscore" />潮湿
+            <input nurse_pressure="vital_sign:Energyscore" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtEnergyscore" />活动力
+            <input nurse_pressure="vital_sign:Locomotivityscore" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtLocomotivityscore" />移动力
+            <input nurse_pressure="vital_sign:Nutritionscore" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtNutritionscore" />营养
+            <input nurse_pressure="vital_sign:Shearforcescore" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtShearforcescore" />摩擦力 剪切力
+            <input nurse_pressure="vital_sign:Measure" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtMeasure" />护理措施
+        </div>
+       </div>
+</body>
+</html>

@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/jquerysession.js"></script>
+    <script src="../js/Common.js"></script>
+    <script src="../../JavaScript/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <script src="../js/WorkPlan.js"></script>
+</head>
+<body>
+    <div>
+        <table style="width:98%">
+            <tr>
+                <td><input patientcombo id="ccPatients" name="ccPatients" style="width:120px" class="easyui-combobox" data-options="valueField:'Patient_id',textField:'Name'" /></td>
+                <td>日期：<input datecombo id="txtDate" class="easyui-datebox" style="width:180px;" data-options="formatter:dateFormatter,parser:dateParser,editable:false" /></td>
+                <td>执行时间：<input hourcombo id="ccWorkTime" name="ccWorkTime" style="width:120px" class="easyui-combobox" data-options="valueField:'value',textField:'text',panelHeight:'180px',editable:false" /></td>
+                <td>工作类型：<input id="ccWorkType" name="ccWorkType" style="width:120px" class="easyui-combobox" data-options="valueField:'value',textField:'text',panelHeight:'auto',editable:false" /></td>
+                <td>工作状态：<input id="ccStatus" name="ccStatus" style="width:120px" class="easyui-combobox" data-options="valueField:'value',textField:'text',panelHeight:'auto',editable:false" /></td>
+                <td>
+                    <a href="#" id="btnQuery" class="easyui-linkbutton" iconcls="icon-huayi-search">查询</a>
+                    <a href="#" id="btnShowAddWindow" class="easyui-linkbutton" iconcls="icon-huayi-add">添加备注</a>
+                </td>
+            </tr>
+        </table>
+        <table id="tbWorkPlan" class="easyui-datagrid"></table>
+    </div>
+    <div id="divAdd" editwindow title="添加备注" style="width:550px;height:160px;">
+        <table >
+            <tr>
+                <td>
+                    病人：
+                </td>
+                <td>
+                    <input patientcombo id="ccAddPatient" style="width:120px" name="ccPatients" class="easyui-combobox" data-options="valueField:'Patient_id',textField:'Name',panelHeight:'auto'" />
+                </td>
+                <td>日期：</td>
+                <td><input datecombo id="txtAddWorkDate" class="easyui-datebox" style="width:100px;" data-options="formatter:dateFormatter,parser:dateParser" /></td>
+                <td>
+                    时间：
+                </td>
+                <td>
+                    <input hourcombo id="ccAddWorkTime" style="width:100px" class="easyui-combobox" data-options="valueField:'value',textField:'text',panelHeight:'180px',editable:false" />
+                </td>
+            </tr>
+            <tr>
+                <td>内容：</td>
+                <td colspan="5" align="left">
+                    <input id="txtWorkInfo" name="txtWorkInfo" style="width:240px;height:60px" class="easyui-textbox" data-options="multiline:true" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6" align="center"> <a href="#" id="btnAdd" class="easyui-linkbutton" iconcls="icon-huayi-save">保存</a> </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

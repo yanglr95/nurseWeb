@@ -1,0 +1,9 @@
+/*可以在这里添加你自己的css*/
+.customTable {
+}
+.customTable:hover{
+    border:solid 1px #808080
+}
+.customTD {
+    border: none;
+}

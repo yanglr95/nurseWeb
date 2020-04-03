@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/jquerysession.js"></script>
+    <script src="../js/Common.js"></script>
+    <script src="../js/easyui-extends.js"></script>
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <script src="../js/TCMNursing/NursingProgramEvaluationList.js"></script>
+    <script src="../../JavaScript/easyui/locale/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+    日期:<input id="txtDate" class="easyui-datebox" style="width:180px;" data-options="formatter:dateFormatter,parser:dateParser,editable:true" />
+    姓名:<input id="comPatientName" class="easyui-combobox" style="width:180px;" data-options="valueField:'Patient_id',textField:'Name',panelHeight:'auto'" />
+    症状:<input id="comDiseaseName" class="easyui-combobox" style="width:180px;" data-options="valueField:'Id',textField:'Name',panelHeight:'auto'" />
+    <a href="#" id="btnSearch" class="easyui-linkbutton" onclick="searchData()" iconcls="icon-huayi-search">查询</a>
+    <table id="tbNursingProgram" class="easyui-datagrid" width="98%"></table>
+</body>
+</html>

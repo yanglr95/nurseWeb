@@ -1,0 +1,20 @@
+﻿<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+   
+    <script type ="text/javascript">
+        function two_char(n) {            return n >= 10 ? n : "0" + n;        }
+        function time_fun() {            var sec=0;
+        setInterval(function () {
+        sec++;
+        var date = new Date(0, 0)
+        date.setSeconds(sec);
+        var h = date.getHours(), m = date.getMinutes(), s = date.getSeconds();
+        document.getElementById("mytime").innerText = two_char(h) + ":" + two_char(m) + ":" + two_char(s);
+        }, 1000);        }    </script>
+</head>
+<body onload="time_fun()">
+    <span id="mytime" style="color:red;position: fixed; background-color: #EFF8FF; z-index: 1000;">00:00:00</span>
+</body>
+</html>

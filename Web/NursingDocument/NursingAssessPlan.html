@@ -1,0 +1,376 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>护理计划单</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/jquerysession.js"></script>
+    <script src="../js/Common.js"></script>
+    <script src="../js/easyui-extends.js"></script>
+    <script src="../js/NursingAssessPlan.js"></script>
+    <script src="../js/publicPatient.js"></script>
+    <script src="../js/PatientInfo.js"></script>
+    <script src="../../JavaScript/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <style type="text/css">
+        .auto-style1 {
+            height: 17px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <table style="width:98%">
+            <tr>
+                <td><input id="ccPatients" name="ccPatients" style="width:120px" class="easyui-combobox" data-options="valueField:'Patient_id',textField:'Name'" /></td>
+                <td>
+                    日期<input id="txtDate" class="easyui-datebox" style="width:180px;" data-options="formatter:dateFormatter,parser:dateParser" />
+                    <a href="#" id="btnQuery" class="easyui-linkbutton" iconcls="icon-huayi-search">查询</a>
+                    <a href="#" class="easyui-linkbutton" iconcls="icon-huayi-print" onclick="print()">打印</a>
+                </td>
+            </tr>
+        </table>
+        <table id="tabPatientInfo" class="patientTable" style="width:98%;background: #fff;margin-top:5px;">
+        </table>
+        <div>
+            <table id="tbNurseCareList" class="easyui-datagrid" style="width:98%;height:auto" data-options="singleSelect:true">
+                <thead>
+                    <tr>
+                        <th data-options="field:'Time_point',width:'10%',align:'center',formatter:inputListDateFormatter" class="auto-style1">
+                            评估时间
+                        </th>
+                        <th data-options="field:'Signatory',width:'10%',align:'center'" class="auto-style1">
+                            签字人
+                        </th>
+
+                        <th data-options="field:'Nursing_diagnosis',width:'20%',align:'center'" class="auto-style1">
+                            护理问题
+                        </th>
+                        <th data-options="field:'Measures',width:'45%',align:'center'" class="auto-style1">
+                            护理措施
+                        </th>
+                        <th data-options="width:'15%', field:'Id',align:'center',formatter:InputListOperateField" class="auto-style1">
+                            操作
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+            <table id="tbNursingCare" class="inputTable" style="width:98%;height:auto;">
+                <tr>
+                    <td>
+                        录入时间
+                    </td>
+                    <td colspan="2">
+                        <input class="easyui-timespinner" id="dtInput" style="width:80px" data-options="showSeconds:false" />
+                    </td>
+
+
+                    <td colspan="3"><a href="#" id="btnSaveInput" style="float:right;margin-right:30px" class="easyui-linkbutton" iconcls="icon-huayi-save">保存</a></td>
+                </tr>
+
+                <tr>
+                    <td>
+                        护理诊断/问题
+                    </td>
+                    <td>
+                        <input id="txtNursingDiagnosis" style="width:100px" class="easyui-textbox" data-options="panelHeight:'auto'">
+                    </td>
+                    <td>
+                        预期目标
+                    </td>
+                    <td>
+                        <input id="txtAnticipatedGoal" style="width:100px" class="easyui-textbox" data-options="panelHeight:'auto'">
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td rowspan="2">护理措施</td>
+                    <td colspan="3"> <input id="comboTemplate" style="width:200px" class="easyui-combobox" data-options="panelHeight:'auto',editable:false"></td>
+                </tr>
+                <tr>
+                    <td colspan="5">
+                        <input id="txtMeasure" class="easyui-textbox" data-options="multiline:true" style="width:660px;height:180px" />
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>
+                        停止时间
+                    </td>
+                    <td>
+                        <input id="txtStoppingTime" value="" style="width:100px" class="easyui-timespinner" data-options="formatter:dateFormatter,parser:dateParser">
+                    </td>
+                    <td>评价效果</td>
+                    <td><input id="txtEvaluate" style="width:100px" class="easyui-textbox" data-options="panelHeight:'auto'"></td>
+                </tr>
+                <tr>
+                    <td>
+                        签字人
+                    </td>
+                    <td colspan="4">
+                        <input id="txtSignatory" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'">
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
+<script type="text/javascript">
+    var patient;
+
+    var menu_id = getUrlParam("menu_id");
+
+    $(function () {
+        //patient = getCurrentPatient();
+        $("#ccPatients").combobox({
+            onSelect: PatientsComboChange,
+            filter: filterPatient,
+            panelHeight:document.documentElement.clientHeight
+        });
+        var ward_code = getSession("ward_code") == undefined ? "null" : getSession("ward_code");
+        $.ajax({
+            url: BaseData.WebApiUrl + "nurse/getPatientListByWard/",
+            data: "ward_code=" + ward_code,
+            type: "get",
+            success: (function (data) {
+
+                var jsonData = $.parseJSON(data);
+                if (jsonData.length > 0) {
+                    for (var i = 0; i < jsonData.length; i++) {
+                        jsonData[i].Name = "(" + jsonData[i].Bed_No + ")" + jsonData[i].Name;
+                    }
+                    $("#ccPatients").combobox('loadData', jsonData);
+                    if (patient) {
+                        $("#ccPatients").combobox('setValue', patient.Patient_id);
+                        PatientsComboChange();
+                    }
+                    //       $("#ccPatients").combobox('setValue', jsonData[0].Patient_id);
+                    //      PatientsComboChange();
+
+                    var patientid = getSession("Patient_Id");
+                    if (patientid != null && patientid != "null") {
+                        $("#ccPatients").combobox('setValue', patientid);
+                        PatientsComboChange();
+                    } else {
+                        setSession(jsonData[0].Patient_id);
+                        $("#ccPatients").combobox('setValue', jsonData[0].Patient_id);
+                        PatientsComboChange();
+                    }
+                }
+            })
+        });
+
+        $("#comboTemplate").combobox({
+            onSelect: function () {
+                var value = $("#comboTemplate").combobox("getValue");
+                var text = $("#txtMeasure").textbox("getValue");
+                $("#txtMeasure").textbox("setValue", text + value);
+            },
+            valueField: 'Dict_Name',
+            textField: 'Dict_Code',
+        });
+
+        $.ajax({
+            url: BaseData.WebApiUrl + "nurse/getSysDict/",
+            data: "type=护理记录其他选项",
+            type: "get",
+            success: (function (data) {
+
+                var jsonData = $.parseJSON(data);
+                if (jsonData != null) {
+                    $("#comboTemplate").combobox("loadData", jsonData);
+                }
+                $("#comboTemplate").combobox("setValue", "模板选择");
+
+            })
+        });
+
+
+
+
+        var date = new Date();
+        $('#txtDate').datebox('setValue', dateFormatter(date));
+        $("#btnSaveInput").click(saveData);
+        $("#btnQuery").click(InitInputData);
+    })
+    function PatientsComboChange() {
+        patient_id = $("#ccPatients").combobox('getValue');
+        $.ajax({
+            url: BaseData.WebApiUrl + "nurse/getPatientInfoByPatientID",
+            data: "patientid=" + patient_id,
+            type: "get",
+            success: (function (data) {
+                var jsonData = $.parseJSON(data);
+                if (jsonData) {
+                    patient = jsonData;
+                    //setCurrentPatient(patient);
+                    SetTableValue("tabPatientInfo", jsonData);
+
+                    removeSession("patient_id");
+                    setSession(patient_id);
+                }
+            })
+        });
+        InitInputData();
+    }
+
+    function tdDateFormatter(jsonObj) {
+        var date = jsonObj.Admission_Date_Time.replace(/-/g, "/").replace(/T/g, " ");
+        return dateTimeFormatter(new Date(date), "yyyy-mm-dd");
+    }
+    function InitInputData() {
+
+        var recording_Date = $("#txtDate").datebox("getValue");
+        $.ajax({
+            url: BaseData.WebApiUrl + "NursingAssessPlan/getList",
+            data: "patient_id=" + patient_id + "&recording_Date=" + recording_Date,
+            type: "get",
+            success: (function (data) {
+                if (data && data != "null") {
+                    var jsonData = $.parseJSON(data);
+
+                    $("#tbNurseCareList").datagrid("loadData", jsonData);
+                }else{
+                    $("#tbNurseCareList").datagrid("loadData", []);
+                }
+            })
+        });
+        InitTableData(null);
+        $("#dtInput").timespinner("setValue", dateTimeFormatter(new Date(), "hh:mi"));
+    }
+    function inputListDateFormatter(date) {
+        var showDate = new Date(date.replace(/-/g, "/").replace(/T/g, " "));
+        var hour = showDate.getHours() + showDate.getTimezoneOffset() / 60;
+
+        if (hour < 0) {
+
+            hour = hour + 24;
+        }
+        showDate = showDate.setHours(hour);
+        return dateTimeFormatter(new Date(showDate), "hh:mi");
+    }
+    function InputListOperateField(value, rowData, rowIndex) {
+
+        var str = "<a href='#' name='btnEdit' onclick='editInputList(\"" + value + "\",this)' >编辑</a>";
+        str += "&nbsp;&nbsp;"
+        str += "<a href='#' onclick='delInputList(\"" + value + "\")' >删除</a>";
+        return str;
+    }
+
+    var editID = null;
+    function editInputList(id, obj) {
+        var state = $(obj).html();
+        $("a[name='btnEdit']").html("编辑");
+        if (state == "编辑") {
+            editID = id;
+            $.ajax({
+                url: BaseData.WebApiUrl + "NursingAssessPlan/getView",
+                data: "id=" + id,
+                type: "get",
+                success: (function (data) {
+                    if (data) {
+                        var jsonData = $.parseJSON(data);
+                        InitTableData(jsonData);
+                        var date = new Date(jsonData.Time_Point);
+                        $("#dtInput").timespinner("setValue", inputListDateFormatter(jsonData.Time_point));
+                        $(obj).html("取消");
+                    }
+                })
+            });
+        }
+        else {
+            editID = null;
+            $(obj).html("编辑");
+            InitTableData(null);
+            $("#dtInput").timespinner("setValue", dateTimeFormatter(new Date(), "hh:mi"));
+        }
+    }
+    function delInputList(id) {
+        editID = null;
+        $.ajax({
+            url: BaseData.WebApiUrl + "NursingAssessPlan/delNursingAssessPlanView",
+            data: "id=" + id,
+            type: "get",
+            success: (function (data) {
+                if (data) {
+                    $.messager.alert("提示", data);
+                    InitInputData();
+                    InitTableData(null);
+                    $("#dtInput").timespinner("setValue", dateTimeFormatter(new Date(), "hh:mi"));
+                }
+            })
+        });
+    }
+    function InitTableData(jsonData) {
+        if (jsonData) {
+            $("#txtNursingDiagnosis").textbox("setValue", jsonData["Nursing_diagnosis"]);
+            $("#txtAnticipatedGoal").textbox("setValue", jsonData["Anticipated_goal"]);
+            $("#txtStoppingTime").textbox("setValue", jsonData["Stopping_time"]);
+            $("#txtEvaluate").textbox("setValue", jsonData["Evaluate"]);
+            $("#txtSignatory").textbox("setValue", jsonData["Signatory"]);
+            $("#txtMeasure").textbox("setValue", jsonData["Measures"]);
+        }
+        else {
+            $("#tbNurseCareList").datagrid("loadData", null);
+            $("#txtNursingDiagnosis").textbox("setValue", null);
+            $("#txtAnticipatedGoal").textbox("setValue", null);
+            $("#txtStoppingTime").textbox("setValue", null);
+            $("#txtEvaluate").textbox("setValue", null);
+            $("#txtSignatory").textbox("setValue", null);
+            $("#txtMeasure").textbox("setValue", null);
+            $("#comboTemplate").combobox("setValue", "模板选择");
+        }
+    }
+
+    function saveData() {
+        if (!patient) {
+            $.messager.alert("提示", "请选择病人！");
+            return;
+        }
+        var postData = "";
+
+        var recording_Date = $("#txtDate").datebox("getValue");
+        var time_point = recording_Date + " " + $("#dtInput").timespinner("getValue");
+        var postData = "";
+        postData += '{';
+        postData += '"Id":' + editID + ',';
+        postData += '"Patient_id":"' + patient.Patient_id + '",';
+        postData += '"Visit_id":"' + patient.Visit_id + '",';
+        postData += '"Recording_Date":"' + recording_Date + '",';
+        postData += '"Time_Point":"' + time_point + '",';
+        postData += '"Nursing_diagnosis":"' + $("#txtNursingDiagnosis").textbox("getValue") + '",';
+        postData += '"Anticipated_goal":"' + $("#txtAnticipatedGoal").textbox("getValue") + '",';
+        postData += '"Stopping_time":"' + $("#txtStoppingTime").timespinner("getValue") + '",';
+        postData += '"Evaluate":"' + $("#txtEvaluate").textbox("getValue") + '",';
+        postData += '"Signatory":"' + $("#txtSignatory").textbox("getValue") + '"';
+        var measure = $("#txtMeasure").textbox("getValue");
+        postData += ',"Measures":"' + measure + '"';
+        postData += "}";
+        postData = "[" + postData + "]";
+        $.ajax({
+            url: BaseData.WebApiUrl + "NursingAssessPlan/saveNursingAssessPlanView",
+            type: "POST",
+            data: { '': postData },
+            success: (function (data) {
+                if (data) {
+                    $.messager.alert("提示", data);
+                    InitInputData();
+                }
+            })
+        });
+    }
+
+    function print() {
+        if (!patient) {
+            $.messager.alert("提示", "请选择病人！");
+            return;
+        }
+        $.messager.alert("提示", "没有连接打印机！");
+        //window.open(BaseData.WebApiUrl + "print/printNurseCareReport?patient_id=" + patient.Patient_id + "&visit_id=" + patient.Visit_id);
+    }
+</script>

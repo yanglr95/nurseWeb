@@ -1,0 +1,181 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../../JavaScript/jquery.form.js"></script>
+    <script src="../js/Common.js"></script>
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <script src="UploadVideo.js"></script>
+    <style>
+        #content {
+            border: 1px solid rgb(169, 169, 169);
+            padding: 16px;
+            border-radius: 2px;
+        }
+
+        .list {
+            top: 10px;
+            width: 140px;
+            height: 40px;
+            border: 1px solid #0082E6;
+            display: inline-block;
+            border-radius: 2px;
+            position: relative;
+            line-height: 40px;
+        }
+
+        #Files {
+            position: absolute;
+            opacity: 0;
+            color: white;
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+        }
+
+       #imgFiles {
+            position: absolute;
+            opacity: 0;
+            color: white;
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+        }
+
+        .list span {
+            display: inline-block;
+            text-align: center;
+            width: 100%;
+            line-height: 40px;
+            position: absolute;
+            color: #0082E6;
+        }
+
+        video {
+            margin-top: 8px;
+            border-radius: 4px;
+        }
+
+        ._p {
+            margin: 14px;
+        }
+
+            ._p input {
+                display: inline-block;
+                width: 70%;
+                margin-left: 6px;
+            }
+
+            ._p span {
+                font-size: 15px;
+            }
+    </style>
+</head>
+<body>
+    <form method="post" enctype="multipart/form-data" id="form1" action="UploadFile.ashx?action=upload_video">
+        <div id="content" style="width:95%">
+            <p class=" _p">
+            <span>视频标题</span>：<input id="title" class="easyui-textbox" style="width:260px" type="text" placeholder="请输入视频标题"></p>
+            <p class="_p">
+                <span>视频文件：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>
+                <!--文件选择按钮-->
+                <a class="list" href="javascript:;">
+                    <input id="Files" type="file" name="Files" accept="video/*" onchange="UpladFile();" runat="server" /><span>选择视频文件</span>
+                </a>
+                <!--上传速度显示-->
+                <span id="time"></span>
+            </p>
+            <p class="_p">
+                <span>视频封面图片： </span>
+                <!--文件选择按钮-->
+                <a class="list" href="javascript:;">
+                    <input id="imgFiles" type="file" name="imgFiles" accept="image/*" onchange="ImgUpladFile();" runat="server" /><span>选择视频封面图片</span>
+                </a>
+                <!--上传速度显示-->
+                <span id="time"></span>
+            </p>
+            <!--显示消失-->
+            <ul class="el-upload-list el-upload-list--text" style="display:  none;">
+                <li tabindex="0" class="el-upload-list__item is-success">
+                    <a class="el-upload-list__item-name">
+                        <i class="el-icon-document"></i><span id="videoNames">food.jpeg</span>
+                    </a>
+                    
+                    <label class="el-upload-list__item-status-label">
+                        <i class="el-icon-upload-success el-icon-circle-check"></i>
+                    </label>
+                    <i class="el-icon-close" onclick="del();"></i>
+                    <i class="el-icon-close-tip"></i>
+                </li>
+            </ul>
+
+            <ul id="imgul" style="display:  none;">
+                <li tabindex="0" class="el-upload-list__item is-success">
+                    <a class="el-upload-list__item-name">
+                        <i class="el-icon-document"></i><span id="imgNames">food.jpeg</span>
+                    </a>
+
+                    <label class="el-upload-list__item-status-label">
+                        <i class="el-icon-upload-success el-icon-circle-check"></i>
+                    </label>
+                    <i class="el-icon-close" onclick="del();"></i>
+                    <i class="el-icon-close-tip"></i>
+                </li>
+            </ul>
+
+            <!--进度条-->
+            <div class="el-progress el-progress--line" style="display: none;">
+                <div class="el-progress-bar">
+                    <div class="el-progress-bar__outer" style="height: 6px;">
+                        <div class="el-progress-bar__inner" style="width: 0%;">
+                        </div>
+                    </div>
+                </div>
+                <div class="el-progress__text" style="font-size: 14.4px;">0%</div>
+            </div>
+            <p class="_p"><span>上传视频</span>： <button class="easyui-linkbutton" style="width:60px" type="button" onclick="sub()">上传</button></p>
+
+            <!--预览框-->
+            <div class="preview">
+
+            </div>
+            <div style="margin-top:10px;margin-right: 15px;text-align:right; display:none">
+                <input id="txtSignatory" style="width:120px" class="easyui-textbox" data-options="panelHeight:'auto'">
+            </div>
+        </div>
+        <br />
+        <table id="tbVideoList" class="easyui-datagrid" style="width:98%;height:auto;" data-options="singleSelect:true">
+            <thead>
+                <tr>
+                    <th data-options="field:'VId',width:'10%',align:'center'" class="auto-style1" hidden="hidden">
+                        VId
+                    </th>
+                    <th data-options="field:'Videoname',width:'20%',align:'center'" class="auto-style1" >
+                        视频标题
+                    </th>
+                    <th data-options="field:'Videofile',width:'15%',align:'center'" class="auto-style1">
+                        视频文件
+                    </th>
+                    <th data-options="field:'Imgname',width:'15%',align:'center'" class="auto-style1">
+                        视频封面图片
+                    </th>
+                    <th data-options="field:'Addtime',width:'20%',align:'center'" class="auto-style1">
+                        上传时间
+                    </th>
+                    <th data-options="field:'Adduser',width:'10%',align:'center'" class="auto-style1">
+                        上传人
+                    </th>
+                    <th data-options="width:'17%', field:'Id',align:'center',formatter:InputListOperateField" class="auto-style1">
+                        操作
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </form>
+</body>
+</html>

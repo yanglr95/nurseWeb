@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>工作流</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/jquerysession.js"></script>
+    <link href="../../JavaScript/easyui/themes/default/datagrid.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <script src="../js/WorkPlan/WorkFlow.js"></script>
+    <script src="../js/Common.js"></script>
+</head>
+<body>
+    
+    <div id="Work" class="easyui-tabs" style="width: 98%; ">
+        <div title="护士" style="padding:10px;">
+                <table style="width:98%">
+                    <tr>
+                        <td><input id="ccNurse" name="ccNurse" style="width:120px" class="easyui-combobox" data-options="valueField:'Db_User',textField:'User_Name',panelHeight:'auto'" /></td>
+                        <td>日期：<input id="nurseDate" class="easyui-datebox" style="width:180px;" data-options="formatter:dateFormatter,parser:dateParser" /></td>
+                        <td>
+                            <a href="#" id="btnQuery1" class="easyui-linkbutton" iconcls="icon-huayi-search">查询</a>
+                        </td>
+                        <td>
+                            <input class="easyui-searchbox" title="tbNurse" data-options="prompt:'请输入床号、病案号、操作',searcher:jsonFilter"
+                                   style="width:180px;height:28px;"></input>
+                        </td>
+                    </tr>
+                </table>
+            <table id="tbNurse" class="easyui-datagrid"></table>
+        </div>
+        <div title="患者" closable="false" style="padding:10px;">
+            <table style="width:98%">
+                <tr>
+                    <td><input id="ccPatients" name="ccPatients" style="width:120px" class="easyui-combobox" data-options="valueField:'Patient_id',textField:'Name',panelHeight:'auto'" /></td>
+                    <td>日期：<input id="patientDate" class="easyui-datebox" style="width:180px;" data-options="formatter:dateFormatter,parser:dateParser" /></td>
+                    <td>
+                        <a href="#" id="btnQuery2" class="easyui-linkbutton" iconcls="icon-huayi-search">查询</a>
+                    </td>
+                    <td><input class="easyui-searchbox" title="tbPatient" data-options="prompt:'请输入执行人编码、操作',searcher:jsonFilter"
+       style="width:180px;height:28px;"></input></td>
+                </tr>
+            </table>
+            <table id="tbPatient" class="easyui-datagrid"></table>
+        </div>
+    </div>
+</body>
+</html>

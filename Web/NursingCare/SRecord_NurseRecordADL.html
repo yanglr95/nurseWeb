@@ -1,0 +1,146 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>自理能力评估单</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/jquerysession.js"></script>
+    <script src="../js/Common.js"></script>
+    <script src="../js/easyui-extends.js"></script>
+    <script src="../js/publicPatient.js"></script>
+    <script src="../js/PatientInfo.js"></script>
+    <script src="../../JavaScript/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <script src="../js/NursingCare/SRecord_NurseRecordADL.js"></script>
+</head>
+<body>
+    <div>
+        <table style="width:98%">
+            <tr>
+                <td><input id="ccPatients" name="ccPatients" style="width:120px" class="easyui-combobox" data-options="valueField:'Patient_id',textField:'Name'" /></td>
+                <td>
+                    日期<input id="txtDate" class="easyui-datebox" style="width:180px;" data-options="formatter:dateFormatter,parser:dateParser" />
+                    <a href="#" id="btnQuery" class="easyui-linkbutton" iconcls="icon-huayi-search">查询</a>
+                    <a href="#" class="easyui-linkbutton" iconcls="icon-huayi-print" onclick="print()">打印</a>
+                </td>
+            </tr>
+        </table>
+        <table id="tabPatientInfo" class="patientTable" style="width:98%;background: #fff;margin-top:5px;">
+        </table>
+        <div>
+            <table id="tbNurseRecordADLList" class="easyui-datagrid" style="width:98%;height:auto" data-options="singleSelect:true">
+                <thead>
+                    <tr>
+                        <th data-options="field:'Record_time',width:'20%',align:'center',formatter:formatterTime" class="auto-style1">
+                            记录日期
+                        </th>
+                        <th data-options="field:'Sum',width:'10%',align:'center'" class="auto-style1">
+                            分值
+                        </th>
+                        <th data-options="field:'Signature',width:'20%',align:'center'" class="auto-style1">
+                            记录人
+                        </th>
+                        <th data-options="field:'Ability',width:'30%',align:'center'" class="auto-style1">
+                            能力评估
+                        </th>
+                        <th data-options="field:'Visit_id',width:'25%',align:'center'" class="auto-style1" hidden="hidden">
+                        </th>
+                        <th data-options="width:'20%', field:'Id',align:'center',formatter:InputListOperateField " class=" auto-style1">
+                            操作
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+            <table id="tbNursingCare" class="inputTable" style="width:98%;height:auto;">
+                <tr>
+                    <td>请选择日期</td>
+                    <td><input class="easyui-datebox" id="dtInput" style="width:180px;" data-options="formatter:dateFormatter,parser:dateParser" />
+                  &nbsp;&nbsp;&nbsp; <a href="#" id="btnSaveInput" style="margin-right:20px" class="easyui-linkbutton" iconcls="icon-huayi-save">保存</a></td>
+                </tr>
+            </table>
+            <table  class="inputTable" style="width:98%;height:auto;align-content:space-around">
+                <tr>
+                    <td align="center" style="height: 90px; width: 50px;">
+                        进<br />
+                        食<br />
+                        水
+                    </td>
+                    <td align="center" style="height: 90px; width: 50px;">
+                        沐<br />
+                        <br />
+                        浴
+                    </td>
+                    <td align="center" style="height: 90px; width: 50px;">
+                        穿<br />
+                        衣<br />
+                        洗<br />
+                        漱
+                    </td>
+                    <td align="center" style="height: 90px; width: 50px;">
+                        如<br />
+                        <br />
+                        厕
+                    </td>
+                    <td align="center" style="height: 90px; width: 50px;">
+                        床<br />
+                        上<br />
+                        活<br />
+                        动
+                    </td>
+                    <td align="center" style="height: 90px; width: 50px;">
+                        转<br />
+                        <br />
+                        位
+                    </td>
+                    <td align="center" style="width: 50px; height: 90px">
+                        走<br />
+                        <br />
+                        动
+                    </td>
+                    <td align="center" style="height: 90px; width: 50px;">
+                        上<br />
+                        下<br />
+                        楼<br />
+                        梯
+                    </td>
+                    <td align="center" style="width: 50px; height: 90px">
+                        购<br />
+                        <br />
+                        物
+                    </td>
+                    <td align="center" style="width: 50px; height: 90px">
+                        烹<br />
+                        <br />
+                        饪
+                    </td>
+                    <td align="center" style="height: 90px; width: 50px;">
+                        理<br />
+                        <br />
+                        家<br />
+                    </td>
+                </tr>
+                <tr align="center">
+                    <td><input id="combojss" style="width:60px" class="easyui-combobox" data-options="panelHeight:'auto'"></td>
+                    <td><input id="combomy" style="width:60px" class="easyui-combobox" data-options="panelHeight:'auto'"></td>
+                    <td><input id="combocyxs" style="width:60px" class="easyui-combobox" data-options="panelHeight:'auto'"></td>
+                    <td><input id="comborc" style="width:60px" class="easyui-combobox" data-options="panelHeight:'auto'"></td>
+                    <td><input id="combocshd" style="width:60px" class="easyui-combobox" data-options="panelHeight:'auto'"></td>
+                    <td><input id="combozw" style="width:60px" class="easyui-combobox" data-options="panelHeight:'auto'"></td>
+                    <td><input id="combozd" style="width:60px" class="easyui-combobox" data-options="panelHeight:'auto'"></td>
+                    <td><input id="combosxlt" style="width:60px" class="easyui-combobox" data-options="panelHeight:'auto'"></td>
+                    <td><input id="combogw" style="width:60px" class="easyui-combobox" data-options="panelHeight:'auto'"></td>
+                    <td><input id="combopr" style="width:60px" class="easyui-combobox" data-options="panelHeight:'auto'"></td>
+                    <td><input id="combolj" style="width:60px" class="easyui-combobox" data-options="panelHeight:'auto'"></td>
+                </tr>
+            </table>
+            <div style="margin-top:10px;width:98%;text-align:right">
+                签名:<input id="txtSignatory" style="width:120px" class="easyui-textbox" data-options="panelHeight:'auto'">
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

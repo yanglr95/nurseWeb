@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>医嘱条码打印</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../../JavaScript/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../js/jquerysession.js"></script>
+    <script src="../js/Common.js"></script>
+    <script src="../js/easyui-extends.js"></script>
+    <script src="../js/publicPatient.js"></script>
+    <script src="../js/NursingCareRecord.js"></script>
+    <script src="../js/publicPatient.js"></script>
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <script src="../../JavaScript/easyui/plugins/jquery.tagbox.js"></script>
+    <link href="../../JavaScript/easyui/themes/huayi/tagbox.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/default/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <script src="../js/Orders/OrderPasterPrint.js"></script>
+    <script src="../js/Orders/AddPatient.js"></script>
+</head>
+<body>
+    <div id="AddPatient" title="多选病人" style="width: 700px; height: 675px;">
+        <table style="width: 100%; height: auto;padding:5px">
+            <tr>
+                <td align="right">
+                    <input class="easyui-searchbox" title="tbPatient" data-options="prompt:'请输入床号',searcher:jsonFilter"
+                           style="width:180px;height:28px;" />
+                </td>
+            </tr>
+            <tr>
+                <td><table id="Patients" class="easyui-datagrid"></table></td>
+            </tr>
+            <tr>
+                <td align="right">
+                    <a href="#" id="add" class="easyui-linkbutton" onclick="getBeds()" iconcls="icon-print ">添加</a>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+    <table style="width:98%" id="Condition">
+        <div>
+            <tr>
+                <td colspan="3" id="td">
+                    <input type="text" id="text" />
+                </td>
+            </tr>
+        </div>
+        <tr>
+            <td>
+                <input id="ccPatients" name="ccPatients" style="width:120px" class="easyui-combobox" data-options="valueField:'Patient_id',textField:'ViewName'" />
+                <input type="checkbox" name="AllPatient" value="AllPatient" />全科
+                <input type="checkbox" name="AllPatient" value="Patients" />选择病人
+
+            </td>
+            <td>
+                <input type="radio" name="date" checked="checked" value="today" />今日
+                <input type="radio" name="date" value="tomorrow" />明日
+            </td>
+
+
+        </tr>
+        <tr>
+            <td>
+                <input class="easyui-combobox" id="comboRepeat_Indicator" datafilter="Repeat_Indicator" data-options="panelHeight:'auto'" style="width:80px" />
+                <input class="easyui-combobox" id="comboOrder_Class" datafilter="Order_Class" data-options="panelHeight:'auto',editable:false,multiple:true,editable:false" style="width:135px" />
+            </td>
+            <td>
+                日期：
+                <input id="txtDate" class="easyui-datebox" style="width:180px;" data-options="formatter:dateFormatter,parser:dateParser" />
+                <a href="#" id="btnQuery" class="easyui-linkbutton" iconcls="icon-huayi-search">查询</a>
+            </td>
+            <td>
+                <input type="checkbox" id="cbPrinted" />排除已打印
+
+                <a href="#" id="btnPrint" class="easyui-linkbutton" iconcls="icon-huayi-print">打印</a>
+            </td>
+        </tr>
+    </table>
+    <table id="tbOrders" class="easyui-datagrid"></table>
+</body>
+
+</html>

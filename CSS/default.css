@@ -1,0 +1,113 @@
+﻿html {
+    overflow-y: overlay;
+}
+body {
+    font-size: 10pt;
+    padding: 10px;
+    background: #EFF8FF;
+}
+
+.patientTable {
+    border-width: 1px 0 0 1px;
+    border-color: #acacac;
+    border-style: solid;
+    width: 98%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin-bottom:10px
+}
+
+    .patientTable td {
+        border-width: 0 1px 1px 0;
+        margin: 0;
+        border-color: #acacac;
+        border-style: solid;
+        padding: 3px;
+        box-sizing: border-box;
+    }
+
+        .patientTable td:nth-child(2n+1) {
+            text-align: right;
+        }
+
+        .patientTable td:nth-child(2n) {
+            text-align: left;
+        }
+
+input[type=radio] {
+    margin-left: 15px;
+}
+
+.inputTable {
+    margin-top:10px;
+    border: solid 1px #acacac;
+    border-spacing: 0;
+    border-collapse: collapse;
+    background:#fff;
+}
+
+    .inputTable td{
+        padding: 3px;
+        border-right: solid 1px #ccc;
+        border-bottom: solid 1px #ccc;
+    }
+     .inputTable th{
+        text-align:center;
+        padding: 3px;
+        box-sizing: border-box;
+        border-right: solid 1px #ccc;
+        border-bottom: solid 1px #ccc;
+    }
+     #patient .nurseclass1 {
+    width: 75px;
+    height: 28px;
+    display: inline-block;
+    text-align:center;
+    background-color: #DC143C;
+    color:white;
+    font-size:16px;
+}
+#patient .nurseclass2 {
+    width: 75px;
+    height: 28px;
+    display: inline-block;
+    text-align:center;
+    white-space:nowrap;
+    background-color: skyblue;
+    color:white;
+    font-size:16px;
+}
+#patient .nurseclass3 {
+    width: 75px;
+    height: 28px;
+    display: inline-block;
+    text-align:center;
+    background-color: #fff;
+    color:black;
+    font-size: 16px;
+}
+#patient .nurseclass0 {
+    width: 75px;
+    height: 28px;
+    display: inline-block;
+    text-align:center;
+    background-color: #800000;
+    text-align: center;
+    color:white;
+    font-size:14px;
+}
+
+::-webkit-scrollbar {
+    width: 4px;    
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 15px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.2);
+}
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 0;
+    background: rgba(0,0,0,0.1);
+
+}

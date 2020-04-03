@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>体温单打印</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/jquerysession.js"></script>
+    <script src="../js/Common.js"></script>
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <script src="../js/easyui-extends.js"></script>
+    <script src="../js/publicPatient.js"></script>
+    <script src="../js/PatientInfo.js"></script>
+    <script src="../../JavaScript/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <link href="../../JavaScript/easyui/themes/default/datagrid.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/default/combobox.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/default/dialog.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <script src="../js/NursingCare/BTLine.js"></script>
+</head>
+<body>
+    <table style="width:98%">
+        <tr>
+            <td><input id="ccPatients" name="ccPatients" style="width:120px" class="easyui-combobox" data-options="valueField:'Patient_id',textField:'Name'" /></td>
+
+            <td>
+                <a href="#" name="week" id="btnWeekBegin" style="width:40px" class="easyui-linkbutton"><b>|<</b></a>
+                <a href="#" name="week" id="btnWeekPre" style="width:40px" class="easyui-linkbutton"><b><</b></a>
+                <input id="ccWeek" style="width:80px" class="easyui-combobox" data-options="valueField:'week',textField:'text',panelHeight:'200'">
+                <a href="#" name="week" id="btnWeekNext" style="width:40px" class="easyui-linkbutton"><b>></b></a>
+                <a href="#" name="week" id="btnWeekEnd" style="width:40px" class="easyui-linkbutton"><b>>|</b></a>
+            </td>
+            <td><a href="#" style="width:60px" class="easyui-linkbutton" onclick="printImg()" iconcls="icon-huayi-print">打印</a></td>
+        </tr>
+
+
+    </table>
+    <table id="tabPatientInfo" class="patientTable" style="width:98%;background: #fff;margin-top:5px;">
+    </table>
+    <div id="printDiv">
+        <img id="imgBTLine" style="width:98%">
+    </div>
+    <!-- <iframe></iframe> -->
+</body>
+
+</html>

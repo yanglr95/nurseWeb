@@ -1,0 +1,344 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>转科评估单</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/jquerysession.js"></script>
+    <script src="../js/Common.js"></script>
+    <script src="../js/easyui-extends.js"></script>
+    <script src="../js/publicPatient.js"></script>
+    <script src="../js/PatientInfo.js"></script>
+    <script src="../../JavaScript/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <script src="../js/NursingDocument/TransferEvaluatio.js"></script>
+</head>
+<body>
+    <div>
+        <table style="width:98%">
+            <tr>
+                <td>
+                    <span id="spanSingle">
+                        <input id="ccPatients" name="ccPatients" style="width:120px" class="easyui-combobox" data-options="valueField:'Patient_id',textField:'Name'" />
+                        <!--<a href="#" id="btnQueryAll" style="width:120px" class="easyui-linkbutton">查看全部</a>-->
+                    </span>
+                    <span id="spanAll">
+
+                        <a href="#" id="btnPrint" class="easyui-linkbutton" iconcls="icon-huayi-print">打印</a>
+                    </span>
+                </td>
+
+            </tr>
+        </table>
+        <table id="tabPatientInfo" class="patientTable" style="width:98%;font-size:10pt;background: #fff;margin-top:5px;">
+        </table>
+        <table id="tbNurseTransferList" class="easyui-datagrid" style="width:98%;height:auto" data-options="singleSelect:true">
+            <thead>
+                <tr>
+                    <th data-options="field:'Accesstime',width:'15%',align:'center'" class="auto-style1">
+                        转科时间
+                    </th>
+                    <th data-options="field:'Accesszd',width:'25%',align:'center'" class="auto-style1">
+                        转科诊断
+                    </th>
+                    <th data-options="field:'RYYY',width:'30%',align:'center'" class="auto-style1">
+                        转科原因
+                    </th>
+                    <th data-options="width:'15%', field:'Id',align:'center',formatter:InputListOperateField" class="auto-style1">
+                        操作
+                    </th>
+                </tr>
+            </thead>
+        </table>
+        <table id="MainView" class="inputTable" width="98%">
+            <tr>
+                <th colspan="5" style="height: 21px; text-align: left">
+                    一般情况评估：
+                </th>
+            </tr>
+            <tr>
+                <th style="width: 122px; height: 21px">
+                    转科时间：
+                </th>
+                <td style="height: 21px">
+                    <input class="easyui-datebox" id="txtDate" data-options="formatter:dateFormatter,parser:dateParser" />
+                </td>
+                <th>
+                    转科方式：
+                </th>
+                <td colspan="2">
+                    <input type="checkbox" name="Accesstype" id="Accesstype1"
+                           value="0" />步行
+                    <input type="checkbox" name="Accesstype" id="Accesstype2"
+                           value="1" />扶行
+                    <input type="checkbox" name="Accesstype" id="Accesstype3"
+                           value="3" />轮椅
+                    <input type="checkbox" name="Accesstype" id="Accesstype4"
+                           value="4" />平车
+                    <input type="checkbox" name="Accesstype" id="Accesstype5"
+                           value="5" />其他
+                </td>
+            </tr>
+            <tr>
+                <th style="width: 122px; height: 19px">
+                    转科诊断：
+                </th>
+                <td colspan="4" style="height: 19px">
+                    <input class="easyui-textbox" style="width:600px;" te="data:accesszd" />
+                </td>
+            </tr>
+            <tr>
+                <th style="width: 122px; height: 25px">
+                    转科：
+                </th>
+
+                <td colspan="3">
+                    体温：<input class="easyui-textbox" style="width:50px;" te="data:TW" />℃
+                    血压：<input class="easyui-textbox" style="width:50px;" te="data:XY" />mmHg
+
+                    脉搏：<input class="easyui-textbox" style="width:50px;" te="data:MB" />次/分
+
+
+                    呼吸：<input class="easyui-textbox" style="width:50px;" te="data:HX" />次/分
+                </td>
+            </tr>
+            <tr>
+                <th style="width: 122px; height: 123px">
+                    转科原因：
+                </th>
+                <td colspan="4" style="vertical-align: top; height: 123px; text-align: left">
+                    主诉(代诉)<br />
+                    <input class="easyui-textbox" style="width:600px;height:100px" te="data:RYYY" />
+                </td>
+            </tr>
+            <tr>
+                <th style="width: 122px; height: 26px">
+                    其&nbsp; &nbsp; 他：
+                </th>
+                <td colspan="4" style="height: 26px">
+                    <input class="easyui-textbox" style="width:600px;" te="data:RYQT" />
+                </td>
+            </tr>
+            <tr>
+
+                <th colspan="5" rowspan="1" style="text-align: left">
+                    护理评估
+                </th>
+            </tr>
+            <tr>
+                <th style="width: 122px; height: 26px">
+                    文化程度：
+                </th>
+                <td style="height: 26px">
+                    <input class="easyui-combobox" style="width:120px;" te="data:EDUCATION" combodata="EDUCATION" />
+                </td>
+                <th style="width: 122px; height: 26px">
+                    意识状态：
+                </th>
+                <td style="height: 26px" colspan="2">
+                    <input class="easyui-combobox" style="width:120px;" te="data:YSZT" combodata="YSZT" />
+                </td>
+            </tr>
+            <tr>
+                <th style="width: 122px; height: 26px">
+                    体&nbsp; &nbsp;&nbsp;位：
+                </th>
+                <td style="height: 26px" colspan="4">
+                    <input class="easyui-combobox" style="width:120px;" te="data:TIWEI" combodata="TIWEI" />
+                    <input class="easyui-combobox" style="width:120px;" te="data:BPTW" combodata="BPTW" />
+                    其他：<input class="easyui-textbox" style="width:120px;" te="data:TIWEIQT" />
+                </td>
+            </tr>
+            <tr>
+                <th style="width: 122px; height: 26px">
+                    皮肤粘膜：
+                </th>
+                <td colspan="4" style="height: 26px">
+                    <input class="easyui-combobox" style="width:120px;" te="data:PFNM" combodata="PFNM" />
+                    其他：<input class="easyui-textbox" style="width:120px;" te="data:PFNMQT" />
+                </td>
+            </tr>
+            <tr>
+                <th style="width: 122px; height: 26px">
+                    饮&nbsp; &nbsp;食：
+                </th>
+                <td colspan="4">
+                    <input type="radio" value="0" name="rdYS" />普食
+                    <input type="radio" value="1" name="rdYS" />半流质
+                    <input type="radio" value="2" name="rdYS" />流质
+                    <input type="radio" value="3" name="rdYS" />禁食
+                    <input type="radio" value="4" name="rdYS" />鼻饲
+                    <input type="radio" value="5" name="rdYS" />治疗饮食：
+                    <input class="easyui-textbox" style="width:120px;" te="data:YSZLQT" />
+                </td>
+            </tr>
+            <tr>
+                <th style="width: 122px;">
+                    排&nbsp; &nbsp;  便：
+                </th>
+                <td colspan="4" style="height: 26px">
+                    <input class="easyui-combobox" style="width:120px;" te="data:PBL" combodata="PBL" />
+                    其他：<input class="easyui-textbox" style="width:60px;" te="data:PXQT" />
+                    <br />
+                    便秘：（<input class="easyui-textbox" style="width:60px;" te="data:BMPL" />次/日 辅助排便：<input class="easyui-combobox" style="width:60px;" te="data:FZPB" combodata="YouWu" />）
+                    <br />
+                    腹泻：（<input class="easyui-textbox" style="width:60px;" te="data:FXPL" />次/日）
+                    <br />
+                    造瘘（能否自理：<input class="easyui-combobox" style="width:60px;" te="data:ZL" combodata="NengFou" />）
+                </td>
+            </tr>
+            <tr>
+                <th style="width: 122px; height: 26px">
+                    排&nbsp; &nbsp; 尿：
+                </th>
+                <td colspan="4" style="height: 26px">
+                    <input class="easyui-combobox" style="width:100px;" te="data:PBZT" combodata="PBZT" />
+                </td>
+            </tr>
+            <tr>
+                <th style="width: 122px; height: 26px">
+                    过&nbsp;敏&nbsp;史：
+                </th>
+                <td colspan="4">
+                    药物：<input class="easyui-combobox" style="width:120px;" te="data:GMYW" combodata="YouWuBuXiang" />
+                    <input class="easyui-textbox" style="width:120px;" te="data:GMYWNAME" />
+                    食物：<input class="easyui-combobox" style="width:120px;" te="data:GMSW" combodata="YouWuBuXiang" />
+                    <input class="easyui-textbox" style="width:120px;" te="data:GMSWNAME" />
+                    其他：<input class="easyui-textbox" style="width:120px;" te="data:GMQT" />
+                </td>
+            </tr>
+            <tr>
+                <th rowspan="2" style="width: 122px">
+                    静脉置管：
+                </th>
+                <td colspan="4" style="height: 26px">
+                    <input class="easyui-combobox" style="width:120px;" te="data:JMG" combodata="YouWu" />
+                    （<input type="radio" value="0" name="rdJMZGXX" />PICC
+                    <input type="radio" value="1" name="rdJMZGXX" />CVC
+                    <input type="radio" value="2" name="rdJMZGXX" />静脉留置针
+                    <input type="radio" value="3" name="rdJMZGXX" />外周静脉置管
+                    <input type="radio" value="4" name="rdJMZGXX" />输液港）
+                </td>
+
+            </tr>
+            <tr>
+                <td style="height: 26px" colspan="4">
+                    穿刺部位：<input class="easyui-textbox" style="width:120px;" te="data:CCBW" />
+
+                    置管时间：<input class="easyui-textbox" style="width:120px;" te="data:ZGSJ" />
+
+                    置入管长度：<input class="easyui-textbox" style="width:120px;" te="data:ZRGCD" />
+
+                    其他：<input class="easyui-textbox" style="width:120px;" te="data:JMZGQT" />
+                </td>
+            </tr>
+            <tr>
+                <th style="width: 122px; height: 22px">
+                    管&nbsp; &nbsp; 道：
+                </th>
+                <td colspan="4" style="height: 22px">
+                    <input class="easyui-combobox" style="width:120px;" te="data:GD" combodata="YouWu" />
+                    部位：<input class="easyui-textbox" style="width:120px;" te="data:GDBW" />
+                </td>
+            </tr>
+            <tr>
+                <th style="width: 122px; height: 22px">
+                    血管评估：
+                </th>
+                <td colspan="3" style="height: 22px">
+                    <input class="easyui-combobox" style="width:120px;" te="data:XGPG" combodata="XGPG" />
+                </td>
+            </tr>
+            <tr>
+                <th style="width: 122px; height: 22px">
+                    风险评估：
+                </th>
+                <td colspan="3" style="height: 22px">
+                    跌倒(分值)：<input class="easyui-textbox" style="width:120px;" te="data:DDFZ" />
+                    压疮(分值)：<input class="easyui-textbox" style="width:120px;" te="data:YCFZ" />
+                    其他：<input class="easyui-textbox" style="width:120px;" te="data:FXPGQT" />
+                </td>
+            </tr>
+            <tr>
+                <th style="width: 122px; height: 22px">
+                    自理能力评估：
+                </th>
+                <td colspan="3" style="height: 22px">
+                    <input class="easyui-combobox" style="width:120px;" te="data:ZLNL" combodata="ZLNL" />
+                </td>
+            </tr>
+            <tr>
+                <th style="width: 122px; height: 22px">
+                    疼痛评估：
+                </th>
+                <td colspan="3" style="height: 22px">
+                    <input class="easyui-combobox" style="width:120px;" te="data:TTPG" combodata="YouWu" />
+                    <input type="radio" value="0" name="rdTTPGDJ" />1-3分，轻微痛
+                    <input type="radio" value="1" name="rdTTPGDJ" />4-6分，比较痛
+                    <input type="radio" value="2" name="rdTTPGDJ" />7-9分，非常痛
+                    <input type="radio" value="3" name="rdTTPGDJ" />10分，剧痛
+
+                </td>
+            </tr>
+            <tr>
+                <th style="height: 22px; text-align: left">
+                    专科健康评估：
+                </th>
+
+                <td colspan="4" style="height: 41px; text-align: left">
+                    <input class="easyui-textbox" style="width:600px;height:100px" te="data:ZKJKPG" />
+                </td>
+            </tr>
+            <tr>
+                <th style="width: 122px; height: 22px">
+                    宗教信仰：
+                </th>
+                <td colspan="3" style="height: 22px">
+                    <input class="easyui-combobox" style="width:120px;" te="data:ZJXY" combodata="ZJXY" />
+                    其他：<input class="easyui-textbox" style="width:120px;" te="data:ZJXYQT" />
+                </td>
+            </tr>
+            <tr>
+                <th style="width: 122px; height: 22px">
+                    疾病认知：
+                </th>
+                <td colspan="3" style="height: 22px">
+                    <input class="easyui-combobox" style="width:120px;" te="data:JBRZ" combodata="JBRZ" />
+
+                </td>
+            </tr>
+            <tr>
+                <th style="width: 122px; height: 22px">
+                    心里状况：
+                </th>
+                <td colspan="3" style="height: 22px">
+                    <input class="easyui-combobox" style="width:120px;" te="data:XLZK" combodata="XLZK" />
+                    其他：<input class="easyui-textbox" style="width:120px;" te="data:XLZKQT" />
+                </td>
+            </tr>
+            <tr>
+                <th style="width: 122px; height: 41px">
+                    入院介绍：
+                </th>
+                <td colspan="4">
+                    <input type="checkbox" value="0" name="rdRYJS" />住院须知
+                    <input type="checkbox" value="1" name="rdRYJS" />环境设施
+                    <input type="checkbox" value="2" name="rdRYJS" />经管医护人员
+                    <input type="checkbox" value="3" name="rdRYJS" />饮食
+                    <input type="checkbox" value="4" name="rdRYJS" />安全管理制度
+                    <input type="checkbox" value="5" name="rdRYJS" />告知疾病相关知识
+
+                </td>
+            </tr>
+            <tr>
+                <td align="center" colspan="4">
+                    <a href="#" id="btnSave" class="easyui-linkbutton" iconcls="icon-huayi-save">保存</a>
+                </td>
+            </tr>
+        </table>
+        </div>
+</body>
+</html>

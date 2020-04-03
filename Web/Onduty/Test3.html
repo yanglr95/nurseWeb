@@ -1,0 +1,171 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript">
+        //测试用的数据，这里可以用AJAX获取服务器数据
+        var test_list = ["小张", "小苏", "小杨", "老张", "老苏", "老杨", "老爷爷", "小妹妹", "老奶奶", "大鹏", "大明", "大鹏展翅", "你好", "hello", "hi"];
+        var List_Test = [{ "valueField": "XZ", "textField": "小张" }, { "valueField": "XY", "textField": "小杨" }, { "valueField": "LY", "textField": "老杨" },
+                         { "valueField": "XS", "textField": "小苏" }, { "valueField": "LZ", "textField": "老张" }, { "valueField": "LS", "textField": "老苏" }];
+        var old_value = "";
+        var highlightindex = -1;   //高亮
+        function ShowDiv(ev) {
+
+            var oEvent = ev || event;
+
+            var oDiv = document.createElement('div');
+            oDiv.id = "SMM";
+
+            oDiv.style.left = oEvent.clientX + 'px';  // 指定创建的DIV在文档中距离左侧的位置
+
+            oDiv.style.top = oEvent.clientY + 10 + 'px';  // 指定创建的DIV在文档中距离顶部的位置
+
+            //oDiv.style.border = '1px solid #FF0000'; // 设置边框
+
+            oDiv.style.position = 'absolute'; // 为新创建的DIV指定绝对定位
+
+            //oDiv.style.width = '200px'; // 指定宽度
+
+            //oDiv.style.height = '200px'; // 指定高度
+
+            if (document.getElementById("SMM") != null) {
+                var node = document.getElementById("SMM");
+                node.parentNode.removeChild(node);
+            }
+            document.body.appendChild(oDiv);
+
+            var str = document.getElementById("SMM");
+            var oInput = document.createElement("input"); //添加哪类节点
+            oInput.id = "search_text";
+            oInput.style.border = '1px solid #FF0000'; // 设置边框
+            str.appendChild(oInput);
+
+            var sdiv = document.getElementById("SMM");
+            var oDiv1 = document.createElement("div"); //添加哪类节点
+            oDiv1.id = "auto_div";
+            oDiv1.style.display = "none";
+            oDiv1.style.border = '1px solid #FF0000'; // 设置边框
+            oDiv1.style.position = 'absolute'; // 为新创建的DIV指定绝对定位
+            sdiv.appendChild(oDiv1);
+            ShowSmm();
+        }
+        function ShowSmm() {
+            old_value = $("#search_text").val();
+            $("#search_text").focus(function () {
+                if ($("#search_text").val() == "") {
+                    AutoComplete("auto_div", "search_text", List_Test);
+                }
+            });
+            $("#search_text").keyup(function () {
+                AutoComplete("auto_div", "search_text", List_Test);
+            });
+        }
+        //自动完成
+        function AutoComplete(auto, search, mylist) {
+            if ($("#" + search).val() != old_value || old_value == "") {
+                var autoNode = $("#" + auto);   //缓存对象（弹出框）
+                var carlist = new Array();
+                var n = 0;
+                old_value = $("#" + search).val();
+                for (i in mylist) {
+                    if (mylist[i].valueField.indexOf(old_value) >= 0) {
+                        carlist[n++] = mylist[i];
+                    }
+                }
+                if (carlist.length == 0) {
+                    autoNode.hide();
+                    return;
+                }
+                autoNode.empty();  //清空上次的记录
+                for (i in carlist) {
+                    var wordNode = carlist[i].textField;   //弹出框里的每一条内容
+                    var newDivNode = $("<div>").attr("id", i);    //设置每个节点的id值
+                    newDivNode.attr("style", "font:14px/25px arial;height:25px;padding:0 8px;cursor: pointer;");
+                    newDivNode.html(wordNode).appendTo(autoNode);  //追加到弹出框
+                    //鼠标移入高亮，移开不高亮
+                    newDivNode.mouseover(function () {
+                        if (highlightindex != -1) {        //原来高亮的节点要取消高亮（是-1就不需要了）
+                            autoNode.children("div").eq(highlightindex).css("background-color", "white");
+                        }
+                        //记录新的高亮节点索引
+                        highlightindex = $(this).attr("id");
+                        $(this).css("background-color", "#ebebeb");
+                    });
+                    newDivNode.mouseout(function () {
+                        $(this).css("background-color", "white");
+                    });
+                    //鼠标点击文字上屏
+                    newDivNode.click(function () {
+                        //取出高亮节点的文本内容
+                        var comText = autoNode.hide().children("div").eq(highlightindex).text();
+                        highlightindex = -1;
+                        //文本框中的内容变成高亮节点的内容
+                        $("#" + search).val(comText);
+                        insertAtCaret(document.getElementById("NewtxtMoban"), comText);
+                        $("#search_text").hide();
+                    })
+
+                    if (carlist.length > 0) {    //如果返回值有内容就显示出来
+                        autoNode.show();
+                    } else {               //服务器端无内容返回 那么隐藏弹出框
+                        autoNode.hide();
+                        //弹出框隐藏的同时，高亮节点索引值也变成-1
+                        highlightindex = -1;
+                    }
+                }
+            }
+            //点击页面隐藏自动补全提示框
+            document.onclick = function (e) {
+                var e = e ? e : window.event;
+                var tar = e.srcElement || e.target;
+                if (tar.id != search) {
+                    if ($("#" + auto).is(":visible")) {
+                        $("#" + auto).css("display", "none");
+                    }
+                }
+            }
+        }
+
+        function setCaret(textObj) {
+            if (textObj.createTextRange) {
+                textObj.caretPos = document.selection.createRange().duplicate();
+            }
+        }
+        function insertAtCaret(textObj, textFeildValue) {
+            if (document.all) {
+                if (textObj.createTextRange && textObj.caretPos) {
+                    var caretPos = textObj.caretPos;
+                    caretPos.text = caretPos.text.charAt(caretPos.text.length - 1) == '   ' ? textFeildValue + '   ' : textFeildValue;
+                } else {
+                    textObj.value = textFeildValue;
+                }
+            } else {
+                if (textObj.setSelectionRange) {
+                    var rangeStart = textObj.selectionStart;
+                    var rangeEnd = textObj.selectionEnd;
+                    var tempStr1 = textObj.value.substring(0, rangeStart);
+                    var tempStr2 = textObj.value.substring(rangeEnd);
+                    textObj.value = tempStr1 + textFeildValue + tempStr2;
+                }
+                else {
+                    alert("This   version   of   Mozilla   based   browser   does   not   support   setSelectionRange");
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+    <div>
+        <textarea id="txtMoban" class="textbox" name="tarea"
+                  style="width: 600px; height: 150px; text-align: left;"
+                  onmousedown="ShowDiv()"
+                  onselect="setCaret(this);"
+                  onclick="setCaret(this);"
+                  onkeyup="setCaret(this);"></textarea>
+    </div>
+    </div>
+</body>
+</html>

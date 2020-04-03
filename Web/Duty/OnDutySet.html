@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>排班设置</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/Common.js"></script>
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <script src="../js/Duty/OnDutySet.js"></script>
+</head>
+<body>
+    <b> 当前病区：</b><span id="spanWard"></span>
+    <table id="tbDutySet" class="easyui-datagrid" ></table>
+    <table>
+        <tr>
+            <td>简称：<input class="easyui-textbox" id="txtRY_NAME" /></td>
+        </tr>
+        <tr>
+            <td>  描述：<input class="easyui-textbox" id="txtBC" /></td>
+        </tr>
+        <tr>
+            <td><a href="#" id="btnSave" class="easyui-linkbutton" iconcls="icon-huayi-save">保存</a></td>
+        </tr>
+    </table>
+
+
+</body>
+</html>

@@ -1,0 +1,28 @@
+﻿<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>请调整浏览器窗口</title>
+    <script src="../js/Common.js"></script>
+</head>
+<body>
+    <h2 align="center">请调整浏览器窗口大小</h2><hr />
+    <form action="#" method="get" name="form1" id="form1">
+        <!--显示浏览器窗口的实际尺寸-->
+        浏览器窗口 的 实际高度: <input type="text" name="availHeight" size="4" /><br />
+        浏览器窗口 的 实际宽度: <input type="text" name="availWidth" size="4" /><br />
+    </form>
+</body>
+<script type="text/javascript">
+    var winWidth = 0;
+    var winHeight = 0;
+    var size = findDimensions();
+    winWidth = size.split(";")[0];
+    winHeight = size.split(";")[1];
+    //结果输出至两个文本框
+    document.form1.availHeight.value = winHeight;
+    document.form1.availWidth.value = winWidth;
+   
+    //调用函数，获取数值
+    window.onresize = findDimensions;
+</script>
+</html>

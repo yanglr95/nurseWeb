@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>费用查询</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/jquerysession.js"></script>
+    <script src="../js/Common.js"></script>
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../CSS/default.css" rel="stylesheet" />
+</head>
+
+<body oncontextmenu="false">
+    <div style="width:98%;height:5%;position:absolute;top:0">
+        <table style="width:98%">
+            <tr>
+                <td>
+                    床号：<input id="ccPatients" class="easyui-searchbox" data-options="searcher:doSearch" autocomplete="off"
+                        style="width:120px" name="Bed_No"></input>
+                        <a href="#" id="btnQuery" class="easyui-linkbutton" iconcls="icon-huayi-search"
+                        onclick="doSearch()">查询</a>
+                    <!-- <input id="ccPatients" name="ccPatients" style="width:120px" class="easyui-combobox" data-options="valueField:'Patient_id',textField:'Name',panelHeight:'auto'" /> -->
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div style="width: 98%; height: 95%; position: absolute; bottom: 0;">
+        <table id="grid" class="easyui-datagrid" style="width:98%; height: 100%">
+            <thead>
+                <tr>
+                    <th data-options="field:'Bed_No',width:'6%',sortable:true">
+                        床号
+                    </th>
+                    <th data-options="field:'Name',width:'10%',sortable:true">
+                        姓名
+                    </th>
+                    <th data-options="field:'Sex',width:'6%',sortable:true">
+                        性别
+                    </th>
+
+                    <th data-options="field:'BirthDay',width:'9%',formatter:Formatter,sortable:true">
+                        出生年月
+                    </th>
+                    <th data-options="field:'Charge_Type',width:'9%',sortable:true">
+                        费别
+                    </th>
+                    <th data-options="field:'Patient_id',width:'10%',sortable:true">
+                        住院号
+                    </th>
+                    <th data-options="field:'Admission_Date_Time',width:'14%',formatter:inputListDateFormatter,sortable:true">
+                        入院日期
+                    </th>
+                    <th data-options="field:'Prepayments',width:'10%',sortable:true">
+                        押金
+                    </th>
+                    <th data-options="field:'Total_Costs',width:'8%',sortable:true">
+                        记账
+                    </th>
+                    <th data-options="field:'balance',width:'11%',sortable:true,formatter:getLeft">
+                        余额
+                    </th>
+                    <th data-options="field:'Doctor_In_Charge',width:'8%',sortable:true">
+                        主管医生
+                    </th>
+                    <!--<th data-options="field:'操作',width:'6%',formatter:InputListOperateField">打印
+                </th>-->
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript">
+    $(function () {
+        var ward_code = getSession("ward_code") == undefined ? "null" : getSession("ward_code");
+        $.ajax({
+            url: BaseData.WebApiUrl + "nurse/getPatientListByWard/",
+            data: "ward_code=" + ward_code,
+            type: "get",
+            success: (function (data) {
+                var jsonData = $.parseJSON(data);
+                if (jsonData) {
+                    for(var i=0;i<jsonData.length;i++){
+                         var charge = getFloatValue(jsonData[i].Prepayments);
+                         var cost = getFloatValue(jsonData[i].Total_Costs);
+                         var left = charge - cost;
+                         jsonData[i].balance = Number(left.toFixed(2));
+                    }
+                    $("#grid").datagrid('loadData', jsonData);
+                }
+            })
+        });
+        $('#ccPatients').textbox({
+            icons: [{
+                iconCls:''
+             }]
+        })
+        $("#grid").datagrid({
+            sortName:'balance',
+            sortOrder:'desc',
+            remoteSort:false
+        })
+    })
+
+    function InputListOperateField(value, rowData, rowIndex) {
+        dateTime = rowData.Time_Point;
+        var str = "<a href='#' id='btnEdit' onclick='editInputList(\"" + dateTime + "\",this)' >打印</a>";
+        return str;
+    }
+
+    function getFloatValue(value) {
+        if (typeof (value) == typeof (1.1)) return value;
+        var val = parseFloat(value);
+        return isNaN(val) ? 0 : val;
+    }
+
+    function getLeft(charges, costs) {
+        var charge = getFloatValue(costs.Prepayments);
+        var cost = getFloatValue(costs.Total_Costs);
+        var left = charge - cost;
+        left = left.toFixed(2);
+        return left < 2000 ? "<span style='color:red'>" + left + "</span>" : left;
+    }
+
+    function inputListDateFormatter(date) {
+        var showDate = new Date(date.replace(/-/g, "/").replace(/T/g, " "));
+        var hour = showDate.getHours() + showDate.getTimezoneOffset() / 60;
+
+        if (hour < 0) {
+
+            hour = hour + 24;
+        }
+        showDate = showDate.setHours(hour);
+        return dateTimeFormatter(new Date(showDate), "yyyy-mm-dd hh:mi");
+    }
+
+    function Formatter(date) {
+        var formatDate = new Date(date.replace(/-/g, "/").replace(/T/g, " "));
+        return dateTimeFormatter(new Date(formatDate), "yyyy-mm-dd");
+    }
+    jQuery.expr[':'].Contains = function (a, i, m) {
+        return jQuery(a).text().toUpperCase()
+            .indexOf(m[3].toUpperCase()) >= 0;
+    };
+
+    // OVERWRITES old selecor
+    jQuery.expr[':'].contains = function (a, i, m) {
+        return jQuery(a).text().toUpperCase()
+            .indexOf(m[3].toUpperCase()) >= 0;
+    };
+    //输入床号查询
+    function doSearch() {
+        var val = $("#ccPatients").val();
+        $("table tr:gt(1)").hide().filter(":contains('" + $.trim(val) + "')").show();
+    }
+</script>

@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <script src="/JavaScript/easyui/jquery.min.js"></script>
+
+    <script src="/JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="/Web/js/Common.js"></script>
+    <script src="/Web/js/easyui-extends.js"></script>
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <link href="/JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../CSS/CustomForm/CustomField.css" rel="stylesheet" />
+    <script src="../../JavaScript/Formdesign4_1_Ueditor1_4_2/js/ueditor/dialogs/internal.js"></script>
+    <script src="../js/CustomForm/CustomField.js"></script>
+
+
+</head>
+<body>
+    <table>
+        <tr>
+            <td>
+                字段名称：
+            </td>
+            <td>
+                <input class="easyui-textbox" id="txtFieldName" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                字体大小：
+            </td>
+            <td>
+                <input class="easyui-numberbox" style="width:40px" data-options="prompt:'自动',precision:0" id="cfSize" />&nbsp;px
+            </td>
+        </tr>
+        <tr>
+            <td>
+                字段类型：
+            </td>
+            <td>
+                <input type="radio" name="fieldType" value="0" checked />单选
+                <input type="radio" name="fieldType" value="1" />多选
+                <input type="radio" name="fieldType" value="2" />文本
+                <input type="radio" name="fieldType" value="3" />多行文本
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="2">
+                <table id="tbField_0" class="fieldTable checkTable">
+                    <tr>
+                        <td>
+                            排列方式
+                        </td>
+                        <td>
+                            <input type="radio" name="radioArrangement" checked value="0">横排
+                            <input type="radio" name="radioArrangement" value="1">竖排
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <table style="width:398px;border:solid 0.5px #dddddd" class="ArrangementTable">
+                                <tr>
+
+                                    <th>选项值</th>
+                                    <th>操作</th>
+
+                                </tr>
+
+
+                            </table>
+                            <a title="添加选项" class="easyui-linkbutton" onclick="fnRadioAdd();">添加选项</a>
+                        </td>
+                    </tr>
+                </table>
+                <!--<table id="tbField_1" class="fieldTable">
+                    <tr>
+                        <td>
+                            222
+                        </td>
+                    </tr>
+                </table>-->
+                <table id="tbField_2" class="fieldTable">
+                    <tr>
+                        <td>
+                            默认值：
+                        </td>
+                        <td>
+                            <input class="easyui-textbox" style="width:180px" id="cfTextDefault" />
+                        </td>
+                    </tr>
+
+
+                </table>
+                <table id="tbField_3" class="fieldTable">
+                    <!--<tr>
+                        <td>
+                            字体大小：
+                        </td>
+                        <td>
+                            <input class="easyui-numberbox" style="width:40px" data-options="prompt:'自动'" />&nbsp;px
+                        </td>
+                    </tr>-->
+                    <tr>
+                        <td>
+                            输入框大小：
+                        </td>
+                        <td>
+                            宽&nbsp;<input class="easyui-numberbox" style="width:40px" data-options="value:300,precision:0" id="cfWidth" />&nbsp;px&nbsp;&nbsp;
+                            高&nbsp;<input class="easyui-numberbox" style="width:40px" data-options="value:80,precision:0" id="cfHeight" />&nbsp;px
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            默认值：
+                        </td>
+                        <td>
+                            <input class="easyui-textbox" id="cfTextAreaDefault" data-options="multiline:true" style="height:100px;width:300px" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <!--<tr>
+            <td align="center" colspan="2">
+                <a class="easyui-linkbutton" onclick="saveField()">保存</a>
+            </td>
+        </tr>-->
+    </table>
+
+    <div id="test">
+
+    </div>
+</body>
+</html>

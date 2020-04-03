@@ -1,0 +1,189 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>功能管理</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/Common.js"></script>
+    <script src="../js/easyui-extends.js"></script>
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+
+    <link href="../../CSS/default.css" rel="stylesheet" />
+</head>
+<body>
+    <table style="width:98%;height:700px">
+        <tr>
+            <td width="30%" valign="top"><ul id="treeMenu" class="easyui-tree"></ul></td>
+            <td valign="top">
+                <table style="width:98%">
+                    <thead>
+                        <tr>
+                            <th>添加功能</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td width="30%" align="right">所属模块：</td>
+                            <td><input class="easyui-combobox" id="comboParentMenu" data-options="panelHeight:'auto',editable:false" style="width:240px" /></td>
+                        </tr>
+                        <tr>
+                            <td width="30%" align="right">功能名称：</td>
+                            <td>
+                                <input class="easyui-textbox" id="txtMenuName" style="width:240px" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="30%" align="right">页面地址：</td>
+                            <td><input class="easyui-textbox" id="txtMenuUrl" style="width:240px" /></td>
+                        </tr>
+                        <tr>
+                            <td width="30%" align="right">状态：</td>
+                            <td>
+                                &nbsp;&nbsp;
+                                <input type="radio" name="status" id="rdStatus_0" checked="checked" />启用&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input type="radio" name="status" id="rdStatus_1" />禁用
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="30%" align="right">功能图标：</td>
+                            <td><input class="easyui-textbox" id="txtMenuIcon" style="width:240px" /></td>
+                        </tr>
+                        <tr>
+                            <td width="30%" align="right">备注：</td>
+                            <td><input class="easyui-textbox" id="txtMenuMemo" data-options="multiline:true" style="width:240px;height:80px" /></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" align="center">
+                                <a id="btnEditUserData" href="#" class="easyui-linkbutton" style="width:60px" data-options="iconCls:'icon-edit'" onclick="saveData()">保存</a>
+                                <a id="btnEditUserData" href="#" class="easyui-linkbutton" style="width:60px" data-options="iconCls:'icon-reload'" onclick="resetData()">重置</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+<script language="javascript" type="text/javascript">
+    var menuList = new Array();
+    $(function () {
+        $("#treeMenu").tree({
+            checkbox: false,
+            onClick: editMenu,
+        });
+        $("#comboParentMenu").combobox({
+            valueField: 'id',
+            textField: 'text'
+        });
+        $.ajax({
+            url: BaseData.WebApiUrl + "SystemManager/getAllMenu",
+            type: "get",
+            success: (function (data) {
+                if (data) {
+                    menuList = $.parseJSON(data);
+                    InitData();
+
+                }
+            })
+        })
+    });
+    function InitData() {
+        var treeData = new Array();
+
+
+        var comboData = new Array();
+        comboData.push({ id: 0, text: "添加模块" });
+        for (var i in menuList) {
+            var menu = { id: menuList[i].Id, text: menuList[i].Menu_Name, children: new Array(), attributes: { parentID: menuList[i].Parent_ID } };
+            if (menuList[i].ChildMenu && menuList[i].ChildMenu.length > 0) {
+                for (var j in menuList[i].ChildMenu) {
+                    menu.children.push({ id: menuList[i].ChildMenu[j].Id, text: menuList[i].ChildMenu[j].Menu_Name, attributes: { parentID: menuList[i].ChildMenu[j].Parent_ID } });
+                }
+            }
+            treeData.push(menu);
+            comboData.push({ id: menuList[i].Id, text: menuList[i].Menu_Name });
+        }
+        $("#treeMenu").tree("loadData", treeData);
+        $("#comboParentMenu").combobox("loadData", comboData);
+        resetData();
+    }
+    function editMenu(node) {
+        var menu;
+        var parentID = node.attributes.parentID
+        if (parentID == 0) {
+            for (var i in menuList) {
+                if (menuList[i].Id == node.id) {
+                    menu = menuList[i];
+                    break;
+                }
+            }
+        }
+        else {
+            for (var i in menuList) {
+                if (menuList[i].Id == parentID) {
+                    var child = menuList[i].ChildMenu
+                    for (var j in child) {
+                        if (child[j].Id == node.id) {
+                            menu = child[j];
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        if (menu) {
+            $("#comboParentMenu").combobox("setValue", menu.Parent_ID);
+            $("#txtMenuName").textbox("setValue", menu.Menu_Name);
+            $("#txtMenuUrl").textbox("setValue", menu.Menu_Url);
+            $("#txtMenuIcon").textbox("setValue", menu.Menu_Icon);
+            $("#txtMenuMemo").textbox("setValue", menu.Memo);
+            $('input:radio[name=status]')[menu.Status].checked = true;
+            $("th").html("编辑功能");
+        }
+    }
+    function resetData() {
+        $("#comboParentMenu").combobox("setValue", 0);
+        $("#txtMenuName").textbox("setValue", "");
+        $("#txtMenuUrl").textbox("setValue", "");
+        $("#txtMenuIcon").textbox("setValue", "");
+        $("#txtMenuMemo").textbox("setValue", "");
+        $('input:radio[name=status]')[0].checked = true;
+        $("th").html("添加功能");
+        $("#treeMenu").tree("select", null);
+    }
+    function saveData() {
+        var menuNode = $("#treeMenu").tree("getSelected");
+        var menuId;
+        var menuLevel;
+        if (menuNode) {
+            menuId = menuNode.id;
+        }
+        else {
+            menuId = -1;
+        }
+
+        var data = {
+            Id: menuId,
+            Parent_ID: $("#comboParentMenu").combobox("getValue"),
+            Menu_Name: $("#txtMenuName").val(),
+            Menu_Url: $("#txtMenuUrl").val(),
+            Menu_Icon: $("#txtMenuIcon").val(),
+            Memo: $("#txtMenuMemo").val(),
+            Status: $('input:radio[name=status]')[0].checked ? 0 : 1
+        }
+        $.ajax({
+            url: BaseData.WebApiUrl + "SystemManager/saveMenuInfo",
+            type: "post",
+            data: { '': JSON.stringify(data) },
+            success: (function (data) {
+                menuList = new Array();
+                menuList = $.parseJSON(data);
+                InitData();
+            })
+        });
+    }
+</script>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/jquerysession.js"></script>
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <script src="../js/Common.js"></script>
+    <script src="../js/Print/qrcode.min.js"></script>
+    <script src="../js/Print/SpirePrint.js"></script>
+    <style type="text/css">
+        @media print {
+            @page {
+                font-size: 16px;
+                margin: 0;
+            }
+        }
+        body {
+            margin: 0;
+        }
+        #spire{
+            width:30.5cm;
+            height:3cm;
+            background:#fff;
+            margin:0px auto;
+        }
+        #spire div{
+            float:left;
+        }
+        #spire div:nth-child(1){
+            padding-top:1.2cm;
+            font-size:18px;
+            padding-right:1cm;
+            box-sizing: border-box;
+        }
+        #spire div:nth-child(2){
+            padding-top:0.5cm;
+            box-sizing: border-box;
+            vertical-align: middle;
+        }
+        #spire div:nth-child(3){
+            padding-top:0.2cm;
+            box-sizing: border-box;
+        }
+        #spire div:nth-child(2) p{
+            font-size: 16px;
+        }
+        #spire div:nth-child(2) p span{
+            padding-right:1cm;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+
+<body style="font-size:20px;" id="body">
+    <div id="page_print">
+        <a href="#" style="width:60px;margin-left:30px;margin-top:30px;" class="easyui-linkbutton"
+            onclick="page_print()" iconcls="icon-huayi-print">打印</a>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,362 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>疼痛评估单</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/jquerysession.js"></script>
+    <script src="../js/Common.js"></script>
+    <script src="../js/easyui-extends.js"></script>
+    <script src="../js/NursingDocument/JointSurgeryRecord.js"></script>
+    <script src="../js/publicPatient.js"></script>
+    <script src="../js/PatientInfo.js"></script>
+    <script src="../../JavaScript/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <style type="text/css">
+        .auto-style1 {
+            height: 17px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <table style="width: 98%">
+            <tr>
+                <td>
+                    <input id="ccPatients" name="ccPatients" style="width: 120px" class="easyui-combobox" data-options="valueField:'Patient_id',textField:'Name'" />
+                </td>
+                <td>
+                    日期<input id="txtDate" class="easyui-datebox" style="width: 180px;" data-options="formatter:dateFormatter,parser:dateParser" />
+                    <a href="#" id="btnQuery" class="easyui-linkbutton" iconcls="icon-huayi-search">查询</a>
+                    <a href="#" class="easyui-linkbutton" iconcls="icon-huayi-print" onclick="print()">打印</a>
+                </td>
+            </tr>
+        </table>
+        <table id="tabPatientInfo" class="patientTable" style="width: 98%;background: #fff;margin-top:5px;">
+        </table>
+        <div>
+            <table id="tbJointSurgeryRecord" class="easyui-datagrid" style="width: 98%; height: auto" data-options="singleSelect:true">
+                <thead>
+                    <tr>
+                        <th data-options="field:'Datetime',width:'15%',align:'center'" class="auto-style1"><!--,formatter:inputListDateFormatter-->
+                            第一次评估时间
+                        </th>
+                        <th data-options="field:'Paingrade',width:'9%',align:'center'" class="auto-style1">
+                            第一次评估
+                        </th>
+
+                        <th data-options="field:'Recorddatetime',width:'18%',align:'center'" class="auto-style1">
+                            <!--,formatter:inputListDateFormatter-->
+                            第二次评估时间
+                        </th>
+                        <th data-options="field:'Nursinggrade',width:'15%',align:'center'" class="auto-style1">
+                            第二次评估
+                        </th>
+                        <th data-options="field:'BodyPart',width:'15%',align:'center'" class="auto-style1">
+                            部位
+                        </th>
+                        <th data-options="field:'HandleMethod',width:'17%',align:'center'" class="auto-style1">
+                            处理措施
+                        </th>
+                        <th data-options="width:'10%', field:'Id',align:'center',formatter:InputListOperateField" class="auto-style1">
+                            操作
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+            <table id="tbRecord" class="inputTable" style="width: 98%; height: auto;">
+                <tr>
+                    <td>
+                        录入时间
+                    </td>
+                    <td colspan="2">
+                        <input id="comboDtInput" nurse_care="significant:DtInput;combo_data:DtInput" style="width: 80px" class="easyui-combobox" data-options="panelHeight:'auto'">
+                    </td>
+
+
+                    <td colspan="3"><a href="#" id="btnSaveInput" style="float: right; margin-right: 30px" class="easyui-linkbutton" iconcls="icon-huayi-save">保存</a></td>
+                </tr>
+
+                <tr>
+                    <td>第一次评估</td>
+                    <td>
+                        <input id="comboPaingrade" nurse_care="significant:Paingrade;combo_data:Paingrade" style="width: 80px" class="easyui-combobox" data-options="panelHeight:'auto'">
+                    </td>
+                    <td>第二次评估</td>
+                    <td>
+                        <input id="comboNursinggrade" nurse_care="significant:Nursinggrade;combo_data:Nursinggrade" style="width: 80px" class="easyui-combobox" data-options="panelHeight:'auto'">
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td>部位</td>
+                    <td>
+                        <input id="txtBodyPart" style="width: 100px" class="easyui-textbox" data-options="panelHeight:'auto'">
+                    </td>
+                    <td>处理措施</td>
+                    <td>
+                        <input id="comboHandleMethod" nurse_care="significant:HandleMethod;combo_data:HandleMethod" style="width: 80px" class="easyui-combobox" data-options="panelHeight:'auto'">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5">
+                        疼痛等级说明:
+                        无疼痛（0）       有一点疼痛（1-2）       轻微疼痛（3-4）       疼痛明显（5-6）       疼痛较严重（7-8）       剧烈疼痛（9-10）
+
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5">
+                        <img class="style4" src="../images/pain.jpg" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
+<script type="text/javascript">
+    var patient;
+
+    var menu_id = getUrlParam("menu_id");
+
+    $(function () {
+        //patient = getCurrentPatient();
+        $("#ccPatients").combobox({
+            onSelect: PatientsComboChange,
+            filter: filterPatient,
+            panelHeight:document.documentElement.clientHeight
+        });
+        var ward_code = getSession("ward_code") == undefined ? "null" : getSession("ward_code");
+        $.ajax({
+            url: BaseData.WebApiUrl + "nurse/getPatientListByWard/",
+            data: "ward_code=" + ward_code,
+            type: "get",
+            success: (function (data) {
+
+                var jsonData = $.parseJSON(data);
+                if (jsonData.length > 0) {
+                    for (var i = 0; i < jsonData.length; i++) {
+                        jsonData[i].Name = "(" + jsonData[i].Bed_No + ")" + jsonData[i].Name;
+                    }
+                    $("#ccPatients").combobox('loadData', jsonData);
+                    if (patient) {
+                        $("#ccPatients").combobox('setValue', patient.Patient_id);
+                        PatientsComboChange();
+                    }
+
+                    var patientid = getSession("Patient_Id");
+                    if (patientid != null && patientid != "null") {
+                        $("#ccPatients").combobox('setValue', patientid);
+                        PatientsComboChange();
+                    } else {
+                        setSession(jsonData[0].Patient_id);
+                        $("#ccPatients").combobox('setValue', jsonData[0].Patient_id);
+                        PatientsComboChange();
+                    }
+                }
+            })
+        });
+
+        $("#comboTemplate").combobox({
+            onSelect: function () {
+                var value = $("#comboTemplate").combobox("getValue");
+                var text = $("#txtMeasure").textbox("getValue");
+                $("#txtMeasure").textbox("setValue", text + value);
+            },
+            valueField: 'Dict_Name',
+            textField: 'Dict_Code',
+        });
+        var date = new Date();
+        $('#txtDate').datebox('setValue', dateFormatter(date));
+        $("#comboDtInput").combobox("loadData", JointSurgeryRecordDefaultValues.DtInput);
+        $("#comboPaingrade").combobox("loadData", JointSurgeryRecordDefaultValues.Paingrade);
+        $("#comboNursinggrade").combobox("loadData", JointSurgeryRecordDefaultValues.Nursinggrade);
+        $("#comboHandleMethod").combobox("loadData", JointSurgeryRecordDefaultValues.HandleMethod);
+        $("#btnSaveInput").click(saveData);
+        $("#btnQuery").click(InitInputData);
+    })
+    function PatientsComboChange() {
+        patient_id = $("#ccPatients").combobox('getValue');
+        $.ajax({
+            url: BaseData.WebApiUrl + "nurse/getPatientInfoByPatientID",
+            data: "patientid=" + patient_id,
+            type: "get",
+            success: (function (data) {
+                var jsonData = $.parseJSON(data);
+                if (jsonData) {
+                    patient = jsonData;
+                    //setCurrentPatient(patient);
+                    SetTableValue("tabPatientInfo", jsonData);
+
+                    removeSession("patient_id");
+                    setSession(patient_id);
+                }
+            })
+        });
+        InitInputData();
+    }
+
+    function tdDateFormatter(jsonObj) {
+        var date = jsonObj.Admission_Date_Time.replace(/-/g, "/").replace(/T/g, " ");
+        return dateTimeFormatter(new Date(date), "yyyy-mm-dd");
+    }
+    function InitInputData() {
+
+        var record_date = $("#txtDate").datebox("getValue");
+        $.ajax({
+            url: BaseData.WebApiUrl + "JointSurgeryRecord/getJointSurgeryRecordList",
+            data: "patient_id=" + patient_id + "&record_date=" + record_date,
+            type: "get",
+            success: (function (data) {
+                if (data && data != "null") {
+                    var jsonData = $.parseJSON(data);
+                    InitTableData(null);
+                    $("#tbJointSurgeryRecord").datagrid("loadData", jsonData);
+                }else{
+                    $("#tbJointSurgeryRecord").datagrid("loadData", []);
+                }
+            })
+        });
+        InitTableData(null);
+    }
+    function inputListDateFormatter(date) {
+        if (date == null) return;
+        var showDate = new Date(date.replace(/-/g, "/").replace(/T/g, " "));
+        var hour = showDate.getHours() + showDate.getTimezoneOffset() / 60;
+
+        if (hour < 0) {
+
+            hour = hour + 24;
+        }
+        showDate = showDate.setHours(hour);
+        return dateTimeFormatter(new Date(showDate), "hh:mi");
+    }
+    function InputListOperateField(value, rowData, rowIndex) {
+
+        var str = "<a href='#' name='btnEdit' onclick='editInputList(\"" + value + "\",this)' >编辑</a>";
+        str += "&nbsp;&nbsp;"
+        str += "<a href='#' onclick='delInputList(\"" + value + "\")' >删除</a>";
+        return str;
+    }
+
+    var editID = null;
+    function editInputList(id, obj) {
+        var state = $(obj).html();
+        $("a[name='btnEdit']").html("编辑");
+        if (state == "编辑") {
+            editID = id;
+            $.ajax({
+                url: BaseData.WebApiUrl + "JointSurgeryRecord/getJointSurgeryRecordView",
+                data: "id=" + id,
+                type: "get",
+                success: (function (data) {
+                    if (data) {
+                        var jsonData = $.parseJSON(data);
+                        InitTableData(jsonData);
+                        $(obj).html("取消");
+                    }
+                })
+            });
+        }
+        else {
+            editID = null;
+            $(obj).html("编辑");
+            InitTableData(null);
+        }
+    }
+    function delInputList(id) {
+        editID = null;
+        $.ajax({
+            url: BaseData.WebApiUrl + "JointSurgeryRecord/delJointSurgeryRecordView",
+            data: "id=" + id,
+            type: "get",
+            success: (function (data) {
+                if (data) {
+                    $.messager.alert("提示", data);
+                    InitInputData();
+                }
+            })
+        });
+    }
+    function InitTableData(jsonData) {
+        InitComboData($("#tbRecord"), jsonData);
+        if (jsonData) {
+            $("#txtBodyPart").textbox("setValue", jsonData["BodyPart"]);
+            $("#comboDtInput").combobox("setValue", dateTimeFormatter(new Date(jsonData["Datetime"]), "hh:mi"))
+        }
+        else {
+            $("#comboDtInput").combobox("setValue", "未选择");
+            $("#txtBodyPart").textbox("setValue", null);
+            $("#comboHandleMethod").combobox("setValue", "");
+        }
+    }
+
+    function saveData() {
+        if (!patient) {
+            $.messager.alert("提示", "请选择病人！");
+            return;
+        }
+        if ($("#comboDtInput").combobox("getValue") == "未选择") {
+            $.messager.alert("提示", "请选择时间！");
+            return;
+        }
+
+        var postData = "";
+
+        var recordeDate = $("#txtDate").datebox("getValue");
+        var dateTime = recordeDate + " " + $("#comboDtInput").combobox("getValue");
+        var postData = "";
+        postData += '{';
+        postData += '"Id":' + editID + ',';
+        postData += '"Patient_id":"' + patient.Patient_id + '",';
+        postData += '"Visit_id":"' + patient.Visit_id + '",';
+        postData += '"RecordDate":"' + recordeDate + '",';
+        postData += '"Recorddatetime":"' + recordeDate + '",';
+        postData += '"Datetime":"' + dateTime + '"';
+        $("#tbRecord").find("input[" + AttrName + "]").each(function (index, obj) {
+            var array = $(obj).attr(AttrName).split(';');
+            for (var s in array) {
+                var p = array[s].replace(/(^\s*)|(\s*$)/g, "");
+                var length = JsonPro.length;
+                if (p.substr(0, length).toLowerCase() == JsonPro) {
+                    var value;
+                    if ($(obj).hasClass("easyui-combobox")) {
+                        value = $(obj).combobox("getValue");
+                        value = '"' + value + '"';
+                    }
+                    postData += ',"' + p.substr(length) + '":' + value;
+                }
+            }
+        });
+        var bodyPart = $("#txtBodyPart").textbox("getValue");
+        postData += ',"BodyPart":"' + bodyPart + '"';
+        postData += "}";
+        postData = "[" + postData + "]";
+        $.ajax({
+            url: BaseData.WebApiUrl + "JointSurgeryRecord/saveJointSurgeryRecordView",
+            type: "POST",
+            data: { '': postData },
+            success: (function (data) {
+                if (data) {
+                    $.messager.alert("提示", data);
+                    InitInputData();
+                }
+            })
+        });
+    }
+
+    function print() {
+        if (!patient) {
+            $.messager.alert("提示", "请选择病人！");
+            return;
+        }
+        $.messager.alert("提示", "没有连接打印机！");
+        //  window.open(BaseData.WebApiUrl + "print/printJointSurgeryRecordReport?patient_id=" + patient.Patient_id + "&visit_id=" + patient.Visit_id);
+    }
+</script>
+

@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>护理提醒</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/Common.js"></script>
+    <script src="../../JavaScript/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../CSS/default.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div>
+        <table style="width: 98%">
+            <tr>
+                <td>
+                    日期：<input id="txtDate" class="easyui-datebox" style="width: 180px;" data-options="formatter:dateFormatter,parser:dateParser" />
+                    <a href="#" id="btnQuery" class="easyui-linkbutton" onclick="query()"  iconcls="icon-huayi-search" style="margin-left:5px;">查询</a>
+                </td>
+            </tr>
+        </table>
+        <div id="remindList" class="easyui-accordion" data-options="multiple:true" style="width: 98%; height: auto;">
+            <div title="连续三天大便为0的病人" style="overflow: auto; padding: 10px;">
+                <table id="tbInfusion" data="1" class="easyui-datagrid">
+                    <thead>
+                        <tr>
+                            <th data-options="field:'BED_LABEL',width:'18%',align:'center'">
+                                床号
+                            </th>
+
+                            <th data-options="field:'PATIENT_ID',width:'22%',align:'center'">
+                                患者ID
+                            </th>
+                            <th data-options="field:'NAME',width:'18%',align:'center'">
+                                姓名
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div title="今日体温单需打印病人" style="overflow:auto;padding:10px;">
+                <table id="tbOral" data="2" class="easyui-datagrid">
+                    <thead>
+                        <tr>
+                            <th data-options="field:'BED_LABEL',width:'18%',align:'center'">
+                                床号
+                            </th>
+
+                            <th data-options="field:'PATIENT_ID',width:'22%',align:'center'">
+                                患者ID
+                            </th>
+                            <th data-options="field:'NAME',width:'18%',align:'center'">
+                                姓名
+                            </th>
+
+                            <th data-options="field:'WEEK',width:'10%',align:'center'">
+                                入院周次
+                            </th>
+                            <th data-options="field:'WEEK_INDEX',width:'20%',align:'center'">
+                                起始未打印周次
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div title="体温超过38.5（包含38.5）" style="overflow:auto;padding:10px;">
+                <table id="tbInjection" data="9" class="easyui-datagrid">
+                    <thead>
+                        <tr>
+                            <th data-options="field:'BED_LABEL',width:'18%',align:'center'">
+                                床号
+                            </th>
+
+                            <th data-options="field:'PATIENT_ID',width:'22%',align:'center'">
+                                患者ID
+                            </th>
+                            <th data-options="field:'NAME',width:'18%',align:'center'">
+                                姓名
+                            </th>
+                            <th data-options="field:'VITAL_SIGNS_VALUES',width:'10%',align:'center'">
+                                体温
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</body>
+<script type="text/javascript">
+    $(function () {
+        var date = new Date();
+        $('#txtDate').datebox('setValue', dateFormatter(date));
+        $("#btnQuery").click(query);
+        HideMainMask();
+    })
+    function query() {
+        var panel = $("#remindList").accordion('getSelected').panel('collapse')
+        $(".easyui-datagrid").each(function (index, obj) {
+            var name = $(obj).attr("data");
+            $.ajax({
+                url: BaseData.WebApiUrl + "NurseRemind/GetNoticeList",
+                data: "noticeType=" + name + "&date=" + $("#txtDate").datebox("getValue"),
+                type: "get",
+                success: (function (data) {
+                    if (data != null)
+                        $(obj).datagrid("loadData", data["Table"]);
+                })
+            });
+        });
+    }
+    function print(pid, week) {
+        document.location = "BTLine.html?patientid=" + pid + "&week=" + week;
+        //   window.open(BaseData.WebApiUrl + "drawreport/getBodyTemperatureReport?patient_id=" + pid + "&visit_id=" + vid + "&week=" + week);
+    }
+</script>
+</html>

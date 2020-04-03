@@ -1,0 +1,357 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>出院指导</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/jquerysession.js"></script>
+    <script src="../js/Common.js"></script>
+    <script src="../js/easyui-extends.js"></script>
+    <script src="../js/publicPatient.js"></script>
+    <script src="../js/PatientInfo.js"></script>
+    <script src="../../JavaScript/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <style type="text/css">
+        .auto-style1 {
+            height: 17px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <table style="width:98%">
+            <tr>
+                <td><input id="ccPatients" name="ccPatients" style="width:120px" class="easyui-combobox" data-options="valueField:'Patient_id',textField:'Name'" /></td>
+                <td>
+                    日期<input id="txtDate" class="easyui-datebox" style="width:180px;" data-options="formatter:dateFormatter,parser:dateParser" />
+                    <a href="#" id="btnQuery" class="easyui-linkbutton" iconcls="icon-huayi-search">查询</a>
+                    <a href="#" class="easyui-linkbutton" iconcls="icon-huayi-print" onclick="print()">打印</a>
+                </td>
+            </tr>
+        </table>
+        <table id="tabPatientInfo" class="patientTable" style="width:98%;background: #fff;margin-top:5px;">
+         </table>
+       <div>
+            <table id="tbNurseCareList" class="easyui-datagrid" style="width:98%;height:auto" data-options="singleSelect:true">
+                <thead>
+                    <tr><!--,formatter:inputListDateFormatter-->
+                        <th data-options="field:'DateTime',width:'20%',align:'center'" class="auto-style1">
+                            时间
+                        </th>
+                        <th data-options="field:'Name',width:'10%',align:'center'" class="auto-style1">
+                            姓名
+                        </th>
+
+                        <th data-options="field:'Diagnosis',width:'25%',align:'center'" class="auto-style1">
+                            入院诊断
+                        </th>
+                        <th data-options="field:'Doctor_in_charge',width:'30%',align:'center'" class="auto-style1">
+                            主治医师
+                        </th>
+                        <th data-options="width:'15%', field:'Id',align:'center',formatter:InputListOperateField" class="auto-style1">
+                            操作
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+            <table id="inputTabs" class="inputTable" style="width:98%;height:auto;">
+                <tr>
+                    <td>
+                        录入时间
+                    </td>
+                    <td colspan="2">
+                        <input class="easyui-timespinner" id="dtInput" style="width:80px" data-options="showSeconds:false" />
+                    </td>
+
+
+                    <td colspan="3"><a href="#" id="btnSaveInput" style="float:right;margin-right:30px" class="easyui-linkbutton" iconcls="icon-huayi-save">保存</a></td>
+                </tr>
+                
+                <tr>
+                    <td>
+                        门诊收治诊断</td>
+                    <td colspan="5">
+                        <input id="outpatientdiagnosis" class="easyui-textbox"  data-options="multiline:true" style="width:360px;height:30px" />
+                    </td>
+                </tr>
+               
+              
+                <tr>
+                    <td>临床初步诊断</td>
+                    <td colspan="5"> <input id="preliminarydiagnosis"  class="easyui-textbox"  data-options="multiline:true" style="width:360px;height:30px" />
+                </tr>
+                <tr>
+                    <td>临床确定诊断</td>
+                    <td colspan="5">
+                       <input id="definitediagnosis" class="easyui-textbox" data-options="multiline:true" style="width:360px;height:30px" />
+                    </td>
+
+                </tr>
+                  <tr>
+                    <td>
+                        入院时情况</td>
+                         <td colspan="5">
+                        <input id="hospitalizations" class="easyui-textbox" data-options="multiline:true" style="width:360px;height:30px" />
+                    </td>
+                        </tr>
+                <tr>
+                    <td>
+                        出院医嘱</td>
+                         <td colspan="5">
+                        <input id="dischargeorder" class="easyui-textbox" data-options="multiline:true" style="width:360px;height:30px" />
+                    </td>
+                    </tr>
+                <tr>
+                    <td >
+                        主治医师（签名）
+                    </td>
+                    <td colspan="2">
+                        <input id="doctor_in_charge" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'">
+                    </td>
+                    <td >
+                        住院医师（签名）
+                    </td>
+                    <td colspan="2">
+                        <input id="resident" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'">
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
+<script type="text/javascript">
+    var patient;
+
+    var menu_id = getUrlParam("menu_id");
+
+    $(function () {
+        $("#ccPatients").combobox({
+            onSelect: PatientsComboChange,
+            filter: filterPatient,
+            panelHeight:document.documentElement.clientHeight
+        });
+        var ward_code = getSession("ward_code") == undefined ? "null" : getSession("ward_code");
+        $.ajax({
+            url: BaseData.WebApiUrl + "nurse/getPatientListByWard/",
+            data: "ward_code=" + ward_code,
+            type: "get",
+            success: (function (data) {
+
+                var jsonData = $.parseJSON(data);
+                if (jsonData.length > 0) {
+                    for (var i = 0; i < jsonData.length; i++) {
+                        jsonData[i].Name = "(" + jsonData[i].Bed_No + ")" + jsonData[i].Name;
+                    }
+                    $("#ccPatients").combobox('loadData', jsonData);
+                    //       $("#ccPatients").combobox('setValue', jsonData[0].Patient_id);
+                    //      PatientsComboChange();
+
+                    var patientid = getSession("Patient_Id");
+                    if (patientid != null && patientid != "null") {
+                        $("#ccPatients").combobox('setValue', patientid);
+                        PatientsComboChange();
+                    } else {
+                        setSession(jsonData[0].Patient_id);
+                        $("#ccPatients").combobox('setValue', jsonData[0].Patient_id);
+                        PatientsComboChange();
+                    }
+                }
+            })
+        });
+
+
+        var date = new Date();
+        $('#txtDate').datebox('setValue', dateFormatter(date));
+        $("#btnSaveInput").click(saveData);
+        $("#btnQuery").click(InitInputData);
+    })
+    function PatientsComboChange() {
+        patient_id = $("#ccPatients").combobox('getValue');
+        $.ajax({
+            url: BaseData.WebApiUrl + "nurse/getPatientInfoByPatientID",
+            data: "patientid=" + patient_id,
+            type: "get",
+            success: (function (data) {
+                var jsonData = $.parseJSON(data);
+                if (jsonData) {
+                    patient = jsonData;
+                    SetTableValue("tabPatientInfo", jsonData);
+
+                    removeSession("patient_id");
+                    setSession(patient_id);
+                }
+            })
+        });
+        InitInputData();
+    }
+
+    function tdDateFormatter(jsonObj) {
+        var date = jsonObj.Admission_Date_Time.replace(/-/g, "/").replace(/T/g, " ");
+        return dateTimeFormatter(new Date(date), "yyyy-mm-dd");
+    }
+    function InitInputData() {
+
+
+        var recording_Date = $("#txtDate").datebox("getValue");
+        $.ajax({
+            url: BaseData.WebApiUrl + "DetailedDisease/getDetailedDiseaseList",
+            data: "patient_id=" + patient_id + "&record_date=" + recording_Date,
+            type: "get",
+            success: (function (data) {
+                if (data && data != "null") {
+                    var jsonData = $.parseJSON(data);
+
+                    $("#tbNurseCareList").datagrid("loadData", jsonData);
+                }else{
+                    $("#tbNurseCareList").datagrid("loadData", []);
+                }
+            })
+        });
+        InitTableData(null);
+        $("#dtInput").timespinner("setValue", dateTimeFormatter(new Date(), "hh:mi"));
+    }
+    function inputListDateFormatter(date) {
+        var showDate = new Date(date.replace(/-/g, "/").replace(/T/g, " "));
+        var hour = showDate.getHours() + showDate.getTimezoneOffset() / 60;
+
+        if (hour < 0) {
+
+            hour = hour + 24;
+        }
+        showDate = showDate.setHours(hour);
+        return dateTimeFormatter(new Date(showDate), "hh:mi");
+    }
+    function InputListOperateField(value, rowData, rowIndex) {
+
+        var str = "<a href='#' name='btnEdit' onclick='editInputList(\"" + value + "\",this)' >编辑</a>";
+        str += "&nbsp;&nbsp;"
+        str += "<a href='#' onclick='delInputList(\"" + value + "\")' >删除</a>";
+        return str;
+    }
+
+    var editID = null;
+    function editInputList(id, obj) {
+        var state = $(obj).html();
+        $("a[name='btnEdit']").html("编辑");
+        if (state == "编辑") {
+            editID = id;
+            $.ajax({
+                url: BaseData.WebApiUrl + "DetailedDisease/getDetailedDiseaseView",
+                data: "id=" + id,
+                type: "get",
+                success: (function (data) {
+                    if (data) {
+                        var jsonData = $.parseJSON(data);
+                        InitTableData(jsonData);
+                        var date = new Date(jsonData.Time_Point);
+                        $("#dtInput").timespinner("setValue", inputListDateFormatter(jsonData.DateTime));
+                        $(obj).html("取消");
+                    }
+                })
+            });
+        }
+        else {
+            editID = null;
+            $(obj).html("编辑");
+            InitTableData(null); 
+            $("#dtInput").timespinner("setValue", dateTimeFormatter(new Date(), "hh:mi"));
+        }
+    }
+    function delInputList(id) {
+        editID = null;
+        $.ajax({
+            url: BaseData.WebApiUrl + "DetailedDisease/delDetailedDiseaseView",
+            data: "id=" + id,
+            type: "get",
+            success: (function (data) {
+                if (data) {
+                    $.messager.alert("提示", data);
+                    InitInputData();
+                    InitTableData(null);
+                    $("#dtInput").timespinner("setValue", dateTimeFormatter(new Date(), "hh:mi"));
+                }
+            })
+        });
+    }
+    function InitTableData(jsonData) {
+        if (jsonData) {
+            $("#outpatientdiagnosis").textbox("setValue", jsonData.Outpatientdiagnosis);
+            $("#preliminarydiagnosis").textbox("setValue", jsonData.Preliminarydiagnosis);
+            $("#definitediagnosis").textbox("setValue", jsonData.Definitediagnosis);
+            $("#hospitalizations").textbox("setValue", jsonData.Hospitalizations);
+            $("#dischargeorder").textbox("setValue", jsonData.Dischargeorder);
+            $("#doctor_in_charge").textbox("setValue", jsonData.Doctor_in_charge);
+            $("#resident").textbox("setValue", jsonData.Resident);
+        }
+        else {
+            $("#outpatientdiagnosis").textbox("setValue", "");
+            $("#preliminarydiagnosis").textbox("setValue", "");
+            $("#definitediagnosis").textbox("setValue", "");
+            $("#hospitalizations").textbox("setValue", "");
+            $("#dischargeorder").textbox("setValue", "");
+            $("#doctor_in_charge").textbox("setValue", "");
+            $("#resident").textbox("setValue", "");
+            $("#dtInput").timespinner("setValue", dateTimeFormatter(new Date(), "hh:mi"));
+        }
+    }
+
+    function saveData() {
+        if (!patient) {
+            $.messager.alert("提示", "请选择病人！");
+            return;
+        }
+        var postData = "";
+
+        var recording_Date = $("#txtDate").datebox("getValue");
+        var time_point = recording_Date + " " + $("#dtInput").timespinner("getValue");
+        var postData = "";
+        postData += '{';
+        postData += '"Id":' + editID + ',';
+        postData += '"Patient_id":"' + patient.Patient_id + '",';
+        postData += '"Visit_id":"' + patient.Visit_id + '",';
+        postData += '"Recordingdate":"' + recording_Date + '",';
+        postData += '"DateTime":"' + time_point + '",';
+
+        postData += '"Name":"' + patient.Name + '",';
+        postData += '"Sex":"' + patient.Sex + '",';
+        postData += '"Age":"' + patient.Age + '",';
+        postData += '"Ward_name":"' + patient.Dept_name + '",';
+        postData += '"Bed_label":"' + patient.Bed_Label + '",';
+        postData += '"Admission_date_time":"' + patient.Admission_Date_Time + '",';
+        postData += '"Diagnosis":"' + patient.Diagnosis + '",';
+      
+        postData += '"Outpatientdiagnosis":"' + $("#outpatientdiagnosis").textbox("getValue") + '",';
+        postData += '"Preliminarydiagnosis":"' + $("#preliminarydiagnosis").textbox("getValue") + '",';
+        postData += '"Definitediagnosis":"' + $("#definitediagnosis").textbox("getValue") + '",';
+        postData += '"Hospitalizations":"' + $("#hospitalizations").textbox("getValue") + '",';
+        postData += '"Dischargeorder":"' + $("#dischargeorder").textbox("getValue") + '",';
+
+        postData += '"Doctor_in_charge":"' + $("#doctor_in_charge").textbox("getValue") + '",';
+        postData += '"Resident":"' + $("#resident").textbox("getValue") + '"';
+        postData += "}";
+        postData = "[" + postData + "]";
+        $.ajax({
+            url: BaseData.WebApiUrl + "DetailedDisease/saveDetailedDiseaseView",
+            type: "POST",
+            data: { '': postData },
+            success: (function (data) {
+                if (data) {
+                    $.messager.alert("提示", data);
+                    InitInputData();
+                }
+            })
+        });
+    }
+
+    function print() {
+        if (!patient) {
+            $.messager.alert("提示", "请选择病人！");
+            return;
+        }
+        window.open(BaseData.WebApiUrl + "print/printDetailedDiseaseReport?patient_id=" + patient.Patient_id + "&visit_id=" + patient.Visit_id);
+    }
+</script>

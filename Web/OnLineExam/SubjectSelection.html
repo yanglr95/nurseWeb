@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>科目</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/Common.js"></script>
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <script src="../js/OnLineExam/SimulationSubpage.js"></script>
+</head>
+<body class="easyui-layout">
+
+    <div data-options="region:'west',title:'选择章节',collapsible:'false'" style="width:240px;">
+        <ul id="tt" class="easyui-tree"></ul>
+    </div>
+    <div data-options="region:'center',title:'护理满意度问卷设置'" style="padding:5px">
+        <table id="tbConfig" class="easyui-datagrid" width="98%"></table>
+        </div>
+</body>
+</html>
+<script type="text/javascript">
+
+    $(function(){
+            //假设这是从后台获取到的json数据
+        var dataJsonObj = [{ 'Id': 1, 'ParentId': 0, 'Title': '猫分类', 'CreateTime': '2015/06/04 01:05:32' }, { 'Id': 2, 'ParentId': 1, 'Title': '田园猫', 'CreateTime': '2015/06/04 01:11:30' }, { 'Id': 3, 'ParentId': 1, 'Title': '英国短毛猫', 'CreateTime': '2015/06/04 01:11:51' }, { 'Id': 4, 'ParentId': 1, 'Title': '布偶猫', 'CreateTime': '2015/06/04 01:12:05' }];
+
+      $('#tt').tree("loadData", parseDatagrid(dataJsonObj));
+
+    });
+</script>

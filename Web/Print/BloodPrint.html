@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/jquerysession.js"></script>
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <script src="../js/Common.js"></script>
+    <script src="../js/Print/BloodPrint.js"></script>
+    <script src="../js/publicInfo.js"></script>
+    <style type="text/css">
+        @media print {
+            @page {
+                size: A4 landscape;
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+
+<body style="font-size:20px;" id="body">
+    <div id="page_print">
+        <a href="#" style="width:60px;margin-left:30px;margin-top:30px;" class="easyui-linkbutton"
+            onclick="page_print()" iconcls="icon-huayi-print">打印</a>
+    </div>
+    <div id="Info"></div>
+
+</body>
+
+</html>

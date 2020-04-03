@@ -1,0 +1,1090 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>护理评估</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/jquerysession.js"></script>
+    <script src="../js/Common.js"></script>
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../CSS/default.css" rel="stylesheet" />
+
+</head>
+<body>
+    <table style="width: 98%">
+        <tr>
+            <td>
+                <input id="ccPatients" name="ccPatients" style="width: 120px" class="easyui-combobox" data-options="valueField:'Patient_id',textField:'Name',panelHeight:'auto'" />
+                <!--<input id="ccvisitid" class="easyui-textbox" data-options="valueField:'Visit_id',textField:'Visit_id',panelHeight:'auto'" />-->
+            </td>
+            <td>
+                <a href="#" id="btnSaveInput" class="easyui-linkbutton" iconcls="icon-huayi-save">保存</a>
+                <a href="#" id="btnDelete" class="easyui-linkbutton" iconcls="icon-huayi-delete">删除</a>
+                <a href="#" class="easyui-linkbutton" iconcls="icon-huayi-print" onclick="print()">打印</a>
+            </td>
+        </tr>
+    </table>
+    <div class="easyui-tabs" style="width: 98%;" id="inputTabs">
+        <div title="一般资料" style="padding: 10px;">
+            <table id="First" style="width:98%;height:auto;align-content:space-around">
+                <tr>
+                    <td>职业</td>
+                    <td><input type="radio">专业技术人员</td>
+                    <td><input type="radio">机关组织单位领导</td>
+                    <td><input type="radio">办事人员</td>
+                    <td><input type="radio">商业工作人员</td>
+                    <td><input type="radio">服务性工作人员</td>
+                    <td><input type="radio">农林牧渔劳动者</td>
+                    <td><input type="radio">生产运输工人</td>
+                    <td><input type="radio">其他劳动者</td>
+                </tr>
+                <tr>
+                    <td>文化程度</td>
+                    <td><input type="radio">文盲</td>
+                    <td><input type="radio">学龄前</td>
+                    <td><input type="radio">小学</td>
+                    <td><input type="radio">中学</td>
+                    <td><input type="radio">高中</td>
+                    <td><input type="radio">大学</td>
+                    <td><input type="radio">研究生以上</td>
+                </tr>
+                <tr>
+                    <td>婚姻状态</td>
+                    <td><input type="radio">未婚</td>
+                    <td><input type="radio">已婚</td>
+                    <td><input type="radio">丧偶</td>
+                    <td><input type="radio">离婚</td>
+                    <td><input type="radio">再婚</td>
+                    <td><input type="radio">分居</td>
+                    <td><input type="radio">同居</td>
+                    <td><input type="radio">不适用</td>
+                    <td><input type="radio">其他</td>
+                </tr>
+                <tr>
+                    <td>宗教信仰</td>
+                    <td><input type="radio">无</td>
+                    <td><input type="radio">佛教</td>
+                    <td><input type="radio">道教</td>
+                    <td><input type="radio">伊斯兰教</td>
+                    <td><input type="radio">基督教</td>
+                    <td><input type="radio">天主教</td>
+                    <td><input type="radio">其他</td>
+                </tr>
+                <tr>
+                    <td>入院方式</td>
+                    <td><input type="radio">步行</td>
+                    <td><input type="radio">搀扶</td>
+                    <td><input type="radio">轮椅</td>
+                    <td><input type="radio">平车</td>
+                    <td><input type="radio">救护车</td>
+                </tr>
+                <tr>
+                    <td>患者来源</td>
+                    <td><input type="radio">家</td>
+                    <td><input type="radio">门诊</td>
+                    <td><input type="radio">急诊</td>
+                    <td><input type="radio">手术室</td>
+                    <td><input type="radio">外院转诊</td>
+                    <td><input type="radio">产房</td>
+                </tr>
+                <tr>
+                    <td>资料来源</td>
+                    <td><input type="radio">自述</td>
+                    <td><input type="radio">家人代述</td>
+                    <td><input type="radio">友人代述</td>
+                    <td><input type="radio">他人代述</td>
+                    <td>联系电话</td>
+                </tr>
+                <tr>
+                    <td>日常照顾者</td>
+                    <td><input type="radio"/>夫妻</td>
+                    <td><input type="radio">子女</td>
+                    <td><input type="radio">（外）孙子女</td>
+                    <td><input type="radio">（岳）父母</td>
+                    <td><input type="radio">（外）外父母</td>
+                    <td><input type="radio">兄弟姐妹</td>
+                    <td><input type="radio">亲属</td>
+                    <td><input type="radio">朋友</td>
+                    <td><input type="radio">同事</td>
+                    <td><input type="radio">其他</td>
+                </tr>
+
+            </table>
+        </div>
+        <div title="体格检查" style="padding: 10px;">
+            <table id="First" style="width:98%;height:auto;align-content:space-around">
+                <tr>
+                    <td>体温</td>
+                    <td><input class="easyui-numberbox" /></td>
+                
+                    <td>脉搏</td>
+                    <td><input class="easyui-numberbox" /></td>
+                </tr>
+                <tr>
+                    <td>心率</td>
+                    <td><input class="easyui-numberbox" /></td>
+                </tr>
+                <tr>
+                    <td>呼吸</td>
+                    <td><input class="easyui-numberbox" /></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>收缩压/舒张压</td>
+                    <td><input class="easyui-numberbox" /></td>
+                </tr>
+                <tr>
+                    <td>血氧</td>
+                    <td><input class="easyui-numberbox" /></td>
+                </tr>
+                <tr>
+                    <td>身高</td>
+                    <td><input class="easyui-numberbox" /></td>
+                </tr>
+                <tr>
+                    <td>体重</td>
+                    <td><input class="easyui-numberbox" /></td>
+                </tr>
+            </table>
+        </div>
+        <div title="既往史" style="padding: 10px;">
+            <table id="First" style="width:98%;height:auto;align-content:space-around">
+                <tr>
+                    <td>心血管系统相关病史</td>
+                    <td>
+                        <input type="checkbox" value="1" name="Cardiovascular" id="chkCardiovascular1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkCardiovascular1" id="lbCardiovascular1">心绞痛</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="2" name="Cardiovascular" id="chkCardiovascular2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkCardiovascular2" id="lbCardiovascular2">心肌梗死</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="3" name="Cardiovascular" id="chkCardiovascular3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkCardiovascular3" id="lbCardiovascular3">高血压</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="4" name="Cardiovascular" id="chkCardiovascular4" data-inline="true" data-mini="true" title="4" />
+                        <label for="chkCardiovascular4" id="lbCardiovascular4">糖尿病</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="5" name="Cardiovascular" id="chkCardiovascular5" data-inline="true" data-mini="true" title="5" />
+                        <label for="chkCardiovascular5" id="lbCardiovascular5">心悸</label>
+                    </td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <td>
+                        <input type="checkbox" value="6" name="Cardiovascular" id="chkCardiovascular6" data-inline="true" data-mini="true" title="6" />
+                        <label for="chkCardiovascular6" id="lbCardiovascular6">房颤</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="7" name="Cardiovascular" id="chkCardiovascular7" data-inline="true" data-mini="true" title="7" />
+                        <label for="chkCardiovascular7" id="lbCardiovascular7">起搏器</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="8" name="Cardiovascular" id="chkCardiovascular8" data-inline="true" data-mini="true" title="8" />
+                        <label for="chkCardiovascular8" id="lbCardiovascular8">支架</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="9" name="Cardiovascular" id="chkCardiovascular9" data-inline="true" data-mini="true" title="9" />
+                        <label for="chkCardiovascular9" id="lbCardiovascular9">血管造影</label>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>其他系统相关病史</td>
+                    <td><input type="radio"/>有</td>
+                    <td><input type="radio" />无</td>
+                </tr>
+                <tr id="trOtherSystem1">
+                    <th></th>
+                    <td>
+                        <input type="checkbox" value="1" name="OtherSystemH" id="chkOtherSystemH1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkOtherSystemH1" id="lbOtherSystemH1">中风</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="2" name="OtherSystemH" id="chkOtherSystemH2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkOtherSystemH2" id="lbOtherSystemH2">肝炎</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="3" name="OtherSystemH" id="chkOtherSystemH3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkOtherSystemH3" id="lbOtherSystemH3">肾病</label>
+                    </td>
+                    <td colspan="2">
+                        <input type="checkbox" value="4" name="OtherSystemH" id="chkOtherSystemH4" data-inline="true" data-mini="true" title="4" />
+                        <label for="chkOtherSystemH4" id="lbOtherSystemH4">呼吸道疾病</label>
+                    </td>
+                </tr>
+                <tr id="trOtherSystem2">
+                    <th></th>
+                    <td>
+                        <input type="checkbox" value="5" name="OtherSystemH" id="chkOtherSystemH5" data-inline="true" data-mini="true" title="5" />
+                        <label for="chkOtherSystemH5" id="lbOtherSystemH5">消化道疾病</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="6" name="OtherSystemH" id="chkOtherSystemH6" data-inline="true" data-mini="true" title="6" />
+                        <label for="chkOtherSystemH6" id="lbOtherSystemH6">癫痫</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="7" name="OtherSystemH" id="chkOtherSystemH7" data-inline="true" data-mini="true" title="7" />
+                        <label for="chkOtherSystemH7" id="lbOtherSystemH7">骨骼肌疾病</label>
+                    </td>
+                    <td colspan="2">
+                        <input type="checkbox" value="8" name="OtherSystemH" id="chkOtherSystemH8" data-inline="true" data-mini="true" title="8" />
+                        <label for="chkOtherSystemH8" id="lbOtherSystemH8">精神心理疾病</label>
+                    </td>
+                </tr>
+                <tr id="trOtherSystem3">
+                    <th></th>
+                    <td>
+                        <input type="checkbox" value="9" name="OtherSystemH" id="chkOtherSystemH9" data-inline="true" data-mini="true" title="9" />
+                        <label for="chkOtherSystemH9" id="lbOtherSystemH9">青光眼</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="10" name="OtherSystemH" id="chkOtherSystemH10" data-inline="true" data-mini="true" title="10" />
+                        <label for="chkOtherSystemH10" id="lbOtherSystemH10">出血性疾病</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="11" name="OtherSystemH" id="chkOtherSystemH11" data-inline="true" data-mini="true" title="11" />
+                        <label for="chkOtherSystemH11" id="lbOtherSystemH11">癌症</label>
+                    </td>
+                    <td colspan="2">
+                        <input type="checkbox" value="12" name="OtherSystemH" id="chkOtherSystemH12" data-inline="true" data-mini="true" title="12" />
+                        <label for="chkOtherSystemH12" id="lbOtherSystemH12">多脏器衰竭</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>饮酒史</td>
+                    <td><input type="radio" />有</td>
+                    <td><input type="radio" />无</td>
+                </tr>
+                <tr>
+                    <td>吸烟史</td>
+                    <td><input type="radio" />有</td>
+                    <td><input type="radio" />无</td>
+                </tr>
+                <tr>
+                    <td>是否生活在吸烟环境中</td>
+                    <td><input type="radio" />是</td>
+                    <td><input type="radio" />否</td>
+                </tr>
+                <tr>
+                    <td>辅助护理</td>
+                    <td><input type="radio" />有</td>
+                    <td><input type="radio" />无</td>
+                </tr>
+                <tr id="trAssisted">
+                    <th></th>
+                    <td>
+                        <input type="checkbox" value="1" name="AssistedItem" id="chkAssistedItem1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkAssistedItem1" id="lbAssistedItem1">护理员</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="2" name="AssistedItem" id="chkAssistedItem2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkAssistedItem2" id="lbAssistedItem2">家属陪同</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="3" name="AssistedItem" id="chkAssistedItem3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkAssistedItem3" id="lbAssistedItem3">其他</label>
+                    </td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <td>生活</td>
+                    <td>
+                        <input name="Life" type="checkbox" id="chkLife1" value="1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkLife1" id="lbLife1">独居</label>
+                    </td>
+                    <td colspan="2">
+                        <input name="Life" type="checkbox" id="chkLife2" value="2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkLife2" id="lbLife2">与配偶生活</label>
+                    </td>
+                    <td colspan="2">
+                        <input name="Life" type="checkbox" id="chkLife3" value="3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkLife3" id="lbLife3">与父母/儿女生活</label>
+                    </td>
+                    <td>
+                        <input name="Life" type="checkbox" id="chkLife4" value="4" data-inline="true" data-mini="true" title="4" />
+                        <label for="chkLife4" id="lbLife4">需协助</label>
+                    </td>
+                    <td>
+                        <input name="Life" type="checkbox" id="chkLife5" value="5" data-inline="true" data-mini="true" title="5" />
+                        <label for="chkLife5" id="lbLife5">使用辅具</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>生育史</td>
+                    <td><input type="radio" />有</td>
+                    <td><input type="radio" />无</td>
+                </tr>
+                <tr>
+                    <td>手术史</td>
+                    <td><input type="radio" />有</td>
+                    <td><input type="radio" />无</td>
+                </tr>
+                <tr>
+                    <td>过敏及药物不良反应</td>
+                    <td><input type="radio" />有</td>
+                    <td><input type="radio" />无</td>
+                </tr>
+                <tr>
+                    <td>药物过敏</td>
+                    <td><input type="radio" />有</td>
+                    <td><input type="radio" />无</td>
+                </tr>
+                <tr>
+                    <td>食物过敏</td>
+                    <td><input type="radio" />有</td>
+                    <td><input type="radio" />无</td>
+                </tr>
+                <tr>
+                    <td>其他过敏</td>
+                    <td><input type="radio" />有</td>
+                    <td><input type="radio" />无</td>
+                </tr>
+                <tr>
+                    <td>针对过敏反应的措施</td>
+                    <td>
+                        <input name="AllergyMethod" type="checkbox" id="chkAllergyMethod1" value="1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkAllergyMethod1" id="lbAllergyMethod1">有记录</label>
+                    </td>
+                    <td>
+                        <input name="AllergyMethod" type="checkbox" id="chkAllergyMethod2" value="2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkAllergyMethod2" id="lbAllergyMethod2">腕带标识</label>
+                    </td>
+                    <td colspan="2">
+                        <input name="AllergyMethod" type="checkbox" id="chkAllergyMethod3" value="3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkAllergyMethod3" id="lbAllergyMethod3">床头提示牌</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>入院前使用药物</td>
+                    <td><input type="radio" />有</td>
+                    <td><input type="radio" />无</td>
+                <tr>
+                    <td>特殊用药</td>
+                    <td><input type="radio" />有</td>
+                    <td><input type="radio" />无</td>
+                </tr>
+                </tr>
+            </table>
+        </div>
+        <div title="生活状况及自理程度" style="padding: 10px;">
+            <table id="First" style="width:98%;height:auto;align-content:space-around">
+                <tr>
+                    <td>食欲</td>
+                    <td><input type="radio" />正常</td>
+                    <td><input type="radio" />添加</td>
+                    <td><input type="radio" />亢进</td>
+                    <td><input type="radio" />下降</td>
+                    <td><input type="radio" />厌食</td>
+                </tr>
+                <tr>
+                    <td>饮食</td>
+                    <td><input type="radio" />不同膳食</td>
+                    <td><input type="radio" />软食</td>
+                    <td><input type="radio" />半流质</td>
+                    <td><input type="radio" />流质</td>
+                    <td><input type="radio" />禁食</td>
+                    <td><input type="radio" />治疗膳食</td>
+                </tr>
+                <tr>
+                    <td>进食方式</td>
+                    <td><input type="radio" />正常</td>
+                    <td><input type="radio" />亢进</td>
+                    <td><input type="radio" />鼻饲</td>
+                    <td><input type="radio" />空肠造瘘</td>
+                    <td><input type="radio" />全静脉营养</td>
+                    <td><input type="radio" />其他</td>
+                </tr>
+                <tr>
+                    <td>咀嚼</td>
+                    <td><input type="radio" />正常</td>
+                    <td><input type="radio" />困难</td>
+                </tr>
+                <tr>
+                    <td>营养</td>
+                    <td><input type="radio" />良好</td>
+                    <td><input type="radio" />中等</td>
+                    <td><input type="radio" />不良</td>
+                    <td><input type="radio" />肥胖</td>
+                    <td><input type="radio" />消瘦</td>
+                    <td><input type="radio" />恶液质</td>
+                </tr>
+                <tr>
+                    <td>面容</td>
+                    <td><input type="radio" />正常</td>
+                    <td><input type="radio" />潮红</td>
+                    <td><input type="radio" />苍白</td>
+                    <td><input type="radio" />黄染</td>
+                    <td><input type="radio" />其他</td>
+                </tr>
+                <tr>
+                    <td>表情</td>
+                    <td><input type="radio" />正常</td>
+                    <td><input type="radio" />淡漠</td>
+                    <td><input type="radio" />痛苦面容</td>
+                </tr>
+                <tr>
+                    <td>步态</td>
+                    <td><input type="radio" />正常</td>
+                    <td><input type="radio" />异常</td>
+                </tr>
+                <tr>
+                    <td>嗜好</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>禁食</td>
+                    <td><input type="radio" />无</td>
+                    <td><input type="radio" />糖尿病饮食</td>
+                    <td><input type="radio" />低脂</td>
+                    <td><input type="radio" />无油</td>
+                    <td><input type="radio" />低盐</td>
+                    <td><input type="radio" />无盐</td>
+                    <td><input type="radio" />低蛋白</td>
+                    <td><input type="radio" />低碘</td>
+                    <td><input type="radio" />低嘌呤</td>
+                </tr>
+                <tr>
+                    <td>睡眠</td>
+                    <td><input type="radio" />正常</td>
+                    <td><input type="radio" />无法评估</td>
+                    <td><input type="radio" />睡眠障碍</td>
+                    <td><input type="radio" />不易入睡</td>
+                    <td><input type="radio" />断续睡眠</td>
+                    <td><input type="radio" />日夜颠倒</td>
+                    <td><input type="radio" />辅助睡眠</td>
+                    <td>药物</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>午睡</td>
+                    <td><input type="radio" />无</td>
+                    <td><input type="radio" />有</td>
+                </tr>
+                <tr>
+                    <td>休息后精力是否充沛</td>
+                    <td><input type="radio" />是</td>
+                    <td><input type="radio" />否</td>
+                </tr>
+                <tr>
+                    <td>辅助睡眠</td>
+                    <td><input type="radio" />无</td>
+                    <td><input type="radio" />有</td>
+                </tr>
+                <tr>
+                    <td>药物</td>
+                    <td><input type="radio" />无</td>
+                    <td><input type="radio" />有</td>
+                </tr>
+                <tr>
+                    <td>自理程度</td>
+                    <td><input type="radio" />自理</td>
+                    <td><input type="radio" />需协助</td>
+                    <td><input type="radio" />(进食</td>
+                    <td><input type="radio" />洗漱</td>
+                    <td><input type="radio" />穿衣</td>
+                    <td><input type="radio" /> 排泄)</td>
+                    <td><input type="radio" />完全依赖</td>
+                </tr>
+                <tr>
+                    <td>跌倒史</td>
+                    <td><input type="radio" />无</td>
+                    <td><input type="radio" />有</td>
+                    <td><input type="radio" />90天内</td>
+                </tr>
+                <tr>
+                    <td>活动辅助装置</td>
+                    <td><input type="radio" />无</td>
+                    <td><input type="radio" />有</td>
+                    <td><input type="radio" />拐杖</td>
+                    <td><input type="radio" />轮椅</td>
+                    <td><input type="radio" />假肢</td>
+                    <td><input type="radio" />助步车</td>
+                </tr>
+                <tr>
+                    <td>体位</td>
+                    <td><input type="radio" />自主体位</td>
+                    <td><input type="radio" />强迫体位</td>
+                    <td><input type="radio" />(坐位</td>
+                    <td><input type="radio" />半卧床)</td>
+                </tr>
+            </table>
+        </div>
+        <div title="感官" style="padding: 10px;">
+            <table id="First" style="width:98%;height:auto;align-content:space-around">
+                <tr>
+                    <td>疼痛</td>
+                    <td><input type="radio" />无</td>
+                    <td><input type="radio" />有</td>
+                    <td>部位/性质/程度</td>
+                </tr>
+                <tr>
+                    <td>视力</td>
+                    <td><input type="radio" />正常</td>
+                    <td><input type="radio" />近视</td>
+                    <td><input type="radio" />远视</td>
+                    <td><input type="radio" />失明</td>
+                    <td><input type="radio" />（左眼</td>
+                    <td><input type="radio" />右眼）</td>
+                </tr>
+                <tr>
+                    <td>听力</td>
+                    <td><input type="radio" />正常</td>
+                    <td><input type="radio" />耳鸣</td>
+                    <td><input type="radio" />减退</td>
+                    <td><input type="radio" />(左耳</td>
+                    <td><input type="radio" />右耳）</td>
+                    <td><input type="radio" />耳聋</td>
+                    <td><input type="radio" />（左耳</td>
+                    <td><input type="radio" />右耳）</td>
+
+                </tr> 
+                <tr>
+                    <td>味觉</td>
+                    <td><input type="radio" />正常</td>
+                    <td><input type="radio" />减退</td>
+                    <td><input type="radio" />缺失</td>
+                </tr>
+                <tr>
+                    <td>记忆力</td>
+                    <td><input type="radio" />良好</td>
+                    <td><input type="radio" />减退</td>
+                    <td><input type="radio" />（短时记忆</td>
+                    <td><input type="radio" />长时记忆）</td>
+                    <td><input type="radio" />丧失</td>
+                </tr>
+                <tr>
+                    <td>注意力</td>
+                    <td><input type="radio" />正常</td>
+                    <td><input type="radio" />分散</td>
+                </tr>
+                <tr>
+                    <td>语言能力</td>
+                    <td><input type="radio" />正常</td>
+                    <td><input type="radio" />失语</td>
+                    <td><input type="radio" />构音困难</td>
+                </tr>
+                <tr>
+                    <td>定向力</td>
+                    <td><input type="radio" />正常</td>
+                    <td><input type="radio" />障碍</td>
+                </tr>
+
+            </table>
+        </div>
+        <div title="心理状态及社会" style="padding: 10px;">
+            <table id="First" style="width:98%;height:auto;align-content:space-around">
+                <tr>
+                    <td>情绪状态</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>精神状态</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>性格及交往能力</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>家庭关系</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>遇到困难最愿向谁倾述</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>住院顾虑</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>对疾病的认识</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>经济状况</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                
+            </table>
+        </div>
+        <div title="排泄" style="padding: 10px;">
+            <table id="First" style="width:98%;height:auto;align-content:space-around">
+                <tr>
+                    <th>排尿</th>
+                    <td>
+                        <input name="Micturition" type="checkbox" id="chkMicturition1" value="1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkMicturition1" id="lbMicturition1">正常</label>
+                    </td>
+                    <td>
+                        <input name="Micturition" type="checkbox" id="chkMicturition2" value="2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkMicturition2" id="lbMicturition2">潴留</label>
+                    </td>
+                    <td>
+                        <input name="Micturition" type="checkbox" id="chkMicturition3" value="3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkMicturition3" id="lbMicturition3">失禁（几级）</label>
+                    </td>
+                    <td colspan="2">
+                        <input name="Micturition" type="checkbox" id="chkMicturition4" value="4" data-inline="true" data-mini="true" title="4" />
+                        <label for="chkMicturition4" id="lbMicturition4">尿频等</label>
+                    </td>
+                    <td><input type="checkbox" />尿急</td>
+                    <td><input type="checkbox" />尿痛</td>
+                    <td><input type="checkbox" />排尿困难</td>
+                    <td><input type="checkbox" />少尿</td>
+                    <td><input type="checkbox" />无尿</td>
+                    <td><input type="checkbox" />尿路刺激征</td>
+                    <td><input type="checkbox" />膀胱造瘘</td>
+                </tr>
+                
+                <tr>
+                    <th></th>
+                    <td colspan="2">
+                        <input name="Micturition" type="checkbox" id="chkMicturition5" value="5" data-inline="true" data-mini="true" title="5" />
+                        <label for="chkMicturition5" id="lbMicturition5">留置导尿管</label>
+                    </td>
+                    <td colspan="6"></td>
+                </tr>
+                <tr>
+                    <th>排便</th>
+                    <td>
+                        <input name="Defecation" type="checkbox" id="chkDefecation1" value="1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkDefecation1" id="lbDefecation1">正常</label>
+                    </td>
+                    <td>
+                        <input name="Defecation" type="checkbox" id="chkDefecation2" value="2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkDefecation2" id="lbDefecation2">便秘</label>
+                    </td>
+                    <td>
+                        <input name="Defecation" type="checkbox" id="chkDefecation3" value="3" data-inline="true" data-mini="true" title="3" onclick="ChangeLabel(this)" />
+                        <label for="chkDefecation3" id="lbDefecation3">腹泻</label>
+                    </td>
+                    <td>
+                        <input nurse_eval="vital_sign:DEFECATION_COUNT" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtDefecationCount" />
+                    </td>
+                    <td>次/天</td>
+                    <td>
+                        <input name="Defecation" type="checkbox" id="chkDefecation4" value="4" data-inline="true" data-mini="true" title="4" />
+                        <label for="chkDefecation4" id="lbDefecation4">失禁</label>
+                    </td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <td>
+                        <input name="Defecation" type="checkbox" id="chkDefecation5" value="5" data-inline="true" data-mini="true" title="5" />
+                        <label for="chkDefecation5" id="lbDefecation5">造瘘</label>
+                    </td>
+                    <td>
+                        <input name="Defecation" type="checkbox" id="chkDefecation6" value="6" data-inline="true" data-mini="true" title="6" onclick="ChangeLabel(this)" />
+                        <label for="chkDefecation6" id="lbDefecation6">部位</label>
+                    </td>
+                    <td colspan="6">
+                        <input nurse_eval="vital_sign:DEFECATION_NAME" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtDefecationName" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>排汗</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>引流</th>
+                    <td><input type="checkbox" />无</td>
+                    <td><input type="checkbox" />有</td>
+                </tr>
+                <tr id="trDrainage">
+                    <th></th>
+                    <td>
+                        <input nurse_eval="vital_sign:DRAINAGE_TYPE" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtDrainageType" />
+                    </td>
+                    <td>引流液性状</td>
+                    <td colspan="2">
+                        <input nurse_eval="vital_sign:DRAINAGE_LEAD" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtDrainageLead" />
+                    </td>
+                    <td>颜色</td>
+                    <td>
+                        <input nurse_eval="vital_sign:DRAINAGE_COLOR" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtDrainageColor" />
+                    </td>
+                    <td>量</td>
+                    <td>
+                        <input nurse_eval="vital_sign:DRAINAGE_SIZE" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtDrainageSize" />
+                    </td>
+                </tr>
+               
+            </table>
+        </div>
+        <div title="头颈口咽" style="padding: 10px;">
+            <table id="First" style="width:98%;height:auto;align-content:space-around">
+                <tr>
+                    <td>眼脸</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>结膜</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>巩膜</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>瞳孔</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>对光反射</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>口唇</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>口唇粘膜</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>牙齿</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>吞咽反射</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>颈强直</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>颈静脉气管</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>肝颈静脉反流征</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+        <div title="神经系统" style="padding: 10px;">
+            <table id="First" style="width:98%;height:auto;align-content:space-around">
+                <tr>
+                    <td>肌张力</td>
+                    <td><input type="radio" />正常</td>
+                    <td><input type="radio" />增强</td>
+                    <td><input type="radio" />减弱</td>
+                </tr>
+                <tr>
+                    <td>肌力</td>
+                    <td>几级</td>
+                </tr>
+                <tr>
+                    <td>肢体瘫痪</td>
+                    <td><input type="radio" />无</td>
+                    <td><input type="radio" />有</td>
+                </tr>
+                <tr>
+                    <td>Babinski</td>
+                    <td><input type="radio" />无</td>
+                    <td><input type="radio" />有</td>
+                </tr>
+                 <tr>
+                    <td>意识</td>
+                    <td><input type="radio" />清晰</td>
+                    <td><input type="radio" />嗜睡</td>
+                     <td><input type="radio" />意识模糊</td>
+                     <td><input type="radio" />昏睡</td>
+                     <td><input type="radio" />浅昏迷</td>
+                     <td><input type="radio" />深昏迷</td>
+                     <td><input type="radio" />浅昏迷</td>
+                     <td><input type="radio" />谵妄</td>
+                </tr>
+                <tr>
+                    <td>定向力</td>
+                    <td><input type="radio" />准确</td>
+                    <td><input type="radio" />障碍</td>
+                    <td>自我，时间，地点，人物</td>
+                </tr>
+                <tr>
+                    <td>语言表达</td>
+                    <td><input type="radio" />清楚</td>
+                    <td><input type="radio" />含糊</td>
+                    <td><input type="radio" />语言困难</td>
+                    <td><input type="radio" />失语</td>
+                    <td><input type="radio" />英语</td>
+                    <td><input type="radio" />其他国家语言</td>
+                    <td>自我，时间，地点，人物</td>
+                </tr>
+                
+            </table>
+        </div>
+        <div title="皮肤系统" style="padding: 10px;">
+            <table id="First" style="width:98%;height:auto;align-content:space-around">
+                <tr>
+                    <td>皮肤及粘膜颜色</td>
+                    <td><input type="radio" />正常</td>
+                    <td><input type="radio" />潮红</td>
+                    <td><input type="radio" />苍白</td>
+                    <td><input type="radio" />发绀</td>
+                    <td><input type="radio" />黄染</td>
+                    <td><input type="radio" />色素沉着</td>
+                    <td><input type="radio" />色素脱失</td>
+                    <td><input type="radio" />其他</td>
+                </tr>
+                <tr>
+                    <td><input type="radio" />湿度</td>
+                    <td><input type="radio" />正常</td>
+                    <td><input type="radio" />潮湿</td>
+                    <td><input type="radio" />干燥</td>
+                    <td><input type="radio" />多汗</td>
+                </tr>
+                <tr>
+                    <td>皮肤弹性</td>
+                    <td><input type="radio" />正常</td>
+                    <td><input type="radio" />降低</td>
+                   
+                </tr>
+                <tr>
+                    <td>皮肤完整性</td>
+                    <td><input type="radio" />完整</td>
+                    <td><input type="radio" />破损</td>
+                    <td><input type="radio" />皮疹</td>
+                    <td><input type="radio" />出血点</td>
+                    <td><input type="radio" />瘢痕</td>
+                </tr>
+                <tr>
+                    <td>压疮</td>
+                    <td><input type="radio" />无</td>
+                    <td><input type="radio" />有</td>
+                    <td>I，II，III/部位</td>
+                </tr>
+                <tr>
+                    <td>水肿</td>
+                    <td><input type="radio" />无</td>
+                    <td><input type="radio" />有</td>
+                    <td>部位</td>
+                </tr>
+                <tr>
+                    <td>瘙痒</td>
+                    <td><input type="radio" />无</td>
+                    <td><input type="radio" />有</td>
+                    <td>部位</td>
+                </tr>
+            </table>
+        </div>
+        <div title="呼吸系统" style="padding: 10px;">
+            <table id="First" style="width:98%;height:auto;align-content:space-around">
+                <tr>
+                    <td>呼吸方式</td>
+                    <td><input type="radio" />自主呼吸</td>
+                    <td><input type="radio" />机械呼吸</td>
+                    <td><input type="radio" />简易呼吸器辅助呼吸</td>
+                </tr>
+                <tr>
+                    <td>呼吸节律</td>
+                    <td><input type="radio" />规则</td>
+                    <td><input type="radio" />异常</td>
+                </tr>
+                <tr>
+                    <td>呼吸困难</td>
+                    <td><input type="radio" />无</td>
+                    <td><input type="radio" />轻度</td>
+                    <td><input type="radio" />中度</td>
+                    <td><input type="radio" />重度</td>
+                    <td><input type="radio" />极重度</td>
+                </tr>
+                <tr>
+                    <td>呼吸音</td>
+                    <td><input type="radio" />正常</td>
+                    <td><input type="radio" />异常</td>
+                </tr>
+                <tr>
+                    <td>啰音</td>
+                    <td><input type="radio" />无</td>
+                    <td><input type="radio" />有</td>
+                    
+                </tr>
+               
+                <tr>
+                    <td>心律</td>
+                    <td><input type="radio" />齐</td>
+                    <td><input type="radio" />不齐</td>
+                 
+                </tr>
+                <tr>
+                    <td>咳痰</td>
+                    <td><input type="radio" />无</td>
+                    <td><input type="radio" />有（颜色/量/粘稠度）</td>
+                </tr>
+            </table>
+        </div>
+        <div title="肠胃系统" style="padding: 10px;">
+            <table id="First" style="width:98%;height:auto;align-content:space-around">
+                <tr>
+                    <td>胃肠道症状</td>
+                    <td><input type="radio" />恶心</td>
+                    <td><input type="radio" />呕吐（颜色，性质，次数，总量））</td>
+                    <td><input type="radio" />嗳气</td>
+                    <td><input type="radio" />反酸</td>
+                    <td><input type="radio" />烧灼感</td>
+                    <td><input type="radio" />腹痛（部位/性质）</td>
+                  </tr>
+                <tr>
+                    <td>腹部</td>
+                    <td><input type="radio" />软</td>
+                    <td><input type="radio" />肌紧张</td>
+                    <td><input type="radio" />压痛/反跳痛</td>
+                    <td><input type="radio" />可触及包块（部位/性质）</td>
+                </tr>
+               
+                <tr>
+                    <td>移动性浊音</td>
+                    <td><input type="radio" />阴性</td>
+                    <td><input type="radio" />阳性</td>
+                </tr>
+                <tr>
+                    <td>肠鸣音</td>
+                    <td><input type="radio" />正常</td>
+                    <td><input type="radio" />亢进</td>
+                    <td><input type="radio" />减弱</td>
+                    <td><input type="radio" />消失</td>
+                </tr>
+                <tr>
+                    <td>引流管</td>
+                    <td><input type="radio" />无</td>
+                    <td><input type="radio" />有</td>
+                    <td>类型(颜色/性质/量)</td>
+                </tr>
+                <tr>
+                    <td>造瘘口</td>
+                    <td><input type="radio" />无</td>
+                    <td><input type="radio" />有</td>
+                    <td>类型</td>
+                </tr>
+
+            </table>
+        </div>
+        <div title="心血管系统" style="padding: 10px;">
+            <table id="First" style="width:98%;height:auto;align-content:space-around">
+                <tr>
+                    <td>有无异常</td>
+                    <td><input type="radio" />无</td>
+                    <td><input type="radio" />有</td>
+                </tr>
+                <tr>
+                    <td>胸闷</td>
+                    <td><input type="radio" />无</td>
+                    <td><input type="radio" />有</td>
+                    <td><input type="radio" />无法评估</td>
+                </tr>
+                <tr>
+                    <td>胸痛</td>
+                    <td><input type="radio" />无</td>
+                    <td><input type="radio" />有</td>
+                    <td><input type="radio" />无法评估</td>
+                </tr>
+                <tr>
+                    <td>呼吸困难</td>
+                    <td><input type="radio" />无</td>
+                    <td><input type="radio" />有</td>
+                </tr>
+                <tr>
+                    <td>心悸</td>
+                    <td><input type="radio" />无</td>
+                    <td><input type="radio" />有</td>
+                </tr>
+                <tr>
+                    <td>黑矇</td>
+                    <td><input type="radio" />无</td>
+                    <td><input type="radio" />有</td>
+                </tr>
+                <tr>
+                    <td>头晕</td>
+                    <td><input type="radio" />无</td>
+                    <td><input type="radio" />有</td>
+                </tr>
+                <tr>
+                    <td>心律</td>
+                    <td><input type="radio" />无</td>
+                    <td><input type="radio" />有</td>
+                </tr>
+                <tr>
+                    <td>足背动脉搏动</td>
+                    <td><input type="radio" />不适用</td>
+                    <td><input type="radio" />适用</td>
+                </tr>
+                <tr>
+                    <td>颈静脉怒张</td>
+                    <td><input type="radio" />无</td>
+                    <td><input type="radio" />有</td>
+                </tr>
+                <tr>
+                    <td>周围循环</td>
+                    <td><input type="radio" />正常</td>
+                    <td><input type="radio" />异常</td>
+                    <td>部位</td>
+                </tr>
+                <tr>
+                    <td>水肿</td>
+                    <td><input type="radio" />不适用</td>
+                    <td><input type="radio" />无</td>
+                    <td><input type="radio" />有</td>
+                </tr>
+            </table>
+        </div>
+        <div title="血液系统" style="padding: 10px;">
+            <table id="First" style="width:98%;height:auto;align-content:space-around"></table>
+        </div>
+    </div>
+</body>
+</html>

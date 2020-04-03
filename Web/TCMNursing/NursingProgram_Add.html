@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/jquerysession.js"></script>
+    <script src="../js/Common.js"></script>
+    <script src="../js/easyui-extends.js"></script>
+    <script src="../js/publicPatient.js"></script>
+    <script src="../js/PatientInfo.js"></script>
+    <script src="../../JavaScript/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <script src="../js/TCMNursing/NursingProgram_Add.js"></script>
+    <!--<script src="../js/TCMNursing/TemData.js"></script>-->
+</head>
+<body>
+    <table style="width:98%">
+        <tr>
+            <td>
+                <span id="spanSingle">
+                    <input id="ccPatients" name="ccPatients" style="width:120px" class="easyui-combobox" data-options="valueField:'Patient_id',textField:'Name'" />
+                    <!--<a href="#" id="btnQueryAll" style="width:120px" class="easyui-linkbutton">查看全部</a>-->
+                </span>
+                <span id="spanAll" style="display:none">
+
+                    <a href="#" id="btnQuerySingle" style="width:120px" class="easyui-linkbutton">查看单人</a>
+                </span>
+            </td>
+
+        </tr>
+    </table>
+    <table id="tabPatientInfo" class="patientTable" style="width:98%;font-size:10pt;background: #fff;margin-top: 5px;">
+    </table>
+    选择病种：<input id="ccDisease" name="ccDisease" style="width:160px" class="easyui-combobox" data-options="valueField:'Id',textField:'Name',panelHeight:'auto'" />
+    <a href="#" id="btnAdd" class="easyui-linkbutton" iconcls="icon-huayi-save" onclick="saveData()">保存</a>
+    <table id="tbNursingProgram" class="easyui-datagrid" width="98%"></table>
+</body>
+</html>

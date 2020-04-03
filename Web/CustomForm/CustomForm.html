@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <script src="../../JavaScript/Formdesign4_1_Ueditor1_4_2/js/ueditor/formdesign/jquery-1.7.2.min.js"></script>
+    <link href="../../JavaScript/Formdesign4_1_Ueditor1_4_2/css/site.css" rel="stylesheet" />
+    <link href="../../JavaScript/Formdesign4_1_Ueditor1_4_2/css/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <script src="/JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="/Web/js/Common.js"></script>
+    <script src="/Web/js/easyui-extends.js"></script>
+    <link href="../CSS/CustomForm/CustomForm.css" rel="stylesheet" />
+    <link href="/JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+</head>
+<body style="text-align:center" class="easyui-layout" id="mainLayout">
+
+    <script src="../../JavaScript/Formdesign4_1_Ueditor1_4_2/js/ueditor/ueditor.config.js"></script>
+    <script src="../../JavaScript/Formdesign4_1_Ueditor1_4_2/js/ueditor/ueditor.all.js"></script>
+
+    <script src="../../JavaScript/Formdesign4_1_Ueditor1_4_2/js/ueditor/lang/zh-cn/zh-cn.js"></script>
+    <script src="../../JavaScript/Formdesign4_1_Ueditor1_4_2/js/ueditor/formdesign/leipi.formdesign.v4.js"></script>
+    <script src="../js/CustomForm/CustomForm.js"></script>
+  
+    <div data-options="region:'north',border:true" style="height:100px"><form  id="saveform" name="saveform" action="" ></form>
+        <table>
+            <tr>
+                <td>选择模板：</td>
+                <td>
+                    <input class="easyui-combobox" id="ccTemplate" />
+                </td>
+                <td colspan="2">
+                    <a class="easyui-linkbutton" onclick="addTemplate()">新增模板</a>
+                    <a class="easyui-linkbutton" onclick="saveTemplate()">保存模板</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    模板名称：
+                </td>
+                <td colspan="3">
+                    <input class="easyui-textbox" id="txtTemplateName" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    所属菜单：
+                </td>
+                <td>
+                    <input class="easyui-combobox" id="ccMenu" />
+                </td>
+                <td>
+                    状态：
+                </td>
+                <td>
+                    <input type="radio" name="rdStatus" value="1" checked />启用
+                    <input type="radio" name="rdStatus" value="0" />禁用
+                </td>
+            </tr>
+        </table>
+    </div>
+
+ 
+    <!--title:'自定义值'-->
+    <div data-options="region:'west',title:'控件列表',collapsible:false" style="width:240px;">
+        <!--<div style="height:30px">
+            <a class="easyui-linkbutton" style="float:right" onclick="addField()">添加自定义字段</a>
+
+        </div>
+        <div id="divFieldList"></div>-->
+        <div class="span2">
+            <ul class="nav nav-list">
+                <li><a href="javascript:void(0);" onclick="leipiFormDesign.exec('text');" class="btn btn-link">文本框</a></li>
+                <li><a href="javascript:void(0);" onclick="leipiFormDesign.exec('textarea');" class="btn btn-link">多行文本</a></li>
+                <li><a href="javascript:void(0);" onclick="leipiFormDesign.exec('select');" class="btn btn-link">下拉菜单</a></li>
+                <li><a href="javascript:void(0);" onclick="leipiFormDesign.exec('radios');" class="btn btn-link">单选框</a></li>
+                <li><a href="javascript:void(0);" onclick="leipiFormDesign.exec('checkboxs');" class="btn btn-link">复选框</a></li>
+                <li><a href="javascript:void(0);" onclick="leipiFormDesign.exec('macros');" class="btn btn-link">宏控件</a></li>
+                <li><a href="javascript:void(0);" onclick="leipiFormDesign.exec('progressbar');" class="btn btn-link">进度条</a></li>
+                <li><a href="javascript:void(0);" onclick="leipiFormDesign.exec('qrcode');" class="btn btn-link">二维码</a></li>
+                <!--<li><a href="javascript:void(0);" onclick="leipiFormDesign.exec('listctrl');" class="btn btn-link">列表控件</a></li>-->
+            </ul>
+        </div>
+    </div>
+    <div data-options="region:'center',border:true">
+        <script id="myFormDesign" type="text/plain" style="width:1000px;">
+        </script>
+    </div>
+    <input type="hidden" name="fields" id="fields" value="0">
+</body>
+</html>
+`

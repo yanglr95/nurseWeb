@@ -1,0 +1,207 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>压疮评估表</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/jquerysession.js"></script>
+    <script src="../js/Common.js"></script>
+    <script src="../js/easyui-extends.js"></script>
+    <script src="../js/publicPatient.js"></script>
+    <script src="../js/PatientInfo.js"></script>
+    <script src="../../JavaScript/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <script src="../../JavaScript/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../js/NursingCare/SRecord_NurseRecordSkin.js"></script>
+    <style>
+        .combo{
+            margin-top:5px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <table style="width:98%">
+            <tr>
+                <td><input id="ccPatients" name="ccPatients" style="width:120px" class="easyui-combobox" data-options="valueField:'Patient_id',textField:'Name'" /></td>
+                <td>
+                    截止时间<input id="txtDate" class="easyui-datebox" style="width:180px;" data-options="formatter:dateFormatter,parser:dateParser" />
+                    <a href="#" id="btnQuery" class="easyui-linkbutton" iconcls="icon-huayi-search">查询</a>
+                    <a href="#" class="easyui-linkbutton" iconcls="icon-huayi-print" onclick="print()">打印</a>
+                </td>
+            </tr>
+        </table>
+        <table id="tabPatientInfo" class="patientTable" style="width:98%;background: #fff;">
+        </table>
+        <table id="tbNurseRecordSkinList" class="easyui-datagrid" style="width:98%;height:auto" data-options="singleSelect:true">
+            <thead>
+                <tr>
+                    <th data-options="field:'Pid',width:'20%',align:'center'" class="auto-style1" hidden="hidden">
+                        病员ID
+                    </th>
+                    <th data-options="field:'Recorddate',width:'15%',align:'center',formatter:formatterTime" class="auto-style1">
+                        日期
+                    </th>
+                    <th data-options="field:'Banci',width:'15%',align:'center',formatter:FormatterBanci" class="auto-style1">
+                        班次
+                    </th>
+                    <th data-options="field:'Buwei',width:'20%',align:'center'" class="auto-style1" hidden="hidden">
+                        压疮部位
+                    </th>
+                    <th data-options="field:'Mianji',width:'20%',align:'center'" class="auto-style1" >
+                        压疮面积
+                    </th>
+                    <th data-options="field:'Fenqi',width:'15%',align:'center'" class="auto-style1" hidden="hidden">
+                        压疮分期
+                    </th>
+                    <th data-options="field:'Vid',width:'12%',align:'center'" class="auto-style1" hidden="hidden">
+                    </th>
+                    <th data-options="field:'Inserttime',width:'12%',align:'center'" class="auto-style1" hidden="hidden">
+                    </th>
+                    <th data-options="field:'Type',width:'12%',align:'center'" class="auto-style1" hidden="hidden">
+                    </th>
+                    <th data-options="width:'15%', field:'Id',align:'center',formatter:InputListOperateField" class=" auto-style1">
+                        操作
+                    </th>
+                </tr>
+            </thead>
+        </table>
+        <table class="inputTable" style="margin-top:20px;width:98%"  id="inputTabs">
+            <tr>
+                <td colspan="2">
+                    &nbsp;日期：
+                    <input id="RECORDDATE" style="width:180px" class="easyui-datebox" data-options="panelHeight:'auto'">
+                    &nbsp;
+                    班次：
+                    <input id="Banci" style="width:80px" class="easyui-combobox" data-options="panelHeight:'auto'">
+                    <input id="RECORDTIME" style="width:80px; display:none" data-options="panelHeight:'auto'" hidden="hidden">
+                    <input id="INSERTTIME" style="width:80px; display:none" data-options="panelHeight:'auto'" hidden="hidden">
+                    <input type="checkbox" value="1" title="1" id="Type1" name="Type" />周评估
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    每日评估：
+                </td>
+            </tr>
+            <tr>
+                <th class="style2" id="thycbw">
+                    压疮部位：
+                </th>
+                <td id="tdbuwei">
+                    <input id="Buwei" style="width:220px;" class="easyui-textbox" data-options="panelHeight:'auto'"  >
+                </td>
+            </tr>
+            <tr>
+                <th class="style2" style="width:150px">压疮面积：</th>
+                <td>
+                    <input id="Mianji" style="width:220px" class="easyui-textbox" data-options="panelHeight:'auto'">
+                </td>
+            </tr>
+            <tr>
+                <th class="style2">压疮分期：</th>
+                <td>
+                    <input type="checkbox" value="1" title="1" id="Fenqi1" name="Fenqi" />Ⅰ
+                    <input type="checkbox" value="2" title="2" id="Fenqi2" name="Fenqi" />Ⅱ
+                    <input type="checkbox" value="3" title="3" id="Fenqi3" name="Fenqi" />Ⅲ
+                    <input type="checkbox" value="4" title="4" id="Fenqi4" name="Fenqi" />Ⅳ
+                </td>
+            </tr>
+            <tr>
+                <th class="style2">
+                    护理措施：
+                </th>
+                <td>
+                    <input type="checkbox" value="1" title="1" id="Cuoshi1" name="Cuoshi" />①
+                    <input type="checkbox" value="2" title="2" id="Cuoshi2" name="Cuoshi" />②
+                    <input type="checkbox" value="3" title="3" id="Cuoshi3" name="Cuoshi" />③
+                    <input type="checkbox" value="4" title="4" id="Cuoshi4" name="Cuoshi" />④
+                    <input type="checkbox" value="5" title="5" id="Cuoshi5" name="Cuoshi" />⑤
+                    <input type="checkbox" value="6" title="6" id="Cuoshi6" name="Cuoshi" />⑥
+                    <input type="checkbox" value="7" title="7" id="Cuoshi7" name="Cuoshi" />⑦
+                    <input type="checkbox" value="8" title="8" id="Cuoshi8" name="Cuoshi" />⑧
+                    <input id="CUOSHIQITA" style="width:240px" class="easyui-textbox" data-options="panelHeight:'auto'">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align:left;">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;①告知患者及家属可能出现压疮的危险性，讲解注意事项，定时翻身，减轻局部皮肤受压，避免摩擦 </br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;②保持皮肤及床单位清洁干燥 </br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;③指导患者及家属合理膳食，增强营养 </br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;④R型垫 </br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⑤气垫床 </br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⑥压疮保护膜 </br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⑦换药 </br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⑧其他</br>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align:left;">
+                    每周评估:
+                </td>
+            </tr>
+            <tr>
+                <th class="style2">
+                    压疮部位：
+                </th>
+                <td>
+                    <input type="checkbox" value="1" title="1" id="Buwei1" name="Buwei" />骶骨
+                    <input type="checkbox" value="2" title="2" id="Buwei2" name="Buwei" />髋骨
+                    <input type="checkbox" value="3" title="3" id="Buwei3" name="Buwei" />脊柱
+                    <input type="checkbox" value="4" title="4" id="Buwei4" name="Buwei" />肩胛
+                    <input type="checkbox" value="5" title="5" id="Buwei5" name="Buwei" />肘部
+                    <input type="checkbox" value="6" title="6" id="Buwei6" name="Buwei" />膝部
+                    <input type="checkbox" value="7" title="7" id="Buwei7" name="Buwei" />外踝
+                    <input type="checkbox" value="8" title="8" id="Buwei8" name="Buwei" />足跟
+                    <input type="checkbox" value="9" title="9" id="Buwei9" name="Buwei" />枕部
+                    <input type="checkbox" value="10" title="10" id="Buwei10" name="Buwei" />耳廓
+                    <input type="checkbox" value="11" title="11" id="Buwei11" name="Buwei" />其他
+                </td>
+            </tr>
+            <tr>
+                <th class="style2">
+                    创面情况：
+                </th>
+                <td>
+                    红肿：
+                    <input id="hongzhong" style="width:90px" class="easyui-combobox "  data-options="panelHeight:'auto'">
+                    渗血渗液：
+                    <input id="shenxueshenye" style="width:90px" class="easyui-combobox" data-options="panelHeight:'auto'">
+                    溃疡面积： <input id="kuiyanmianji" style="width:90px" class="easyui-combobox" data-options="panelHeight:'auto'">
+                    <br />化脓：<input id="huanong" style="width:90px" class="easyui-combobox textboxcombo" data-options="panelHeight:'auto'">
+                    坏死面积：<input id="huaisimianji" style="width:90px" class="easyui-combobox" data-options="panelHeight:'auto'">
+                    恶臭：<input id="echou" style="width:90px" class="easyui-combobox" data-options="panelHeight:'auto'">
+                </td>
+            </tr>
+            <tr>
+                <th class="style2">
+                    下步措施：
+                </th>
+                <td>
+                    <input id="NEXTSTEPE" class="easyui-textbox" data-options="multiline:true" style="width: 99%; height: 40px; ">
+                </td>
+            </tr>
+            <tr>
+                <th>护士签名：</th>
+                <td style="text-align:left;">
+                    <input id="QIANMING" style="width:180px" class="easyui-textbox" data-options="panelHeight:'auto'">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align:center;">
+                    <a href="#" id="btnSaveInput" style="margin-right:20px" class="easyui-linkbutton" iconcls="icon-huayi-save">保存</a>
+                </td>
+            </tr>
+        </table>
+        <div style="visibility: hidden;" id="checks">
+            <input nurse_skin="vital_sign:Fenqi" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtFenqi" />压疮分期
+            <input nurse_skin="vital_sign:Cuoshi" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtCuoshi" />护理措施
+            <input nurse_skin="vital_sign:Buwei" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtBuwei" />压疮部位
+        </div>
+   </div>
+</body>
+</html>

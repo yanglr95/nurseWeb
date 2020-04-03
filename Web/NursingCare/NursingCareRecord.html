@@ -1,0 +1,97 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>护理记录</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/jquerysession.js"></script>
+    <script src="../js/Common.js"></script>
+    <script src="../js/easyui-extends.js"></script>
+    <script src="../js/NursingCareRecord.js"></script>
+    <script src="../js/publicPatient.js"></script>
+    <script src="../js/PatientInfo.js"></script>
+    <script src="../../JavaScript/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <script src="../js/NursingCare/NursingCareRecord.js"></script>
+</head>
+<body>
+    <div>
+        <table style="width:98%">
+            <tr>
+                <td><input id="ccPatients" name="ccPatients" style="width:120px" class="easyui-combobox" data-options="valueField:'Patient_id',textField:'Name'" /></td>
+                <td>
+                    日期<input id="txtDate" class="easyui-datebox" style="width:180px;" data-options="formatter:dateFormatter,parser:dateParser" />
+                    <a href="#" id="btnSaveInput" class="easyui-linkbutton" iconcls="icon-huayi-save">保存</a>
+                    <a href="#" id="btnQuery" class="easyui-linkbutton" iconcls="icon-huayi-search">查询</a>
+                    <a href="#" id="btnPrint" class="easyui-linkbutton" iconcls="icon-huayi-print" onclick="print()">打印</a>
+                </td>
+            </tr>
+        </table>
+        <table id="tabPatientInfo" class="patientTable" style="width:98%;background: #fff;margin-top:5px;">
+        </table>
+        <div>
+            <table id="tbNurseCareList" class="easyui-datagrid" style="width:98%;height:auto" data-options="singleSelect:true">
+                <thead>
+                    <tr>
+                        <th data-options="field:'Time_Point',width:'8%',align:'center',formatter:inputListDateFormatter">
+                            时间
+                        </th>
+                        <th data-options="field:'Temperature',width:'8%',align:'center'">
+                            体温
+                        </th>
+
+                        <th data-options="field:'Consciousness',width:'8%',align:'center'">
+                            意识
+                        </th>
+                        <th data-options="field:'Pulse',width:'8%',align:'center',formatter:getPulseText">
+                            脉搏
+                        </th>
+                        <th data-options="field:'Breath',width:'8%',align:'center'">
+                            呼吸
+                        </th>
+
+                        <th data-options="field:'Blood_Pressure',width:'8%',align:'center'">
+                            血压
+                        </th>
+                        <th data-options="field:'Measure',width:'37%',align:'center'">
+                            措施
+                        </th>
+
+                        <th data-options="width:'15%', field:'Id',align:'center',formatter:InputListOperateField">
+                            操作
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+            <table id="tbNursingCare" class="inputTable" style="width:98%;height:auto;">
+                <tr>
+                    <td>
+                        录入时间
+                    </td>
+                    <td>
+                        <input class="easyui-timespinner" id="dtInput" style="width:80px" data-options="showSeconds:false" />
+                    </td>
+                    <td>生命体征</td>
+                    <td><input class="easyui-combobox" style="width:60px" id="VitalSigns" data-options="valueField:'Vital_Signs',textField:'Vital_Signs',panelHeight:'auto'" /></td>
+                </tr>
+                <tr>
+                    <td rowspan="2">病情、治疗<br />及护理措施</td>
+                    <td> <input id="comboTemplate" style="width:200px" class="easyui-combobox" data-options="panelHeight:'auto',editable:false"></td>
+                    <td>
+                        <input id="comboSpecialChar" style="width:100px" class="easyui-combobox" data-options="panelHeight:'auto',editable:false">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <input id="txtMeasure" class="easyui-textbox" data-options="multiline:true" style="width:660px;height:180px" />
+                    </td>
+
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/Common.js"></script>
+
+    <script src="../js/RoutineConfig.js"></script>
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../CSS/default.css" rel="stylesheet" />
+</head>
+<body>
+    <table>
+        <tr>
+            <td align="right">
+                工作周期：
+            </td>
+            <td align="left">
+                <input id="ccType" name="ccType" style="width:120px" class="easyui-combobox" data-options="valueField:'value',textField:'text',panelHeight:'auto',editable:false" />
+            </td>
+        </tr>
+        <tr>
+            <td align="right">
+                工作日期：
+            </td>
+            <td align="left">
+                <input id="ccExecDay" name="ccExecDay" style="width:120px" class="easyui-combobox" data-options="valueField:'value',textField:'text',panelHeight:'auto',editable:false" />
+            </td>
+        </tr>
+        <tr>
+            <td align="right">
+                工作时间：
+            </td>
+            <td align="left">
+                <input id="ccExecTime" name="ccExecTime" style="width:120px" class="easyui-combobox" data-options="valueField:'value',textField:'text',panelHeight:'180px',editable:false" />
+            </td>
+        </tr>
+
+        <tr>
+            <td align="right">
+                工作内容：
+            </td>
+            <td align="left">
+                <input id="txtWorkInfo" name="txtWorkInfo" style="width:240px;height:60px" class="easyui-textbox" data-options="multiline:true" />
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <a href="#" id="btnSave" class="easyui-linkbutton" iconcls="icon-huayi-save">保存</a>
+                <a href="#" id="btnReset" class="easyui-linkbutton" iconcls="icon-huayi-reset">重置</a>
+            </td>
+        </tr>
+    </table>
+    <table id="tbRoutineConfig" class="easyui-datagrid"></table>
+</body>
+</html>

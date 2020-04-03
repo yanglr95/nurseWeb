@@ -1,0 +1,205 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>危重护理记录单</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/jquerysession.js"></script>
+    <script src="../js/Common.js"></script>
+    <script src="../js/CriticalCareRecord.js"></script>
+    <script src="../js/easyui-extends.js"></script>
+    <script src="../js/publicPatient.js"></script>
+    <script src="../js/PatientInfo.js"></script>
+    <script src="../../JavaScript/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <script src="../js/NursingCare/CriticalCareRecord.js"></script>
+</head>
+<body>
+    <div>
+        <table width="98%">
+            <tr>
+                <td><input id="ccPatients" name="ccPatients" style="width:120px" class="easyui-combobox" data-options="valueField:'Patient_id',textField:'Name'" /></td>
+                <td>
+                    日期：<input id="txtDate" class="easyui-datebox" style="width:180px;" data-options="formatter:dateFormatter,parser:dateParser" />
+                    <a href="#" id="btnQuery" class="easyui-linkbutton" iconcls="icon-huayi-search">查询</a>
+                    <a href="#" id="btnPrint" class="easyui-linkbutton" iconcls="icon-huayi-print" onclick="print()">打印</a>
+                </td>
+
+            </tr>
+        </table>
+        <table id="tabPatientInfo" class="patientTable" style="width:98%;font-size:10pt;background:#fff;margin-top:5px;">
+        </table>
+        <div class="easyui-tabs" id="inputTabs" style="width:98%;">
+            <div title="随时" style="width:98%;padding:10px;box-sizing: border-box;">
+                <table id="tbCareList" class="easyui-datagrid" style="width:98%; height:auto"></table>
+                <table id="tbInput" class="inputTable" style="width:98%; height:auto">
+                    <tr>
+                        <td>
+                            录入时间
+                        </td>
+                        <td colspan="2">
+                            <input class="easyui-timespinner" id="dtInput" name="timespinner" style="width:80px" data-options="showSeconds:false" />
+                        </td>
+                        <td>生命体征</td>
+                        <td><input class="easyui-combobox" style="width:60px" id="VitalSigns" data-options="valueField:'Vital_Signs',textField:'Vital_Signs',panelHeight:'auto'" /></td>
+                        <td colspan="3"><a href="#" id="btnSaveInput" class="easyui-linkbutton" iconcls="icon-huayi-save">保存</a></td>
+                    </tr>
+
+                    <tr><td colspan="8" style="font-size:11pt"><b>吸氧：</b></td></tr>
+                    <tr>
+                        <td>
+                            吸氧方式
+                        </td>
+                        <td>
+                            <input nurse_care="vital_sign:吸氧方式;combo_data:Breath_Mode" style="width:100px" class="easyui-combobox" data-options="panelHeight:'auto',editable:false">
+                        </td>
+                        <td>
+                            呼吸形式
+                        </td>
+                        <td>
+                            <input nurse_care="vital_sign:呼吸形式;combo_data:Breath_Type" style="width:100px" class="easyui-combobox" data-options="panelHeight:'auto',editable:false">
+                        </td>
+                        <td colspan="2">
+                            氧流量(L/min)
+                        </td>
+                        <td colspan="2">
+                            <input nurse_care="vital_sign:氧流量(L/min);" style="width:100px" class="easyui-numberbox" data-options="panelHeight:'auto'">
+                        </td>
+                    </tr>
+                    <tr><td colspan="8" style="font-size:11pt"><b>呼吸机参数：</b></td></tr>
+                    <tr>
+                        <td>
+                            呼吸模式
+                        </td>
+                        <td>
+                            <input nurse_care="vital_sign:呼吸模式" style="width:100px" class="easyui-textbox" data-options="panelHeight:'auto'">
+                        </td>
+                        <td>
+                            VT(ml)
+                        </td>
+                        <td>
+                            <input nurse_care="vital_sign:VT" style="width:100px" class="easyui-numberbox" data-options="panelHeight:'auto'">
+                        </td>
+                        <td colspan="2">
+                            PEEP/CPAP(cmH2O)
+                        </td>
+                        <td colspan="2">
+                            <input nurse_care="vital_sign:PEEP/CPAP(cmH2O);" style="width:100px" class="easyui-numberbox" data-options="panelHeight:'auto'">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            f(次/分)
+                        </td>
+                        <td>
+                            <input nurse_care="vital_sign:f(次/分)" style="width:100px" class="easyui-numberbox" data-options="panelHeight:'auto'">
+                        </td>
+                        <td>
+                            Fi02(%)
+                        </td>
+                        <td>
+                            <input nurse_care="vital_sign:Fi02(%)" style="width:100px" class="easyui-numberbox" data-options="panelHeight:'auto'">
+                        </td>
+                        <td colspan="2">
+                            PS/IPAP(cmH2O)
+                        </td>
+                        <td colspan="2">
+                            <input nurse_care="vital_sign:PS/IPAP(cmH2O);" style="width:100px" class="easyui-numberbox" data-options="panelHeight:'auto'">
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+            <div title="出入量" closable="false" style="padding:10px;box-sizing: border-box;">
+                <a id="addCrl" href="#" class="easyui-linkbutton" style="width:100px;float:right" data-options="iconCls:'icon-huayi-add'">添加记录</a>
+                <table id="tbCrl" class="easyui-datagrid" style="width:98%;height:auto"></table>
+
+
+            </div>
+            <div title="护理事件" closable="false" style="width:98%;padding:10px;box-sizing: border-box;">
+
+                <table class="easyui-datagrid" id="tbEventRecord" style="width:98%;height:auto"> </table>
+                <table id="tbEvent" class="inputTable" style="width:98%;height:auto;">
+                    <tr>
+                        <td>
+                            录入时间
+                        </td>
+                        <td colspan="2">
+                            <input class="easyui-timespinner" id="dtEvent" style="width:80px" data-options="showSeconds:false" />
+                        </td>
+
+
+                        <td colspan="3"><a href="#" id="btnSaveEvent" style="float:right;margin-right:30px" class="easyui-linkbutton" onclick="saveEventData()" iconcls="icon-huayi-save">保存</a></td>
+                    </tr>
+                    <tr>
+                        <td>痰液性质</td>
+                        <td><input class="easyui-combobox" nurse_care="vital_sign:Sputum;combo_data:Sputum" data-options="panelHeight:'auto',editable:false" /></td>
+                        <td>翻身体位</td>
+                        <td><input class="easyui-combobox" nurse_care="vital_sign:Posture;combo_data:Posture" data-options="panelHeight:'auto',editable:false" /></td>
+                        <td>皮肤情况</td>
+                        <td><input class="easyui-combobox" nurse_care="vital_sign:Skin;combo_data:Skin" data-options="panelHeight:'auto',editable:false" /></td>
+                    </tr>
+                    <tr>
+                        <td>伤口情况</td>
+                        <td><input class="easyui-combobox" nurse_care="vital_sign:Wound;combo_data:Wound" data-options="panelHeight:'auto',editable:false" /></td>
+                        <td>管路情况</td>
+                        <td><input class="easyui-combobox" nurse_care="vital_sign:Piping;combo_data:Piping" data-options="panelHeight:'auto',editable:false" /></td>
+                        <td colspan="2"></td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2">病情、治疗<br />及护理措施</td>
+                        <td colspan="5">
+                            <input id="comboTemplate" style="width:200px" class="easyui-combobox" data-options="panelHeight:'auto',editable:false">
+                            <input id="comboSpecialChar" style="width:100px" class="easyui-combobox" data-options="panelHeight:'auto',editable:false">
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="5">
+                            <input id="txtMeasure" nurse_care="vital_sign:Memo;" class="easyui-textbox" data-options="multiline:true" style="width:660px;height:180px" />
+                        </td>
+
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <div id="dd" title="出入量信息" style="width:700px;height:180px;line-height:40px ">
+        <table>
+            <tr>
+                <td style="width:10%">日期：</td>
+                <td colspan="3"><input id="dateCrl" class="easyui-datebox" style="width:100px;" data-options="formatter:dateFormatter,parser:dateParser" /></td>
+                <td style="width:10%">时间：</td>
+                <td style="width:20%"><input class="easyui-timespinner" id="tsCrl" style="width:60px" data-options="showSeconds:false" /></td>
+                <td style="width:20%">出入量类型：</td>
+                <td style="width:30%"><input class="easyui-combobox" id="cbCrlType" data-options="valueField:'Xm',textField:'Xm',panelHeight:'120px',editable:false"></td>
+            </tr>
+            <tr>
+
+                <td>类型：</td>
+                <td><span id="spCrlNote"></span></td>
+                <td>单位：</td>
+                <td><span id="spCrlUnit"></span></td>
+                <td>数量：</td>
+                <td><input id="txtCrlValue" class="easyui-numberbox" style="width:60px;" /></td>
+                <td>名称：</td>
+                <td colspan="3">
+                    <input id="txtContent" class="easyui-textbox" style="width:100px;" />
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="8" align="center">
+                    <a id="addCrlData" href="#" class="easyui-linkbutton" style="width:60px" data-options="iconCls:'icon-huayi-add'" onclick="saveCrl()">添加</a>
+                    <a id="saveCrlData" href="#" class="easyui-linkbutton" style="width:60px" data-options="iconCls:'icon-huayi-save'" onclick="saveCrl()">保存</a>
+                </td>
+            </tr>
+
+        </table>
+    </div>
+</body>
+</html>

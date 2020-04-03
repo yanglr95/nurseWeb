@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>平时练习</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/Common.js"></script>
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <script src="../js/OnLineExam/SimulationSubpage.js"></script>
+    <style type="text/css">
+                iframe,li {
+                    line-height: 25px;
+                    margin-top: 5px;
+                    list-style-type: none;
+                    padding-left: 5px;
+                    font-size: 12px;
+                    text-decoration: none;
+                }
+
+                li {
+                    font-size: 12px;
+                }
+    </style>
+        </head>
+<body class="easyui-layout">
+    <div id="center" data-options="region:'center',title:'模拟测试'" style="padding:5px">
+        <table>
+            <tbody id="tabInfo">
+                <tr>
+                    <td>试卷编号</td>
+                    <td id="Papernumber" field="Papernumber"></td>
+                
+                    <td>试卷名称</td>
+                    <td id="Papername" field="Papername"></td>
+               
+                    <td>录入者</td>
+                    <td id="User" field="User"></td>
+               
+                    <td>总分</td>
+                    <td id="Totalscore" field="Totalscore"></td>
+                    <td>时限</td>
+                    <td id="Timelimit" field="Timelimit"></td>
+                </tr>
+            </tbody>
+        </table>
+        <ul id="patient" style="width:90%;height:90%;"></ul>
+        <div data-options="region:'south'" style="padding:5px;text-align:center">
+            
+            <div style="height:25px;position: fixed; background-color: #EFF8FF; z-index: 1000;">
+                <input type="button" value="交卷" onclick="saveData()" style="float:left" />
+                <span id="mytime" style="color:red;position: fixed; background-color: #EFF8FF; z-index: 1000;padding-left:800px;">00:00:00</span>
+
+            </div>
+        </div>
+
+    </div>
+    <div data-options="region:'west',title:'答题卡',collapsible:'false'" style="width:240px;">
+        <div id="Answer" style="width:50px;">
+            <span id="AnswerCard">
+
+            </span>
+        </div>
+    </div>
+</body>
+        </html>
+<script type="text/javascript">
+    $(function(){
+         $.ajax({
+                    url: BaseData.WebApiUrl + "OnlineExam/getExamManagement",
+
+                    type: "get",
+                    data:"paperType=模拟测试&id="+getUrlParam("id"),
+                    success: (function (data) {
+                        var jsonData = $.parseJSON(data);
+                        if (jsonData) {
+                            SetTableValue("tabInfo", jsonData[0]);
+                        }
+                    })
+        });
+    })
+</script>
+ 

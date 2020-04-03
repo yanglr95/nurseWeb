@@ -1,0 +1,164 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>医嘱分类单</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/jquerysession.js"></script>
+    <script src="../js/Common.js"></script>
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <script src="../js/easyui-extends.js"></script>
+    <script src="../js/publicPatient.js"></script>
+    <script src="../js/PatientInfo.js"></script>
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <script src="../js/OrderQueryClassification.js"></script>
+</head>
+<body>
+    <div>
+        <table style="width:98%">
+            <tr>
+                <td width="10%">
+                    <input id="ccPatients" name="ccPatients" style="width:120px" class="easyui-combobox" data-options="valueField:'Patient_id',textField:'Name',panelHeight:'auto'" />
+                </td>
+                <td width="20%">日期：<input id="txtDate" class="easyui-datebox" style="width:180px;" data-options="formatter:dateFormatter,parser:dateParser" /></td>
+                <td>
+                    <a href="#" id="btnQuery" class="easyui-linkbutton" iconcls="icon-huayi-search">查询</a>
+                </td>
+            </tr>
+        </table>
+        <table id="tabPatientInfo" class="patientTable" style="width:98%;font-size:10pt;background:#fff;margin-top:5px;">
+        </table>
+        <input class="easyui-combobox" id="comboRepeat_Indicator" datafilter="Repeat_Indicator" data-options="panelHeight:'auto',editable:false" style="width:80px" />
+        <input class="easyui-combobox" id="comboOrder_Class" datafilter="Order_Class" data-options="panelHeight:'auto',valueField:'ORDER_CLASS_CODE',textField:'ORDER_CLASS_NAME'" style="width:80px" />
+        <input class="easyui-combobox" id="comboOrder_Administration" datafilter="Administration" data-options="panelHeight:'auto',valueField:'Administration_Value',textField:'Administration'" style="width:80px" />
+                <table id="tbOrders" class="easyui-datagrid" style="width:100% "></table>
+    </div>
+</body>
+</html>
+<script type="text/javascript">
+    var patient;
+    var OrderClass;
+    $(function () {
+        $(".easyui-combobox[datafilter]").combobox({
+            onSelect: orderFilter,
+            filter: filterPatient
+        });
+        $("#ccPatients").combobox({
+            onSelect: PatientsComboChange,
+            filter: filterPatient,
+            panelHeight:document.documentElement.clientHeight
+        });
+        var ward_code = getSession("ward_code") == undefined ? "null" : getSession("ward_code");
+        $.ajax({
+            url: BaseData.WebApiUrl + "nurse/getPatientListByWard/",
+            data: "ward_code=" + ward_code,
+            type: "get",
+            success: (function (data) {
+                var jsonData = $.parseJSON(data);
+                if (jsonData) {
+                    for (var i = 0; i < jsonData.length; i++) {
+                        jsonData[i].Name = "(" + jsonData[i].Bed_No + ")" + jsonData[i].Name;
+                    }
+                    $("#ccPatients").combobox('loadData', jsonData);
+
+                    var patientid = getSession("Patient_Id");
+                    if (patientid != null && patientid != "null") {
+                        $("#ccPatients").combobox('setValue', patientid);
+                        PatientsComboChange();
+                    } else {
+                        setSession(jsonData[0].Patient_id);
+                        $("#ccPatients").combobox('setValue', jsonData[0].Patient_id);
+                        PatientsComboChange();
+                    }
+                }
+            })
+        });
+        $(".easyui-datagrid").datagrid({
+            width: '98%',
+            style: { 'text-align': 'center' },
+            singleSelect: true,
+            columns: TableColumn
+        });
+       $("#comboRepeat_Indicator").combobox("loadData", [{ text: "医嘱类型", value: "" },
+        { text: "长期医嘱", value: "长期" },
+        { text: "临时医嘱", value: "临时" }, ]);
+       GetOrderClass();
+       var date = new Date();
+       $('#txtDate').datebox('setValue', dateFormatter(date));
+       $("#btnQuery").click(InitTableData);
+    });
+    function PatientsComboChange() {
+        var patient_id = $("#ccPatients").combobox('getValue');
+        $.ajax({
+            url: BaseData.WebApiUrl + "nurse/getPatientInfoByPatientID",
+            data: "patientid=" + patient_id,
+            type: "get",
+            success: (function (data) {
+                var jsonData = $.parseJSON(data);
+                if (jsonData) {
+                    SetTableValue("tabPatientInfo", jsonData);
+                    patient = jsonData;
+
+                    removeSession("patient_id");
+                    setSession(patient_id);
+
+                    InitTableData();
+                }
+            })
+        });
+
+    }
+    function InitTableData() {
+        var date = $("#txtDate").datebox("getValue");
+        $.ajax({
+            url: BaseData.WebApiUrl + "order/getOrderQuery",
+            data: "patient_id=" + patient.Patient_id + "&visit_id=" + patient.Visit_id + "&exec_date=" + date,
+            type: "get",
+            success: (function (data) {
+                inputData = $.parseJSON(data);
+                $("#tbOrders").datagrid("loadData", inputData);
+                var admins = [];
+                for (var i = 0; i < inputData.length; i++) 
+                {
+                    var IsAdd=true;
+                    var admin = [{ "Administration": "" + inputData[i].Administration + "", "Administration_Value": "" + inputData[i].Administration + "" }];
+                    for (var j = 0; j < admins.length; j++)
+                    {
+                        if (inputData[i].Administration != null && inputData[i].Administration == admins[j].Administration)
+                            IsAdd = false;
+                    }
+                    if (IsAdd && inputData[i].Administration != null)
+                    {
+                        admins.push(admin[0]);
+                    }
+                }
+                var a = [{ "Administration": "给药方式", "Administration_Value": "" }]
+                admins.unshift(a[0]);
+                $("#comboOrder_Administration").combobox("loadData", admins);
+                //$("#comboOrder_Administration").combobox("setValue", "给药方式");
+            })
+        });
+    }
+    function GetOrderClass() {
+        $.ajax({
+            url: BaseData.WebApiUrl + "order/GetOrderClass",
+            type: "get",
+            success: (function (data) {
+                OrderClass = $.parseJSON(data);
+                var a = [{"ORDER_CLASS_CODE": "", "ORDER_CLASS_NAME": "医嘱类别"}]
+                OrderClass.unshift(a[0]);
+                $("#comboOrder_Class").combobox('loadData', OrderClass);
+            })
+        });
+    }
+    function tdDateFormatter(jsonObj) {
+        var date = jsonObj.Admission_Date_Time.replace(/-/g, "/").replace(/T/g, " ");
+        return dateTimeFormatter(new Date(date), "yyyy-mm-dd");
+    }
+    function orderFilter() {
+        $("#tbOrders").datagrid("loadData", dataFilter(inputData, "dataFilter"));
+    }
+    
+</script>

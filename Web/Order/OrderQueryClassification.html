@@ -1,0 +1,172 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>医嘱分类单</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/jquerysession.js"></script>
+    <script src="../js/Common.js"></script>
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <script src="../js/easyui-extends.js"></script>
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <script src="../js/OrderQueryClassification.js"></script>
+</head>
+<body>
+    <div>
+        <table style="width:98%">
+            <tr>
+                <td>
+                    <input id="ccPatients" name="ccPatients" style="width:120px" class="easyui-combobox" data-options="valueField:'Patient_id',textField:'Name',panelHeight:'auto'" />
+
+                </td>
+
+            </tr>
+        </table>
+        <table id="tabPatientInfo" class="patientTable" style="width:98%;font-size:10pt">
+            <tr>
+                <td>姓名：</td>
+                <td field="Name"></td>
+                <td>性别：</td>
+                <td field="Sex"></td>
+                <td>年龄：</td>
+                <td field="Age"></td>
+
+            </tr>
+            <tr>
+                <td>病案号：</td>
+                <td field="Patient_id"></td>
+                <td>护理等级：</td>
+                <td field="Nursing_Class"></td>
+
+                <td>入院时间：</td>
+                <td field="Admission_Date_Time" formatfun="tdDateFormatter"></td>
+            </tr>
+            <tr>
+                <td>主任医师：</td>
+                <td field="Doctor_In_Charge"></td>
+                <td>
+                    诊断：
+                </td>
+                <td colspan="3" field="Diagnosis"></td>
+            </tr>
+        </table>
+        <div id="accTbList" class="easyui-accordion" data-options="multiple:true" style="width:98%;height:auto;">
+            <div title="输液" style="overflow:auto;padding:10px;width:100%">
+                <table id="tbInfusion" data="输液" class="easyui-datagrid" style="width:100%"></table>
+            </div>
+            <div title="口服" style="overflow:auto;padding:10px;">
+                <table id="tbOral" data="口服" class="easyui-datagrid"></table>
+            </div>
+            <div title="注射" style="overflow:auto;padding:10px;">
+                <table id="tbInjection" data="注射" class="easyui-datagrid"></table>
+            </div>
+            <div title="治疗" style="overflow:auto;padding:10px;">
+                <table id="tbTreatment" data="治疗" class="easyui-datagrid"></table>
+            </div>
+            <div title="检验" style="overflow:auto;padding:10px;">
+                <table id="tbTest" data="检验" class="easyui-datagrid"></table>
+            </div>
+            <div title="检查" style="overflow:auto;padding:10px;">
+                <table id="tbCheck" data="检查" class="easyui-datagrid"></table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script type="text/javascript">
+    var patient;
+    $(function () {
+
+        $("#ccPatients").combobox({
+            onSelect: PatientsComboChange,
+            filter: filterPatient
+        });
+        var ward_code = getSession("ward_code") == undefined ? "null" : getSession("ward_code");
+        $.ajax({
+            url: BaseData.WebApiUrl + "nurse/getPatientListByWard/",
+            data: "ward_code=" + ward_code,
+            type: "get",
+            success: (function (data) {
+
+                var jsonData = $.parseJSON(data);
+                if (jsonData) {
+                    for (var i = 0; i < jsonData.length; i++) {
+                        jsonData[i].Name = "(" + jsonData[i].Bed_No + ")" + jsonData[i].Name;
+                    }
+                    $("#ccPatients").combobox('loadData', jsonData);
+
+                    var patientid = getSession("Patient_Id");
+                    if (patientid != null && patientid != "null") {
+                        $("#ccPatients").combobox('setValue', patientid);
+                        PatientsComboChange();
+                    } else {
+                        setSession(jsonData[0].Patient_id);
+                        $("#ccPatients").combobox('setValue', jsonData[0].Patient_id);
+                        PatientsComboChange();
+                    }
+                }
+            })
+        });
+        $(".easyui-datagrid").datagrid({
+            width: '98%',
+            style: { 'text-align': 'center' },
+            singleSelect: true,
+            columns: TableColumn
+        });
+        collapsePanals();
+    });
+    function PatientsComboChange() {
+        var patient_id = $("#ccPatients").combobox('getValue');
+        $.ajax({
+            url: BaseData.WebApiUrl + "nurse/getPatientInfoByPatientID",
+            data: "patientid=" + patient_id,
+            type: "get",
+            success: (function (data) {
+                var jsonData = $.parseJSON(data);
+                if (jsonData) {
+                    SetTableValue("tabPatientInfo", jsonData);
+                    patient = jsonData;
+
+                    removeSession("patient_id");
+                    setSession(patient_id);
+
+                    InitTableData();
+                }
+            })
+        });
+
+    }
+    function InitTableData() {
+
+        collapsePanals();
+
+        $.ajax({
+            url: BaseData.WebApiUrl + "order/getOrderQuery",
+            data: "patient_id=" + patient.Patient_id + "&visit_id=" + patient.Visit_id,
+            type: "get",
+            success: (function (data) {
+                var inputData = $.parseJSON(data);
+                $(".easyui-datagrid").each(function (index, obj) {
+                    var name = $(obj).attr("data")
+
+                    $(obj).datagrid("loadData", inputData[name]);
+                });
+            })
+        });
+    }
+    function tdDateFormatter(jsonObj) {
+        var date = jsonObj.Admission_Date_Time.replace(/-/g, "/").replace(/T/g, " ");
+        return dateTimeFormatter(new Date(date), "yyyy-mm-dd");
+    }
+    function collapsePanals() {
+        var panels = $("#accTbList").accordion('panels');
+        if (panels && panels.length > 0) {
+            for(var i in panels)
+            {
+                panels[i].panel('collapse');
+            }
+        }
+    }
+</script>

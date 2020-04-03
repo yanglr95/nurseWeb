@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>护理事件项录入字典</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/DictCommon.js"></script>
+    <script src="../js/Common.js"></script>
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../CSS/default.css" rel="stylesheet" />
+</head>
+<body>
+    <div style="width: 800px; float: left">
+         <div>
+            <table id="OtherSetTable" class="blueBorderTable" style="width: 100%;  position: fixed; background-color: #EFF8FF; z-index: 1000;">
+                <tr>
+                    <td>其他项名称</td>
+                    <td>
+                        <input dict="vital_sign:Item_name;" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtName" data-inline="true" data-mini="true" />
+                    </td>
+                    <td>首字母索引</td>
+                    <td>
+                        <input dict="vital_sign:Input_code;" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtCode" data-inline="true" data-mini="true" />
+
+                    </td>
+                     <td>
+                         <a href="#" id="btnSave" class="easyui-linkbutton" iconcls="icon-huayi-save">保存</a>
+
+                    </td>
+                    </tr>
+               
+            </table>
+        </div>
+        <div style="margin-top: 30px;">
+            <table id="OtherSetList" class="easyui-datagrid" style="width: 98%; height: auto" data-options="singleSelect:true">
+                <thead>
+                    <tr>
+                       
+                        <th data-options="field:'Item_name',width:'22%',align:'center'">其他项名称
+                        </th>
+                        <th data-options="field:'Input_code',width:'18%',align:'center'">首字母索引
+                        </th>
+
+                        <th data-options="field:'aaa',width:'18%',align:'center',formatter:InputListOperateField">操作
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+       </div>
+</body>
+<script type="text/javascript">
+    var ITEM_NAME = "";
+    $(function () {
+        searchData();
+       // $("#btnSearch").click(searchData);
+        $("#btnSave").click(saveData);
+    })
+    function InputListOperateField(value, rowData, rowIndex) {
+        Item_name = rowData.Item_name;
+        var str = "<a href='#' name='btnEdit' onclick='editInputList(\"" + Item_name + "\",this)' >编辑</a>";
+        str += "&nbsp;&nbsp;"
+        str += "<a href='#' onclick='delData(\"" + Item_name + "\",this)' >删除</a>";
+        return str;
+    }
+    function searchData() {
+        $.ajax({
+            url: BaseData.WebApiUrl + "OtherSet/getData/",
+            type: "get",
+            success: (function (data) {
+                var jsonData = $.parseJSON(data);
+                $("#OtherSetList").datagrid("loadData", jsonData);
+            })
+        });
+    }
+    function editInputList(Item_name, obj) {
+        var state = $(obj).html();
+        $("a[name='btnEdit']").html("编辑");
+        if (state == "编辑") {
+            $.ajax({
+                url: BaseData.WebApiUrl + "OtherSet/getDataById",
+                data: "ItemName=" + Item_name,
+                type: "get",
+                success: (function (data) {
+                    var jsonData = $.parseJSON(data);
+                    InitTextBoxData($("#OtherSetTable"), jsonData[0]);
+                    ITEM_NAME = Item_name;
+                    $(obj).html("取消");
+                })
+            });
+        }
+        else {
+            $(obj).html("编辑");
+            clear();
+        }
+    }
+    function clear() {
+        ITEM_NAME = "";
+        InitTextBoxData($("#OtherSetTable"), null);
+    }
+    function delData(ItemName, obj) {
+        $.ajax({
+            url: BaseData.WebApiUrl + "OtherSet/delData/",
+            data: 'ItemName=' + ItemName,
+            type: "get",
+            success: (function (data) {
+                if (data) {
+                    $.messager.alert("提示", data);
+                    searchData();
+                }
+            })
+        });
+    }
+    function saveData() {
+        var postData = "";
+        $("#OtherSetTable").find("[" + AttrName + "]").each(function (index, obj) {
+            var bodyChart = $(obj).attr(AttrName).split(';');
+            for (var s in bodyChart) {
+                var p = bodyChart[s].replace(/(^\s*)|(\s*$)/g, "");
+                var length = JsonPro.length;
+                if (p.substr(0, length).toLowerCase() == JsonPro) {
+                    var value;
+                    if ($(obj).hasClass("easyui-combobox")) {
+                        value = $(obj).combobox("getValue");
+                        if (value != "") {
+                            value = '"' + value + '"';
+                        }
+                        else {
+                            value = 'null';
+                        }
+                    } else if ($(obj).hasClass("easyui-textbox")) {
+                        value = $(obj).textbox("getValue");
+                        if (value != "") {
+                            value = '"' + value + '"';
+                        }
+                        else {
+                            value = 'null';
+                        }
+                    }
+                    postData += ',"' + p.substr(length) + '":' + value;
+                }
+            }
+        });
+        postData += "}";
+        postData = postData.substr(1);
+        postData = "[{" + postData + "]";
+        $.ajax({
+            url: BaseData.WebApiUrl + "OtherSet/saveOtherSet/",
+            type: "POST",
+            data: { '': postData },
+            success: (function (data) {
+                if (data) {
+                    $.messager.alert("提示", data);
+                    clear();
+                    searchData();
+                }
+            })
+        });
+    }
+</script>
+</html>

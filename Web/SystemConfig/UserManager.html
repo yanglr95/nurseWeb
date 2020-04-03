@@ -1,0 +1,339 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>用户管理</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+
+    <script src="../js/Common.js"></script>
+
+   
+    <script src="../js/easyui-extends.js"></script>
+    <link href="../../JavaScript/easyui/themes/metro/messager.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/default/datagrid.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/default/combobox.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/default/dialog.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <script src="../js/UserManager.js"></script>
+    <link href="../../CSS/default.css" rel="stylesheet" />
+</head>
+<body>
+    <div>
+        <input class="easyui-combobox" id="comboDept" datafilter="User_Dept" data-options="panelHeight:'200',editable:false" style="width:160px" />
+        <input class="easyui-combobox" id="comboTitle" datafilter="Title" data-options="panelHeight:'200',editable:false" style="width:160px" />
+        <input id="txtName" class="easyui-searchbox" prompt="请输入姓名或者登陆名" style="width:160px"></input>
+        <table id="tbUsers" class="easyui-datagrid"></table>
+    </div>
+    <div id="divUserInfo" title="用户信息" style="width:300px;height:300px">
+        <table id="tbUserInfo" width="98%" style="text-align:center">
+            <tr>
+                <td>登录名：</td>
+                <td><input id="txtUserDBName" maxlength="16" class="easyui-text" style="width:160px" /></td>
+            </tr>
+            <tr>
+                <td>姓名：</td>
+                <td><input id="txtUserInfoName" maxlength="8" class="easyui-text" style="width:160px" /></td>
+
+            </tr>
+            <tr>
+                <td>科室</td>
+                <td>
+                    <input class="easyui-combobox" id="comboUserDept" data-options="panelHeight:'200',editable:false" style="width:160px" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    职务：
+                </td>
+                <td>
+                    <input class="easyui-combobox" id="comboUserRole" data-options="panelHeight:'auto',editable:false" style="width:160px" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <a id="btnAddUserData" href="#" class="easyui-linkbutton" style="width:60px" data-options="iconCls:'icon-huayi-add'" onclick="addUserInfo()">添加</a>
+                    <a id="btnEditUserData" href="#" class="easyui-linkbutton" style="width:60px" data-options="iconCls:'icon-edit'" onclick="editUserInfo()">保存</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
+<script type="text/javascript">
+    var userList = new Array();
+    var deptList = new Array();
+    $(function () {
+        $('#tbUsers').datagrid({
+            title: '用户管理',
+            width: '98%',
+            style: { 'text-align': 'center' },
+            height: 'auto',
+            border: true,
+            idField: 'id',
+            singleSelect: true,//是否单选
+            pagination: true,//分页控件
+            toolbar: [{
+                text: '添加',
+                iconCls: 'icon-huayi-add',
+                handler: function () {
+                    showUserInfo("add");
+                }
+            }, '-', {
+                text: '修改',
+                iconCls: 'icon-edit',
+                handler: function () {
+                    showUserInfo("edit");
+                }
+
+            }],
+            columns: [[
+              { field: 'Db_User', title: '登陆名', width: 80 },
+              { field: 'User_Name', title: '姓名', width: 80 },
+              { field: 'Role_Name', title: '职务', width: 80 },
+              { field: 'Dept_Name', title: '科室', width: 160 },
+            ]]
+        });
+        $(".easyui-combobox[datafilter]").combobox({
+            onSelect: userFilter
+        });
+        $(".easyui-combobox[userdeptfilter]").combobox({
+            onSelect: setUserInfoDeptCombo
+        });
+        $("#comboUserClinic").combobox("loadData", ClinicData);
+        $("#comboUserOI").combobox("loadData", OIData);
+        $("#comboUserIS").combobox("loadData", ISData);
+        $("#comboUserDept").combobox({
+            valueField: 'Dept_Code',
+            textField: 'Dept_Name'
+        });
+     $("#comboUserRole").combobox("loadData", Title)
+
+        $("#comboTitle").combobox("loadData", Title);
+        $("#comboDept").combobox({
+            valueField: 'Dept_Code',
+            textField: 'Dept_Name'
+        });
+        $("#txtName").searchbox({
+            searcher: function (value) {
+                setUserInfoData(1, 10);
+            }
+        });
+        $('#divUserInfo').window({
+            modal: true,
+            collapsible: false,
+            minimizable: false,
+            maximizable: false,
+            closed: true
+        });
+
+        $.ajax({
+            url: BaseData.WebApiUrl + "Nurse/getNurseInfo",
+            type: "get",
+            success: (function (data) {
+                userList = $.parseJSON(data);
+
+                setUserInfoData(1, 10);
+                $('#tbUsers').datagrid('getPager').pagination({
+                    pageSize: 10,//每页显示的记录条数，默认为10
+                    pageList: [10, 20, 30],//可以设置每页记录条数的列表
+                    beforePageText: '第',//页数文本框前显示的汉字
+                    afterPageText: '页    共 {pages} 页',
+                    displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录',
+
+                    onSelectPage: (function (pageNumber, pageSize) {
+                        setUserInfoData(pageNumber, pageSize);
+                    })
+                });
+            })
+        });
+
+        $.ajax({
+            url: BaseData.WebApiUrl + "Nurse/getDeptInfo",
+            type: "get",
+            success: (function (data) {
+                deptList = $.parseJSON(data);
+                setDeptCombo();
+                setUserInfoDeptCombo();
+                $(".easyui-combobox[datafilter]").combobox("setValue", "");
+
+
+                $(".easyui-combobox[userdeptfilter]").combobox("setValue", "");
+            })
+        });
+    });
+    function userFilter() {
+        if ($(this).attr("deptfilter")) {
+            setDeptCombo();
+        }
+        setUserInfoData(1, 10);
+    }
+    function setDeptCombo() {
+        var deptFilterData = dataFilter(deptList, "deptfilter", [{ Dept_Code: "", Dept_Name: "科室" }]);
+
+        $("#comboDept").combobox("loadData", deptFilterData);
+    }
+    function setUserInfoDeptCombo() {
+        var deptFilterData = dataFilter(deptList, "userdeptfilter");
+
+        $("#comboUserDept").combobox("loadData", deptFilterData);
+        if (deptFilterData && deptFilterData.length > 0) {
+            $("#comboUserDept").combobox("setValue", deptFilterData[0].Dept_Code);
+        }
+    }
+    function setUserInfoData(pageNum, pageSize) {
+        var filterData = dataFilter(userList, "datafilter");
+        filterData = searchUserFilter(filterData);
+        var data = new Array();
+        var startIndex = pageSize * (pageNum - 1);
+        for (var i = startIndex; i < startIndex + pageSize && i < filterData.length; i++) {
+            data.push(filterData[i]);
+        }
+        $('#tbUsers').datagrid("loadData", data);
+        $('#tbUsers').datagrid('getPager').pagination("refresh",
+            {
+                total: filterData.length,
+                pageNumber: pageNum,
+                pageSize: pageSize
+            });
+    }
+    function searchUserFilter(jsonData) {
+        var filterStr = $("#txtName").searchbox("getValue");
+        var result = new Array();
+        if (filterStr && filterStr.length > 0) {
+            for (var i in jsonData) {
+                var user = jsonData[i];
+                if ((user.User_Name && user.User_Name.indexOf(filterStr) != -1) || (user.Db_User && user.Db_User.toLowerCase().indexOf(filterStr.toLowerCase()) != -1)) {
+                    result.push(user);
+                }
+            }
+        }
+        else {
+            result = jsonData;
+        }
+        return result;
+    }
+    function listDateFormatter(value) {
+        var showDate = new Date(value);
+        var hour = showDate.getHours() + showDate.getTimezoneOffset() / 60;
+
+        if (hour < 0) {
+
+            hour = hour + 24;
+        }
+        showDate = showDate.setHours(hour);
+        return dateTimeFormatter(new Date(showDate), "yyyy-mm-dd");
+    }
+    function showUserInfo(flag) {
+        if (flag == "edit") {
+            var data = $('#tbUsers').datagrid("getSelected");
+            if (data == null) {
+                $.messager.alert("提示", "请选择用户！");
+                return;
+            }
+            else {
+                $("#txtUserDBName").val(data.Db_User);
+                $("#txtUserDBName").attr("disabled", "disabled");
+                $("#txtUserInfoName").val(data.User_Name);
+                $("#comboUserDept").combobox("setValue", data.User_Dept);
+                //$("#comboUserRole").combobox("setValue", data.Role_id);
+                $("#comboUserRole").combobox("setText", data.Role_Name);
+                $("#comboUserClinic").combobox("setText", data.Clinic_Attr_Name);
+                  $("#comboUserOI").combobox("setText", data.Oi_Attr_Name);
+                  $("#comboUserIS").combobox("setText", data.Is_Attr_Name);
+                $("#btnAddUserData").css("display", "none");
+                $("#btnEditUserData").css("display", "");
+
+            }
+        }
+        else {
+            $("#txtUserDBName").val("");
+            $("#txtUserDBName").removeAttr("disabled");
+            $("#txtUserInfoName").val("");
+            $("#comboUserDept").combobox("setValue", deptList[0].Dept_Code);
+            $("#saveUserData").click(addUserInfo);
+            $("#btnAddUserData").css("display", "");
+            $("#btnEditUserData").css("display", "none");
+        }
+        $('#divUserInfo').window('open');
+    }
+    function editUserInfo() {
+        var userdata = $('#tbUsers').datagrid("getSelected");
+
+        var postdata = {
+             Db_User: $("#txtUserDBName").val(),
+            User_Name: $("#txtUserInfoName").val(),
+            User_Dept: $("#comboUserDept").combobox("getValue"),
+            Name: $("#txtUserInfoName").val(),
+            Title: $("#comboUserRole").combobox("getText"),
+            Dept_code:$("#comboUserDept").combobox("getValue"),
+            Input_Code:$("#txtUserDBName").val(),
+            Job:$("#comboUserRole").combobox("getText"),
+        }
+        $.ajax({
+            url: BaseData.WebApiUrl + "Nurse/editUserInfo",
+            type: "post",
+            data: { '': JSON.stringify(postdata) },
+            success: (function (data) {
+                var jsonData = $.parseJSON(data);
+                if (jsonData) {
+
+                    if (jsonData.user) {
+                        for (var i in userList)
+                        {
+                            if (userList[i].Id == jsonData.user.Id)
+                            {
+                                userList[i] = jsonData.user;
+                                break;
+                            }
+                        }
+
+                        userFilter();
+                    }
+                    $.messager.alert("提示", jsonData.message);
+                }
+            })
+        });
+        $('#divUserInfo').window('close');
+
+    }
+    function addUserInfo() {
+        var data = {
+            Db_User: $("#txtUserDBName").val(),
+            User_Name: $("#txtUserInfoName").val(),
+            User_Dept: $("#comboUserDept").combobox("getValue"),
+            Name: $("#txtUserInfoName").val(),
+            Title: $("#comboUserRole").combobox("getText"),
+            Dept_code:$("#comboUserDept").combobox("getValue"),
+            Input_Code:$("#txtUserDBName").val(),
+            Job:$("#comboUserRole").combobox("getText"),
+        }
+        if (data.Db_User.length < 2) {
+            $.messager.alert("提示", "登录名必需大于两个字！");
+            return;
+        }
+        var re = new RegExp("^[A-Za-z0-9]+$");
+        if (!re.test(data.Db_User)) {
+            $.messager.alert("提示", "登录名只能是字母或数字！");
+            return;
+        }
+        $.ajax({
+            url: BaseData.WebApiUrl + "Nurse/addUserInfo",
+            type: "post",
+            data: { '': JSON.stringify(data) },
+            success: (function (data) {
+                var jsonData = $.parseJSON(data);
+                if (jsonData) {
+                    $.messager.alert("提示", jsonData.message);
+                    if (jsonData.user) {
+                        userList.push(jsonData.user);
+                        userList.sort(function (a, b) { return a.Create_Date < b.Create_Date ? 1 : -1; });
+                        userFilter();
+                    }
+                }
+            })
+        });
+        $('#divUserInfo').window('close');
+    }
+</script>

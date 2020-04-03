@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>权限管理</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+
+    <script src="../js/Common.js"></script>
+
+  
+    <script src="../js/easyui-extends.js"></script>
+  
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+
+    <link href="../../CSS/default.css" rel="stylesheet" />
+   <style>
+    
+   </style>
+</head>
+<body>
+    <div style="width:240px;height:100%;float:left;padding-left:20px">
+        <table id="tbRole" class="easyui-datagrid"></table>
+    </div>
+    <div style="width:240px;height:100%;float:left;padding-left:20px">
+        <table>
+            <tr>
+                <td width="80px" align="right">权限名称：</td>
+                <td><input class="easyui-textbox" id="txtMenuName" style="width:160px" /></td>
+            </tr>
+            <tr>
+                <td align="right">权限状态：</td>
+                <td>
+                    &nbsp;
+                    <input type="radio" name="status" id="rdStatus_0" checked="checked" />启用&nbsp;&nbsp;
+                    <input type="radio" name="status" id="rdStatus_1" />禁用
+                </td>
+            </tr>
+            <tr>
+                <td align="right">备注：</td>
+                <td><input class="easyui-textbox" id="txtMenuMemo" data-options="multiline:true" style="width:160px;height:80px" /></td>
+            </tr>
+        </table>
+    </div>
+    <div style="height:100%;float:left;padding-left:20px">
+        <ul id="treeMenu" class="easyui-tree"></ul>
+    </div>
+</body>
+</html>
+<script language="javascript" type="text/javascript">
+    var menuList = new Array();
+    $(function () {
+        $("#tbRole").datagrid({
+            title: '权限管理',
+            width: '98%',
+            style: { 'text-align': 'center' },
+            singleSelect: true,
+            idField: 'id',
+            toolbar: [{
+                text: '添加',
+                iconCls: 'icon-huayi-add',
+                handler: function () {
+                    showUserInfo("add");
+                }
+            }, '-', {
+                text: '修改',
+                iconCls: 'icon-edit',
+                handler: function () {
+                    showUserInfo("edit");
+                }
+
+            }],
+            columns: [[
+                 { field: 'UserName', title: '权限名称', width: 120 },
+                 { field: '体温', title: '状态', width: 40 },
+
+            ]]
+        });
+        $("#treeMenu").tree({
+            checkbox: true
+        });
+        $.ajax({
+            url: BaseData.WebApiUrl + "SystemManager/getAllMenu",
+            type: "get",
+            success: (function (data) {
+                if (data) {
+                    menuList = $.parseJSON(data);
+                    var treeData = new Array();
+
+
+                    var comboData = new Array();
+
+                    for (var i in menuList) {
+                        var menu = { id: menuList[i].Id, text: menuList[i].Menu_Name, children: new Array(), attributes: { parentID: menuList[i].Parent_ID } };
+                        if (menuList[i].ChildMenu && menuList[i].ChildMenu.length > 0) {
+                            for (var j in menuList[i].ChildMenu) {
+                                menu.children.push({ id: menuList[i].ChildMenu[j].Id, text: menuList[i].ChildMenu[j].Menu_Name, attributes: { parentID: menuList[i].ChildMenu[j].Parent_ID } });
+                            }
+                        }
+                        treeData.push(menu);
+                        comboData.push({ id: menuList[i].Id, text: menuList[i].Menu_Name });
+                    }
+                    $("#treeMenu").tree("loadData", treeData);
+                }
+            })
+        })
+    });
+</script>

@@ -1,0 +1,239 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管路评估</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/jquerysession.js"></script>
+    <script src="../js/Common.js"></script>
+    <script src="../js/easyui-extends.js"></script>
+    <script src="../js/NursingCare/NurseRecordPipeSlide.js"></script>
+    <script src="../js/publicPatient.js"></script>
+    <script src="../js/PatientInfo.js"></script>
+    <script src="../../JavaScript/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+</head>
+<body>
+    <div>
+        <table style="width:98%">
+            <tr>
+                <td><input id="ccPatients" name="ccPatients" style="width:120px" class="easyui-combobox" data-options="valueField:'Patient_id',textField:'Name'" /></td>
+                <td>
+                    日期<input id="txtDate" class="easyui-datebox" style="width:180px;" data-options="formatter:dateFormatter,parser:dateParser" />
+                    <a href="#" id="btnQuery" class="easyui-linkbutton" iconcls="icon-huayi-search">查询</a>
+                    <a href="#" class="easyui-linkbutton" iconcls="icon-huayi-print" onclick="print()">打印</a>
+                </td>
+            </tr>
+        </table>
+        <table id="tabPatientInfo" class="patientTable" style="width:98%;background:#fff;margin-top:5px;">
+        </table>
+        <div>
+            <table id="tbList" class="easyui-datagrid" style="width:98%;height:auto" data-options="singleSelect:true">
+                <thead>
+                    <tr>
+                        <th data-options="field:'Record_Time',width:'12%',align:'center',formatter:inputListDateFormatter">
+                            时间
+                        </th>
+                       
+                        <th data-options="field:'Factor',width:'15%',align:'center'">
+                            危险因素
+                        </th>
+                        <th data-options="field:'Measure',width:'15%',align:'center'">
+                            措施
+                        </th>
+                        <th data-options="field:'Score',width:'12%',align:'center'">
+                            评分
+                        </th>
+                        <th data-options="field:'Nurse_Name',width:'15%',align:'center'">
+                            护士签名
+                        </th>
+                        <th data-options="field:'Headnurse_Name',width:'15%',align:'center'">
+                            护士长签名
+                        </th>
+                        <th data-options="width:'15%', field:'Id',align:'center',formatter:InputListOperateField">
+                            操作
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+            <table id="tbTable" class="inputTable" style="width:98%;height:auto;">
+                <tr>
+                    <td colspan="4">
+                        录入时间
+                        <input class="easyui-timespinner" id="dtInput" style="width:80px" data-options="showSeconds:false" />
+
+
+                    <a href="#" id="btnSaveInput" style="float:right;margin-right:30px" class="easyui-linkbutton" iconcls="icon-huayi-save">保存</a>
+                    </td>
+                </tr>
+                <tr>
+                    <th colspan="4">
+                        危险因素
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" value="(1)" title="(1)" id="Factor1" name="Factor" />(1)气管插管/切开导管
+                    </td>
+                    <td>3分</td>
+                    <td>
+                        <input type="checkbox" value="(2)" title="(2)" id="Factor2" name="Factor" />(2)胸管
+                    </td>
+                    <td>3分</td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" value="(3)" title="(3)" id="Factor3" name="Factor" />(3)脑室引流管
+                    </td>
+                    <td>3分</td>
+                    <td>
+                        <input type="checkbox" value="(4)" title="(4)" id="Factor4" name="Factor" />(4)动静脉插管
+                    </td>
+                    <td>3分</td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" value="(5)" title="(5)" id="Factor5" name="Factor" />(5)深静脉导管/PICK
+                    </td>
+                    <td>3分</td>
+                    <td>
+                        <input type="checkbox" value="(6)" title="(6)" id="Factor6" name="Factor" />(6)双套管
+                    </td>
+                    <td>2分</td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" value="(7)" title="(7)" id="Factor7" name="Factor" />(7)负压球
+                    </td>
+                    <td>2分</td>
+                    <td>
+                        <input type="checkbox" value="(8)" title="(8)" id="Factor8" name="Factor" />(8)T管
+                    </td>
+                    <td>2分</td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" value="(9)" title="(9)" id="Factor9" name="Factor" />(9)导尿管
+                    </td>
+                    <td>2分</td>
+                    <td>
+                        <input type="checkbox" value="(10)" title="(10)" id="Factor10" name="Factor" />(10)胃管
+                    </td>
+                    <td>2分</td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" value="(11)" title="(11)" id="Factor11" name="Factor" />(11)三腔管
+                    </td>
+                    <td>2分</td>
+                    <td>
+                        <input type="checkbox" value="(12)" title="(12)" id="Factor12" name="Factor" />(12)造瘘管/鼻空肠管
+                    </td>
+                    <td>2分</td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" value="(13)" title="(13)" id="Factor13" name="Factor" />(13)重度烦躁
+                    </td>
+                    <td>7分</td>
+                    <td>
+                        <input type="checkbox" value="(14)" title="(14)" id="Factor14" name="Factor" />(14)中度烦躁
+                    </td>
+                    <td>5分</td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" value="(15)" title="(15)" id="Factor15" name="Factor" />(15)轻度烦躁
+                    </td>
+                    <td>3分</td>
+                    <td>
+                        <input type="checkbox" value="(16)" title="(16)" id="Factor16" name="Factor" />(16)幼儿
+                    </td>
+                    <td>5分</td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" value="(17)" title="(17)" id="Factor17" name="Factor" />(17)意识不清不配合
+                    </td>
+                    <td>2分</td>
+                    <td>
+                        <input type="checkbox" value="(18)" title="(18)" id="Factor18" name="Factor" />(18)沟通障碍
+                    </td>
+                    <td>2分</td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" value="(19)" title="(19)" id="Factor19" name="Factor" />(19)呃逆/呛咳
+                    </td>
+                    <td>2分</td>
+                    <td>
+                        <input type="checkbox" value="(20)" title="(20)" id="Factor20" name="Factor" />(20)肥胖（颈部短）
+                    </td>
+                    <td>2分</td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" value="(21)" title="(21)" id="Factor21" name="Factor" />(21)吸氧管
+                    </td>
+                    <td>1分</td>
+                    <td>
+                        <input type="checkbox" value="(22)" title="(22)" id="Factor22" name="Factor" />(22)外周静脉输液管
+                    </td>
+                    <td>1分</td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" value="(23)" title="(23)" id="Factor23" name="Factor" />(23)睡眠中无意识活动过多
+                    </td>
+                    <td>1分</td>
+                    <td></td><td></td>
+                </tr>
+                <tr>
+                    <th colspan="4">护理措施</th>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input type="checkbox" value="①" title="①" id="Measure1" name="Measure" />①悬挂警示牌
+                    </td>
+                    <td colspan="2">
+                        <input type="checkbox" value="②" title="②" id="Measure2" name="Measure" />②告知患者及家属可能出现管路滑脱的危险性，讲解注意事项
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input type="checkbox" value="③" title="③" id="Measure3" name="Measure" />③24h专人看护
+                    </td>
+                    <td colspan="2">
+                        <input type="checkbox" value="④" title="④" id="Measure4" name="Measure" />④使用约束带
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input type="checkbox" value="⑤" title="⑤" id="Measure5" name="Measure" />⑤使用镇静药物
+                    </td>
+                    <td colspan="2">
+                        <input type="checkbox" value="⑥" title="⑥" id="Measure6" name="Measure" />⑥使用手套或袜套
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input type="checkbox" value="⑦" title="⑦" id="Measure7" name="Measure" />⑦加用床栏
+                    </td>
+                    <td colspan="2">
+                        <input type="checkbox" value="⑧" title="⑧" id="Measure8" name="Measure" />⑧加强导管固定
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        护士签名：<input class="easyui-textbox" id="NurseName" readonly="readonly" />
+                        护士长签名：<input class="easyui-textbox" id="HeadNurseName" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

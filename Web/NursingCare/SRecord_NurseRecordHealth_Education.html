@@ -1,0 +1,486 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>健康教育记录</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/jquerysession.js"></script>
+    <script src="../js/Common.js"></script>
+    <script src="../js/easyui-extends.js"></script>
+    <script src="../js/publicPatient.js"></script>
+    <script src="../js/PatientInfo.js"></script>
+    <script src="../../JavaScript/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <script src="../../JavaScript/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../js/NursingCare/SRecord_NurseRecordHealth_Education.js"></script>
+    <style>
+        .textbox {
+            margin-top: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <table style="width:98%">
+            <tr>
+                <td><input id="ccPatients" name="ccPatients" style="width:120px" class="easyui-combobox" data-options="valueField:'Patient_id',textField:'Name'" /></td>
+                <td>
+                    截止时间<input id="txtDate" class="easyui-datebox" style="width:180px;" data-options="formatter:dateFormatter,parser:dateParser" />
+                    <a href="#" id="btnQuery" class="easyui-linkbutton" iconcls="icon-huayi-search">查询</a>
+                    <a href="#" class="easyui-linkbutton" iconcls="icon-huayi-print" onclick="print()">打印</a>
+                </td>
+            </tr>
+        </table>
+        <table id="tabPatientInfo" class="patientTable" style="width:98%;background: #fff;margin-top:5px;">
+        </table>
+        <table id="tbNurseRecordHealth_EducationList" class="easyui-datagrid" style="width:98%;height:auto" data-options="singleSelect:true">
+            <thead>
+                <tr>
+                    <th data-options="field:'patient_id',width:'20%',align:'center'" class="auto-style1" hidden="hidden">
+                        病员ID
+                    </th>
+                    <th data-options="field:'Writing_time',width:'25%',align:'center'" class="auto-style1">
+                        记录日期
+                    </th>
+                    <th data-options="field:'Target_name',width:'25%',align:'center',formatter:formatterTargetName" class="auto-style1">
+                        教育对象
+                    </th>
+                    <th data-options="field:'Nurse_name',width:'30%',align:'center'" class="auto-style1">
+                        责任护士签名
+                    </th>
+                    <th data-options="field:'Ward_code',width:'25%',align:'center'" class="auto-style1" hidden="hidden">
+                    </th>
+                    <th data-options="field:'Visit_id',width:'25%',align:'center'" class="auto-style1" hidden="hidden">
+                    </th>
+                    <th data-options="width:'20%', field:'Id',align:'center',formatter:InputListOperateField" class=" auto-style1">
+                        操作
+                    </th>
+                </tr>
+            </thead>
+        </table>
+        <table class="inputTable" width="98%">
+            <tr>
+                <td style="text-align:left">
+                    记录日期:
+                    <input id="WRITING_TIME" style="width:180px" class="easyui-datetimebox" data-options="panelHeight:'auto'">
+                </td>
+                <td>
+                    <div style="float:left">
+                        教育对象:
+                        <input id="target_name" style="width:100px" class="easyui-combobox" data-options="panelHeight:'auto'">
+                    </div>
+                </td>
+                <td style="text-align:center">
+                    <a href="#" id="btnSaveInput" style="margin-right:20px" class="easyui-linkbutton" iconcls="icon-huayi-save">保存</a>
+                </td>
+            </tr>
+        </table>
+        <table class="inputTable" width="98%"  id="inputTabs">
+            <tr>
+                <th colspan="2" style="text-align:center;">教育项目</th>
+                <th style="text-align:center;">
+                    掌握
+                </th>
+                <th style="text-align:center;">
+                    未掌握
+                </th>
+            </tr>
+            <tr>
+                <td rowspan="5" style="width: 19px">
+                    入院指导
+                </td>
+                <td style="width: 601px">
+                    1.介绍：环境、医务人员
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="1" title="1" id="fore_education_id1" name="Fore_education_id" />
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="2" title="2" id="fore_education_id2" name="Fore_education_id" />
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 601px">
+                    2.功能设施：使用方法及规定
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="3" title="3" id="fore_education_id3" name="Fore_education_id" />
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="4" title="4" id="fore_education_id4" name="Fore_education_id" />
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 601px">
+                    3.规章制度：陪护、休养服、请销假
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="5" title="5" id="fore_education_id5" name="Fore_education_id" />
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="6" title="6" id="fore_education_id6" name="Fore_education_id" />
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 601px">
+                    4.时间：作息、开饭、诊疗时间
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="7" title="7" id="fore_education_id7" name="Fore_education_id" />
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="8" title="8" id="fore_education_id8" name="Fore_education_id" />
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 601px">
+                    5.标本：留检方法、放置地点
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="9" title="9" id="fore_education_id9" name="Fore_education_id" />
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="10" title="10" id="fore_education_id10" name="Fore_education_id" />
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="18" style="width: 19px">
+                    住院指导
+                </td>
+                <td style="width: 601px">
+                    1.个人卫生：清洁、处置的方法和意义
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="1" title="1" id="amongst_education_id1" name="Amongst_education_id" />
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="2" title="2" id="amongst_education_id2" name="Amongst_education_id" />
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 601px">
+                    2.饮食：营养搭配指导
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="3" title="3" id="amongst_education_id3" name="Amongst_education_id" />
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="4" title="4" id="amongst_education_id4" name="Amongst_education_id" />
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 601px; height: 22px;">
+                    3.安全：防跌倒、防坠床、防烫伤、防走失、防 压疮、防误吸、防拔管
+                </td>
+                <td style="width: 200px;text-align:center; height: 22px;">
+                    <input type="checkbox" value="5" title="5" id="amongst_education_id5" name="Amongst_education_id" />
+                </td>
+                <td style="width: 200px;text-align:center; height: 22px;">
+                    <input type="checkbox" value="6" title="6" id="amongst_education_id6" name="Amongst_education_id" />
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 601px">
+                    4.术前准备:备皮、备物、用药、置管、床上大小便训练、胸腹式呼吸、有效咳嗽及咳痰
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="7" title="7" id="amongst_education_id7" name="Amongst_education_id" />
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="8" title="8" id="amongst_education_id8" name="Amongst_education_id" />
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 601px">
+                    5.术后指导：引流管注意事项、麻醉方式及配合、缓解疼痛的方法、预防感染的事宜
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="9" title="9" id="amongst_education_id9" name="Amongst_education_id" />
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="10" title="10" id="amongst_education_id10" name="Amongst_education_id" />
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 601px; height: 22px;">
+                    6.功能锻炼：方法及频次
+                </td>
+                <td style="width: 200px;text-align:center; height: 22px;">
+                    <input type="checkbox" value="11" title="11" id="amongst_education_id11" name="Amongst_education_id" />
+                </td>
+                <td style="width: 200px;text-align:center; height: 22px;">
+                    <input type="checkbox" value="12" title="12" id="amongst_education_id12" name="Amongst_education_id" />
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 601px;">
+                    7.氧疗指导：氧浓度
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="13" title="13" id="amongst_education_id13" name="Amongst_education_id" />
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="14" title="14" id="amongst_education_id14" name="Amongst_education_id" />
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 601px">
+                    8.特殊检查指导
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="15" title="15" id="amongst_education_id15" name="Amongst_education_id" />
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="16" title="16" id="amongst_education_id16" name="Amongst_education_id" />
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 601px">
+                    9.翻身、叩背：方法、配合要点
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="17" title="17" id="amongst_education_id17" name="Amongst_education_id" />
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="18" title="18" id="amongst_education_id18" name="Amongst_education_id" />
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 601px">
+                    10.导管护理
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="19" title="19" id="amongst_education_id19" name="Amongst_education_id" />
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="20" title="20" id="amongst_education_id20" name="Amongst_education_id" />
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 601px;">
+                    11.特殊用药注意事项
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="21" title="21" id="amongst_education_id21" name="Amongst_education_id" />
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="22" title="22" id="amongst_education_id22" name="Amongst_education_id" />
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 601px">
+                    12.静脉治疗：健康宣教
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="23" title="23" id="amongst_education_id23" name="Amongst_education_id" />
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="24" title="24" id="amongst_education_id24" name="Amongst_education_id" />
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 601px; height: 22px;">
+                    13.出入量/尿量：记录的意义和方法
+                </td>
+                <td style="width: 200px;text-align:center; height: 22px;">
+                    <input type="checkbox" value="25" title="25" id="amongst_education_id25" name="Amongst_education_id" />
+                </td>
+                <td style="width: 200px;text-align:center; height: 22px;">
+                    <input type="checkbox" value="26" title="26" id="amongst_education_id26" name="Amongst_education_id" />
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 601px">
+                    14.等级护理活动范围
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="27" title="27" id="amongst_education_id27" name="Amongst_education_id" />
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="28" title="28" id="amongst_education_id28" name="Amongst_education_id" />
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 601px">
+                    15.心理护理
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="29" title="29" id="amongst_education_id29" name="Amongst_education_id" />
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="30" title="30" id="amongst_education_id30" name="Amongst_education_id" />
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 601px">
+                    16.专科疾病知识宣教指导
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="31" title="31" id="amongst_education_id31" name="Amongst_education_id" />
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="32" title="32" id="amongst_education_id32" name="Amongst_education_id" />
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 601px">
+                    17.并发症的预防
+                </td>
+                <td style="width: 200px; text-align: center">
+                    <input type="checkbox" value="33" title="33" id="amongst_education_id33" name="Amongst_education_id" />
+                </td>
+                <td style="width: 200px; text-align: center">
+                    <input type="checkbox" value="34" title="34" id="amongst_education_id34" name="Amongst_education_id" />
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 601px">
+                    18.康复指导
+                </td>
+                <td style="width: 200px; text-align: center">
+                    <input type="checkbox" value="35" title="35" id="amongst_education_id35" name="Amongst_education_id" />
+                </td>
+                <td style="width: 200px; text-align: center">
+                    <input type="checkbox" value="36" title="36" id="amongst_education_id36" name="Amongst_education_id" />
+                </td>
+            </tr>
+            <tr style=" display:none">
+                <td rowspan="5" style="width: 19px">
+                    专科指导
+                </td>
+                <td style="width: 601px; height: 22px">
+                    <!--<asp:DropDownList ID="DropDownList2" runat="server" onchange="setValues(this.id,'TextBox2')">
+                </asp:DropDownList>
+                <asp:TextBox ID="TextBox2" runat="server" Width="80%"></asp:TextBox>-->
+                </td>
+                <td style="width: 200px; height: 22px; text-align: center">
+                    <!--<asp:CheckBox ID="CheckBox57" runat="server" />-->
+                </td>
+                <td style="width: 200px; height: 22px; text-align: center">
+                    <!--<asp:CheckBox ID="CheckBox58" runat="server" />-->
+                </td>
+            </tr>
+            <tr style=" display:none">
+                <td style="width: 601px; height: 22px">
+                    <!--<asp:DropDownList ID="DropDownList3" runat="server" onchange="setValues(this.id,'TextBox3')">
+                </asp:DropDownList>
+                <asp:TextBox ID="TextBox3" runat="server" Width="80%"></asp:TextBox>-->
+                </td>
+                <td style="width: 200px; height: 22px; text-align: center">
+                    <!--<asp:CheckBox ID="CheckBox59" runat="server" />-->
+                </td>
+                <td style="width: 200px; height: 22px; text-align: center">
+                    <!--<asp:CheckBox ID="CheckBox60" runat="server" />-->
+                </td>
+            </tr>
+            <tr style=" display:none">
+                <td style="width: 601px; height: 22px">
+                    <!--<asp:DropDownList ID="DropDownList4" runat="server" onchange="setValues(this.id,'TextBox4')">
+                </asp:DropDownList>
+                <asp:TextBox ID="TextBox4" runat="server" Width="80%"></asp:TextBox>-->
+                </td>
+                <td style="width: 200px; height: 22px; text-align: center">
+                    <!--<asp:CheckBox ID="CheckBox61" runat="server" />-->
+                </td>
+                <td style="width: 200px; height: 22px; text-align: center">
+                    <!--<asp:CheckBox ID="CheckBox62" runat="server" />-->
+                </td>
+            </tr>
+            <tr style=" display:none">
+                <td style="width: 601px; height: 22px">
+                    <!--<asp:DropDownList ID="DropDownList5" runat="server" onchange="setValues(this.id,'TextBox5')">
+                </asp:DropDownList>
+                <asp:TextBox ID="TextBox5" runat="server" Width="80%"></asp:TextBox>-->
+                </td>
+                <td style="width: 200px; height: 22px; text-align: center">
+                    <!--<asp:CheckBox ID="CheckBox63" runat="server" />-->
+                </td>
+                <td style="width: 200px; height: 22px; text-align: center">
+                    <!--<asp:CheckBox ID="CheckBox64" runat="server" />-->
+                </td>
+            </tr>
+            <tr style=" display:none">
+                <td style="width: 601px; height: 22px">
+                    <!--<asp:DropDownList ID="DropDownList6" runat="server" onchange="setValues(this.id,'TextBox6')">
+                </asp:DropDownList>
+                <asp:TextBox ID="TextBox6" runat="server" Width="80%"></asp:TextBox>-->
+                </td>
+                <td style="width: 200px; height: 22px; text-align: center">
+                    <!--<asp:CheckBox ID="CheckBox65" runat="server" />-->
+                </td>
+                <td style="width: 200px; height: 22px; text-align: center">
+                    <!--<asp:CheckBox ID="CheckBox66" runat="server" />-->
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="6" style="width: 19px">
+                    出院指导
+                </td>
+                <td style="width: 601px; height: 22px;">
+                    1.出院：手续办理及途径
+                </td>
+                <td style="width: 200px;text-align:center; height: 22px;">
+                    <input type="checkbox" value="1" title="1" id="after_education_id1" name="After_education_id" />
+                </td>
+                <td style="width: 200px;text-align:center; height: 22px;">
+                    <input type="checkbox" value="2" title="2" id="after_education_id2" name="After_education_id" />
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 601px">
+                    2.保健：休息、营养、活动及用药指导
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="3" title="3" id="after_education_id3" name="After_education_id" />
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="4" title="4" id="after_education_id4" name="After_education_id" />
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 601px">
+                    3.复诊:时间、所需资料、途径及咨询方法
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="5" title="5" id="after_education_id5" name="After_education_id" />
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="6" title="6" id="after_education_id6" name="After_education_id" />
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 601px">
+                    4.专家门诊：时间、地点
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="7" title="7" id="after_education_id7" name="After_education_id" />
+                </td>
+                <td style="width: 200px;text-align:center;">
+                    <input type="checkbox" value="8" title="8" id="after_education_id8" name="After_education_id" />
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 601px">
+                    5.出院后定期随访的意义要求
+                </td>
+                <td style="width: 200px; text-align: center">
+                    <input type="checkbox" value="9" title="9" id="after_education_id9" name="After_education_id" />
+                </td>
+                <td style="width: 200px; text-align: center">
+                    <input type="checkbox" value="10" title="10" id="after_education_id10" name="After_education_id" />
+                </td>
+            </tr>
+        </table>
+        责任护士签名:
+        <input id="nurse_name" style="width:100px;margin-top:5px" class="easyui-textbox" data-options="panelHeight:'auto'">
+        <div style="visibility: hidden;" id="checks">
+            <input nurse_education="vital_sign:Fore_education_id" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtFore_education_id" />入院指导
+            <input nurse_education="vital_sign:Amongst_education_id" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtAmongst_education_id" />住院指导
+            <input nurse_education="vital_sign:After_education_id" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtAfter_education_id" />出院指导
+         </div>
+        </div>
+</body>
+</html>

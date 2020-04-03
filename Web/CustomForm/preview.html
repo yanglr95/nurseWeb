@@ -1,0 +1,40 @@
+<extend name="Public/base_min" />
+<block name="title">
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keyword" content="">
+    <meta name="description" content="">
+</block>
+<block name="head">
+    <script src="../../JavaScript/Formdesign4_1_Ueditor1_4_2/js/ueditor/formdesign/jquery-1.7.2.min.js"></script>
+    <script src="../../JavaScript/Formdesign4_1_Ueditor1_4_2/js/ueditor/ueditor.config.js"></script>
+    <script src="../../JavaScript/Formdesign4_1_Ueditor1_4_2/js/ueditor/ueditor.all.js"></script>
+    <script src="../../JavaScript/Formdesign4_1_Ueditor1_4_2/js/ueditor/lang/zh-cn/zh-cn.js"></script>
+
+</block><!--end head-->
+<block name="body">
+<div class="bs-header" id="content">
+  <div class="container">
+    <h1>预览表单<small></small></h1>
+    <p>
+       预览效果等于填表效果
+    </p>
+  </div>
+</div>
+
+<div class="container">
+<!--<div class="row">
+    <ol class="breadcrumb">
+        <li><a href="/">表单设计器</a> <span class="divider">/</span></li>
+        <li><a href="{:U('/demo')}">实例</a> <span class="divider">/</span></li>
+        <li class="active">预览表单 [{$one.form_name}]</li>
+    </ol>
+</div>-->
+
+<div class="row ">
+{$design_content}
+</div>
+</div><!--end container-->
+
+<block name="footer_js">
+</block><!--end footer_js-->

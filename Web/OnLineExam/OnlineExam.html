@@ -1,0 +1,150 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>在线考试</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/Common.js"></script>
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../CSS/default.css" rel="stylesheet" />
+</head>
+<body>
+    <div data-options="region:'center',title:'护理满意度问卷设置'" style="padding:5px">
+        <table id="tbConfig" class="easyui-datagrid" width="98%"></table>
+    </div>
+</body>
+</html>
+<script type="text/javascript">
+    $(function () {
+         getSubjectData();
+        //splicingField();
+ $("#tbConfig").datagrid({
+        width: '98%',
+        style: { 'text-align': 'center' },
+        singleSelect: true,
+        nowrap: false,
+        columns: [[
+            {
+                field: 'id', title: '试卷编号', width: 200, formatter: function (value, row, rowIndex) {
+                    return rowIndex + 1;
+                }
+
+            },
+             {
+                 field: 'Papername', title: '试卷名称', width:500,
+                 editor: { type: 'textbox' }
+             }
+,
+             {
+                 field: 'Totalscore', title: '总分', width: 60,
+                 editor: { type: 'textbox' }
+             }
+,
+             {
+                 field: 'Questionsnumber', title: '题数', width: 60,
+                 editor: { type: 'textbox' }
+             }
+,
+             {
+                 field: 'Timelimit', title: '时限', width: 60,
+                 editor: { type: 'textbox' }
+             }
+,
+             {
+                 field: 'Startdate', title: '开始时间', width: 60,parser:dateParser,
+                 editor: { type: 'textbox' }
+             }
+,
+             {
+                 field: 'Enddate', title: '结束时间', width: 60,parser:dateParser,
+                 editor: { type: 'textbox' }
+             }
+    ,
+              {
+                  field: 'aa', title: '操作', width: 60, formatter: function (value, row, rowIndex) {
+                      var str = "<a href='#'  onclick='checkDate(" + rowIndex + ")' >开始</a>";
+                      str += "&nbsp;&nbsp;";
+                      str += "<a href='#' onclick='delCrl(" + rowIndex + ")' >删除</a>";
+                      return str;
+                  }
+              }
+        ]],
+
+        onAfterEdit: function (index, row) {
+            //for (var i in NursingTechniques) {
+               //if (NursingTechniques[i].TechID == row.TechID) {
+                   //row.TechName = NursingTechniques[i].TechName;
+                   // break;
+                //}
+           // }
+            row.editing = false;
+            updateActions(index);
+        },
+    });
+    });
+    function dateParse(dateString){
+    var SEPARATOR_BAR = "-";
+    var SEPARATOR_SLASH = "/";
+    var SEPARATOR_DOT = ".";
+    var dateArray;
+    if(dateString.indexOf(SEPARATOR_BAR) > -1){
+        dateArray = dateString.split(SEPARATOR_BAR);
+    }else if(dateString.indexOf(SEPARATOR_SLASH) > -1){
+        dateArray = dateString.split(SEPARATOR_SLASH);
+    }else{
+        dateArray = dateString.split(SEPARATOR_DOT);
+    }
+    return new Date(dateArray[0], dateArray[1]-1, dateArray[2]);
+};
+    function dateCompare(dateString, compareDateString){
+    if(dateString.length<=0){
+        alert("dateString不能为空");
+        return;
+    }
+    if(compareDateString.length<=0){
+        alert("compareDateString不能为空");
+        return;
+    }
+    var dateTime = dateParse(dateString).getTime();
+    var compareDateTime = dateParse(compareDateString).getTime();
+    if(compareDateTime > dateTime){
+        return 1;
+    }else if(compareDateTime == dateTime){
+        return 0;
+    }else{
+        return -1;
+    }
+};
+    function checkDate(rowIndex){
+     if (rowIndex != -1) {
+
+          var data = $('#tbConfig').datagrid('getData').rows[rowIndex];
+        if(dateCompare(dateFormatter(new Date(data.Startdate)),dateFormatter(new Date()))>=0&&dateCompare(dateFormatter(new Date()),dateFormatter(new Date(data.Enddate)))>=0)
+         window.location.href="ExamSubpage.html?questions="+data.Questions+"&id="+data.Id;
+        else{
+         $.messager.alert("提示","不在考试日期内！");
+     }
+        }
+
+    }
+    function getSubjectData(){
+
+                        $.ajax({
+                            url: BaseData.WebApiUrl + "OnlineExam/getExamManagement/",
+                            type: "get",
+                            data: "paperType=在线考试",
+                            success: (function (data) {
+                                var jsonData=$.parseJSON(data);
+                                if (jsonData.length > 0) {
+                                    for (var i = 0; i < jsonData.length; i++) {
+                                     $("#tbConfig").datagrid('loadData', jsonData);
+                                    }
+                                }
+                            })
+                        });
+
+}
+</script>
+

@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>腕带打印</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/jquerysession.js"></script>
+    <script src="../js/Common.js"></script>
+    <script src="../js/BodyChart.js"></script>
+    <script src="../js/PatientInfo.js"></script>
+    <script src="../js/easyui-extends.js"></script>
+    <script src="../js/publicPatient.js"></script>
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../CSS/default.css" rel="stylesheet" />
+</head>
+<body>
+    <div>
+        <table style="width: 98%">
+            <tr>
+                <td>
+                    <input id="ccPatients" name="ccPatients" style="width: 120px;" class="easyui-combobox" data-options="valueField:'Patient_id',textField:'Name'" />
+                    <a href="#" id="btnQue" class="easyui-linkbutton" onclick="PrintBedCard()" iconcls="icon-huayi-print" style="margin-left:30px;">床头卡打印</a>
+                    <a href="#" id="btnQuery" class="easyui-linkbutton" onclick="PrintBand()" iconcls="icon-huayi-print"  style="margin-left:2px;">腕带打印</a>
+                </td>
+            </tr>
+        </table>
+        <table id="tabPatientInfo" class="patientTable" style="width: 98%;background:#fff;margin-top:5px;">
+        </table>
+    </div>
+</body>
+</html>
+<script type="text/javascript">
+    var patient;
+
+    $(function () {
+        var pid = getQuery("pid");
+        $("#ccPatients").combobox({
+            onSelect: PatientsComboChange,
+            filter: filterPatient,
+            panelHeight:document.documentElement.clientHeight
+        });
+        var ward_code = getSession("ward_code") == undefined ? "null" : getSession("ward_code");
+        $.ajax({
+            url: BaseData.WebApiUrl + "nurse/getPatientListByWard/",
+            data: "ward_code=" + ward_code,
+            type: "get",
+            success: (function (data) {
+                var jsonData = $.parseJSON(data);
+                if (jsonData) {
+                    for (var i = 0; i < jsonData.length; i++) {
+                        jsonData[i].Name = "(" + jsonData[i].Bed_No + ")" + jsonData[i].Name;
+                    }
+                    $("#ccPatients").combobox('loadData', jsonData);
+
+                    if (pid != null) {
+                        $("#ccPatients").combobox({
+                            disabled: true
+                        });
+                        $("#ccPatients").combobox('setValue', pid);
+                        PatientsComboChange();
+                    } else {
+                        var patientid = getSession("Patient_Id");
+                        if (patientid != null && patientid != "null") {
+                            $("#ccPatients").combobox('setValue', patientid);
+                            PatientsComboChange();
+                        } else {
+                            setSession(jsonData[0].Patient_id);
+                            $("#ccPatients").combobox('setValue', jsonData[0].Patient_id);
+                            PatientsComboChange();
+                        }
+                    }
+                }
+            })
+        });
+    });
+    function PatientsComboChange() {
+        var patient_id = $("#ccPatients").combobox('getValue');
+        $.ajax({
+            url: BaseData.WebApiUrl + "nurse/getPatientInfoByPatientID",
+            data: "patientid=" + patient_id,
+            type: "get",
+            success: (function (data) {
+                var jsonData = $.parseJSON(data);
+                $.session.set('fuelbandtData', JSON.stringify(jsonData));
+                if (jsonData) {
+                    patient = jsonData;
+                    SetTableValue("tabPatientInfo", jsonData);
+
+                    removeSession("patient_id");
+                    setSession(patient_id);
+                }
+            })
+        });
+    }
+    function getQuery(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]); return null;
+    }
+    function tdDateFormatter(jsonObj) {
+        var date = new Date(jsonObj.Admission_Date_Time.replace(/-/g, "/").replace(/T/g, " "));
+        return dateTimeFormatter(new Date(date), "yyyy-mm-dd");
+    }
+    function PrintBedCard() {
+        if (!patient) {
+            $.messager.alert("提示", "请选择病人！");
+            return;
+        }
+        // window.open(BaseData.WebApiUrl + "print/printBedCard?patient_id=" + patient.Patient_id + "&visit_id=" + patient.Visit_id);
+        var WinPrint = window.open('../Print/BedsidePrint.html?patient_id=' + patient.Patient_id + "&visit_id=" + patient.Visit_id);
+    }
+    function PrintBand() {
+        if (!patient) {
+            $.messager.alert("提示", "请选择病人！");
+            return;
+        }
+        // window.open(BaseData.WebApiUrl + "print/printPatientBand?patient_id=" + patient.Patient_id + "&visit_id=" + patient.Visit_id);
+        var WinPrint = window.open('../Print/SpirePrint.html?patient_id=' + patient.Patient_id + "&visit_id=" + patient.Visit_id);
+
+    }
+
+</script>
+

@@ -1,0 +1,1902 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>入院评估单</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="web/js/Common.js"></script>
+    <script src="web/js/NurseRecordEval.js"></script>
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <script type="text/javascript">
+        function parse() {
+            $("[easyui-ctl]").each(function () {
+                var obj = $(this)
+                obj.addClass("easyui-" + obj.attr("easyui-ctl"));
+
+
+            })
+            $.parser.parse($("#inputTabs"));
+        }
+    </script>
+</head>
+<body>
+    <table style="width: 98%">
+        <tr>
+            <td>
+                <input id="ccPatients" name="ccPatients" style="width: 120px" class="easyui-combobox" data-options="valueField:'Patient_id',textField:'Name',panelHeight:'auto'" />
+                <!--<input id="ccvisitid" easyui-ctl="textbox" data-options="valueField:'Visit_id',textField:'Visit_id',panelHeight:'auto'" />-->
+            </td>
+            <td>
+                <a href="#" id="btnSaveInput" class="easyui-linkbutton" iconcls="icon-huayi-save">保存</a>
+                <a href="#" id="btnDelete" class="easyui-linkbutton" iconcls="icon-huayi-delete">删除</a>
+                <a href="#" class="easyui-linkbutton" iconcls="icon-huayi-print" onclick="print()">打印</a>
+                <input type="button" onclick="parse()" value="parse" />
+            </td>
+        </tr>
+    </table>
+
+    <div class="easyui-tabs" style="width: 98%;" id="inputTabs">
+        <div title="一般资料" style="padding: 10px;">
+            <table id="First" style="width:98%;height:auto;align-content:space-around">
+                <thead></thead>
+                <tbody>
+                    <tr>
+                        <td>姓名</td>
+                        <td>
+                            <input readonly="ture" easyui-ctl="textbox" nurse_eval="vital_sign:NAME" />
+                        </td>
+                        <td>性别</td>
+                        <td>
+                            <input readonly="ture" easyui-ctl="textbox" nurse_eval="vital_sign:SEX" />
+                        </td>
+                        <td>年龄</td>
+                        <td>
+                            <input readonly="ture" easyui-ctl="textbox" nurse_eval="vital_sign:AGE" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>国籍</td>
+                        <td>
+                            <input nurse_eval="vital_sign:COUNTRY" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" />
+                        </td>
+                        <td>民族</td>
+                        <td>
+                            <input nurse_eval="vital_sign:NATION" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtNation" />
+                        </td>
+                        <td>职业</td>
+                        <td>
+                            <input nurse_eval="vital_sign:JOB" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtJob" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>文化水平</td>
+                        <td>
+                            <input nurse_eval="vital_sign:EDUCATION" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtEducation" />
+                        </td>
+                        <td>病案号</td>
+                        <td>
+                            <input readonly="ture" easyui-ctl="textbox" nurse_eval="vital_sign:HOS_NUMBER" />
+                        </td>
+                        <td>科室</td>
+                        <td>
+                            <input readonly="ture" easyui-ctl="textbox" nurse_eval="vital_sign:DEPT_NAME" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>病区</td>
+                        <td colspan="2">
+                            <input readonly="ture" easyui-ctl="textbox" nurse_eval="vital_sign:WARD_CODE" />
+                        </td>
+                        <td>入院时间</td>
+                        <td colspan="2">
+                            <input readonly="ture" easyui-ctl="textbox" nurse_eval="vital_sign:ADMISSION_DATE_TIME" data-options="formatter:dateFormatter,parser:dateParser" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>入院诊断</td>
+                        <td colspan="5">
+                            <input readonly="ture" easyui-ctl="textbox" nurse_eval="vital_sign:DIAGNOSE" />
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>床号</td>
+                        <td>
+                            <input readonly="ture" easyui-ctl="textbox" nurse_eval="vital_sign:BED_LABEL" />
+                        </td>
+                        <td>身高</td>
+                        <td>
+                            <input nurse_eval="vital_sign:HIGH" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtHigh" />
+                        </td>
+                        <td>体重</td>
+                        <td>
+                            <input nurse_eval="vital_sign:WEIGHT;combo_data:weight" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="txtWeight" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>入院方式</td>
+                        <td>
+                            <input nurse_eval="vital_sign:IN_TYPE;combo_data:inType" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="selInType" />
+                        </td>
+                        <td>患者来源地</td>
+                        <td>
+                            <input nurse_eval="vital_sign:PATIENT_FROM;combo_data:patientFrom" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="selPatientFrom" />
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div title="生命体征" style="padding: 10px;">
+            <table id="Second" style="width:98%;height:auto;align-content:space-around">
+                <tr>
+                    <td>体温</td>
+                    <td>
+                        <input nurse_eval="vital_sign:TEMPERATURE;combo_data:hourInput" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="txtTemperature" />
+                    </td>
+                    <td>
+                        脉搏
+                    </td>
+                    <td>
+                        <input nurse_eval="vital_sign:PULSE;combo_data:hourInput" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="txtPulse" />
+                    </td>
+                    <td>
+                        心率
+                    </td>
+                    <td>
+                        <input nurse_eval="vital_sign:HEART_RATE;combo_data:hourInput" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="txtHeartRate" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>呼吸</td>
+                    <td>
+                        <input nurse_eval="vital_sign:BREATHING;combo_data:breath" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="txtBreathing" />
+                    </td>
+                    <td>
+                        血压
+                    </td>
+                    <td colspan="2">
+                        <div class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset" id="bpRang" style="float: left">
+                            <input nurse_eval="vital_sign:SBP;combo_data:hourInput" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="txtSbp" />
+                            <span>/</span>
+                            <input nurse_eval="vital_sign:DBP;combo_data:hourInput" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="txtDbp" />
+                        </div>
+                    </td>
+
+                    <td></td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <td colspan="2">
+                        <!--<input nurse_eval="vital_sign:SBP;combo_data:hourInput" style="width:60px" easyui-ctl="checkbox" data-options="panelHeight:'auto'" id="txtSbp" />-->
+                        <input type="checkbox" value="1" name="Synchronous" id="chkSynchronous1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkSynchronous1" id="lbSynchronous1">同步至体温单</label>
+                    </td>
+                    <td colspan="3"></td>
+                </tr>
+            </table>
+        </div>
+        <div title="既往史" style="padding: 10px;">
+            <table id="Third" style="width:98%;height:auto;align-content:space-around">
+                <tr>
+                    <th>心血管系统相关疾病史 </th>
+                    <td>
+                        <input type="checkbox" value="1" name="Cardiovascular" id="chkCardiovascular1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkCardiovascular1" id="lbCardiovascular1">心绞痛</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="2" name="Cardiovascular" id="chkCardiovascular2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkCardiovascular2" id="lbCardiovascular2">心肌梗死</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="3" name="Cardiovascular" id="chkCardiovascular3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkCardiovascular3" id="lbCardiovascular3">高血压</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="4" name="Cardiovascular" id="chkCardiovascular4" data-inline="true" data-mini="true" title="4" />
+                        <label for="chkCardiovascular4" id="lbCardiovascular4">糖尿病</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="5" name="Cardiovascular" id="chkCardiovascular5" data-inline="true" data-mini="true" title="5" />
+                        <label for="chkCardiovascular5" id="lbCardiovascular5">心悸</label>
+                    </td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <td>
+                        <input type="checkbox" value="6" name="Cardiovascular" id="chkCardiovascular6" data-inline="true" data-mini="true" title="6" />
+                        <label for="chkCardiovascular6" id="lbCardiovascular6">房颤</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="7" name="Cardiovascular" id="chkCardiovascular7" data-inline="true" data-mini="true" title="7" />
+                        <label for="chkCardiovascular7" id="lbCardiovascular7">起搏器</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="8" name="Cardiovascular" id="chkCardiovascular8" data-inline="true" data-mini="true" title="8" />
+                        <label for="chkCardiovascular8" id="lbCardiovascular8">支架</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="9" name="Cardiovascular" id="chkCardiovascular9" data-inline="true" data-mini="true" title="9" />
+                        <label for="chkCardiovascular9" id="lbCardiovascular9">血管造影</label>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>其他系统相关病史</th>
+                    <td>
+                        <input nurse_eval="vital_sign:OTHER_SYSTEM;combo_data:ishas" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="selOtherSystem" />
+                    </td>
+                    <td colspan="4"></td>
+                </tr>
+                <tr id="trOtherSystem1">
+                    <th></th>
+                    <td>
+                        <input type="checkbox" value="1" name="OtherSystemH" id="chkOtherSystemH1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkOtherSystemH1" id="lbOtherSystemH1">中风</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="2" name="OtherSystemH" id="chkOtherSystemH2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkOtherSystemH2" id="lbOtherSystemH2">肝炎</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="3" name="OtherSystemH" id="chkOtherSystemH3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkOtherSystemH3" id="lbOtherSystemH3">肾病</label>
+                    </td>
+                    <td colspan="2">
+                        <input type="checkbox" value="4" name="OtherSystemH" id="chkOtherSystemH4" data-inline="true" data-mini="true" title="4" />
+                        <label for="chkOtherSystemH4" id="lbOtherSystemH4">呼吸道疾病</label>
+                    </td>
+                </tr>
+                <tr id="trOtherSystem2">
+                    <th></th>
+                    <td>
+                        <input type="checkbox" value="5" name="OtherSystemH" id="chkOtherSystemH5" data-inline="true" data-mini="true" title="5" />
+                        <label for="chkOtherSystemH5" id="lbOtherSystemH5">消化道疾病</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="6" name="OtherSystemH" id="chkOtherSystemH6" data-inline="true" data-mini="true" title="6" />
+                        <label for="chkOtherSystemH6" id="lbOtherSystemH6">癫痫</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="7" name="OtherSystemH" id="chkOtherSystemH7" data-inline="true" data-mini="true" title="7" />
+                        <label for="chkOtherSystemH7" id="lbOtherSystemH7">骨骼肌疾病</label>
+                    </td>
+                    <td colspan="2">
+                        <input type="checkbox" value="8" name="OtherSystemH" id="chkOtherSystemH8" data-inline="true" data-mini="true" title="8" />
+                        <label for="chkOtherSystemH8" id="lbOtherSystemH8">精神心理疾病</label>
+                    </td>
+                </tr>
+                <tr id="trOtherSystem3">
+                    <th></th>
+                    <td>
+                        <input type="checkbox" value="9" name="OtherSystemH" id="chkOtherSystemH9" data-inline="true" data-mini="true" title="9" />
+                        <label for="chkOtherSystemH9" id="lbOtherSystemH9">青光眼</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="10" name="OtherSystemH" id="chkOtherSystemH10" data-inline="true" data-mini="true" title="10" />
+                        <label for="chkOtherSystemH10" id="lbOtherSystemH10">出血性疾病</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="11" name="OtherSystemH" id="chkOtherSystemH11" data-inline="true" data-mini="true" title="11" />
+                        <label for="chkOtherSystemH11" id="lbOtherSystemH11">癌症</label>
+                    </td>
+                    <td colspan="2">
+                        <input type="checkbox" value="12" name="OtherSystemH" id="chkOtherSystemH12" data-inline="true" data-mini="true" title="12" />
+                        <label for="chkOtherSystemH12" id="lbOtherSystemH12">多脏器衰竭</label>
+                    </td>
+                </tr>
+                <tr>
+                    <th>饮酒史</th>
+                    <td>
+                        <input nurse_eval="vital_sign:DRINKING;combo_data:ishas" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="selDrinking" />
+                    </td>
+                    <td colspan="4"></td>
+                </tr>
+                <tr id="trDrinking">
+                    <th></th>
+                    <td>用量</td>
+                    <td>
+                        <input nurse_eval="vital_sign:DRINK_DEGREE;" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtDrinkDegree" />
+                    </td>
+                    <td>持续时间</td>
+                    <td>
+                        <input nurse_eval="vital_sign:DRINK_TIME;" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtDrinkTime" />
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>吸烟史</th>
+                    <td>
+                        <input nurse_eval="vital_sign:SMOKING;combo_data:ishas" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="selSmoking" />
+                    </td>
+                    <td colspan="4"></td>
+                </tr>
+                <tr id="trSmoking">
+                    <th></th>
+                    <td>用量</td>
+                    <td>
+                        <input nurse_eval="vital_sign:SMOKING_DEGREE;" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtSmokingDegree" />
+                    </td>
+                    <td>持续时间</td>
+                    <td>
+                        <input nurse_eval="vital_sign:SMOKING_TIME;" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtSmokingTime" />
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>是否生活在吸烟环境中</th>
+                    <td>
+                        <input nurse_eval="vital_sign:SMOKING_IN;combo_data:istrue" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="selSmokingIn" />
+                    </td>
+                    <td colspan="4"></td>
+                </tr>
+                <tr>
+                    <th>辅助护理</th>
+                    <td>
+                        <input nurse_eval="vital_sign:ASSISTED;combo_data:ishas" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="selAssisted" />
+                    </td>
+                    <td colspan="4"></td>
+                </tr>
+                <tr id="trAssisted">
+                    <th></th>
+                    <td>
+                        <input type="checkbox" value="1" name="AssistedItem" id="chkAssistedItem1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkAssistedItem1" id="lbAssistedItem1">护理员</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="2" name="AssistedItem" id="chkAssistedItem2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkAssistedItem2" id="lbAssistedItem2">家属陪同</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="3" name="AssistedItem" id="chkAssistedItem3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkAssistedItem3" id="lbAssistedItem3">其他</label>
+                    </td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <th>生活</th>
+                    <td>
+                        <input name="Life" type="checkbox" id="chkLife1" value="1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkLife1" id="lbLife1">独居</label>
+                    </td>
+                    <td colspan="2">
+                        <input name="Life" type="checkbox" id="chkLife2" value="2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkLife2" id="lbLife2">与配偶生活</label>
+                    </td>
+                    <td colspan="2">
+                        <input name="Life" type="checkbox" id="chkLife3" value="3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkLife3" id="lbLife3">与父母/儿女生活</label>
+                    </td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <td>
+                        <input name="Life" type="checkbox" id="chkLife4" value="4" data-inline="true" data-mini="true" title="4" />
+                        <label for="chkLife4" id="lbLife4">需协助</label>
+                    </td>
+                    <td>
+                        <input name="Life" type="checkbox" id="chkLife5" value="5" data-inline="true" data-mini="true" title="5" />
+                        <label for="chkLife5" id="lbLife5">使用辅具</label>
+                    </td>
+                    <td colspan="3"></td>
+                </tr>
+
+                <tr>
+                    <th>生育史</th>
+                    <td>
+                        <input nurse_eval="vital_sign:CHILD_BRARING;combo_data:ishas" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="selChildBraring" />
+                    </td>
+                    <td colspan="4"></td>
+                </tr>
+                <tr>
+                    <th>手术史</th>
+                    <td>
+                        <input nurse_eval="vital_sign:SURGERY;combo_data:ishas" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="selSurgery" />
+                    </td>
+                    <td colspan="4"></td>
+                </tr>
+                <tr id="trSurgery">
+                    <th></th>
+                    <td>手术名称</td>
+                    <td>
+                        <input nurse_eval="vital_sign:SURGERY_NAME;" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="SURGERY_NAME" />
+                    </td>
+                    <td>手术日期</td>
+                    <td>
+                        <input nurse_eval="vital_sign:SURGERY_TIME;" style="width:60px" easyui-ctl="datebox" data-options="formatter:dateFormatter,parser:dateParser" id="txtSurgeryTime" />
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>过敏及药物不良反应</th>
+                    <td>
+                        <input nurse_eval="vital_sign:ALLERGY;combo_data:ishas" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="selAllergy" />
+                    </td>
+                    <td colspan="4"></td>
+                </tr>
+                <tr id="trAllergy11">
+                    <th>药物过敏</th>
+                    <td>
+                        <input nurse_eval="vital_sign:ALLERGY1;combo_data:ishas" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="selAllergy1" />
+                    </td>
+                    <td colspan="4"></td>
+                </tr>
+                <tr id="trAllergy1">
+                    <th>药物过敏</th>
+                    <td colspan="5">
+                        <input nurse_eval="vital_sign:ALLERGY_MEDICTION;" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtAllergyMediction" />
+                    </td>
+                </tr>
+                <tr id="trAllergy22">
+                    <th>食物过敏</th>
+                    <td>
+                        <input nurse_eval="vital_sign:ALLERGY2;combo_data:ishas" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="selAllergy2" />
+                    </td>
+                    <td colspan="4"></td>
+                </tr>
+                <tr id="trAllergy2">
+                    <th>食物过敏</th>
+                    <td colspan="5">
+                        <input nurse_eval="vital_sign:ALLERGY_FOOD;" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtAllergyFood" />
+                    </td>
+                </tr>
+                <tr id="trAllergy3">
+                    <th>其他过敏</th>
+                    <td colspan="5">
+                        <input nurse_eval="vital_sign:ALLERGY_OTHER;" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtAllergyOther" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>针对过敏反应的措施</th>
+                    <td>
+                        <input name="AllergyMethod" type="checkbox" id="chkAllergyMethod1" value="1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkAllergyMethod1" id="lbAllergyMethod1">有记录</label>
+                    </td>
+                    <td>
+                        <input name="AllergyMethod" type="checkbox" id="chkAllergyMethod2" value="2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkAllergyMethod2" id="lbAllergyMethod2">腕带标识</label>
+                    </td>
+                    <td colspan="2">
+                        <input name="AllergyMethod" type="checkbox" id="chkAllergyMethod3" value="3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkAllergyMethod3" id="lbAllergyMethod3">床头提示牌</label>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>入院前使用药物</th>
+                    <td>
+                        <input nurse_eval="vital_sign:DRUG;combo_data:ishas" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="selDrug" />
+                    </td>
+                    <td colspan="4"></td>
+                </tr>
+                <tr id="trDrug1">
+                    <th>药品名称</th>
+                    <td>
+                        <input nurse_eval="vital_sign:DRUG_NAME_1;" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtDrugName1" />
+                    <th>药品用量</th>
+                    <td>
+                        <input nurse_eval="vital_sign:DRUG_SIZE_1;" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtDrugSize1" />
+                    <th>药品频率</th>
+                    <td>
+                        <input nurse_eval="vital_sign:DRUG_RATE_1;" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtDrugRate1" />
+                </tr>
+                <tr id="trDrug2">
+                    <th>末次药品剂量</th>
+                    <td>
+                        <input nurse_eval="vital_sign:DRUG_LAST_1;" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtDrugLast1" />
+                    <td colspan="4"></td>
+                </tr>
+                <tr id="trDrug3">
+                    <th>药品名称</th>
+                    <td>
+                        <input nurse_eval="vital_sign:DRUG_NAME_2;" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtDrugName2" />
+                    </td>
+                    <th>药品用量</th>
+                    <td>
+                        <input nurse_eval="vital_sign:DRUG_SIZE_2;" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtDrugSize2" />
+                    </td>
+                    <th>药品频率</th>
+                    <td>
+                        <input nurse_eval="vital_sign:DRUG_RATE_2;" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtDrugRate2" />
+                    </td>
+                </tr>
+                <tr id="trDrug4">
+                    <th>末次药品剂量</th>
+                    <td>
+                        <input nurse_eval="vital_sign:DRUG_LAST_2;" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtDrugLast2" />
+                    </td>
+                    <td colspan="4"></td>
+                </tr>
+                <tr id="trDrug5">
+                    <th>药品名称</th>
+                    <td>
+                        <input nurse_eval="vital_sign:DRUG_NAME_3;" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtDrugName3" />
+                    </td>
+                    <th>药品用量</th>
+                    <td>
+                        <input nurse_eval="vital_sign:DRUG_SIZE_3;" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtDrugSize3" />
+                    </td>
+                    <th>药品频率</th>
+                    <td>
+                        <input nurse_eval="vital_sign:DRUG_RATE_3;" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtDrugRate3" />
+                    </td>
+                </tr>
+                <tr id="trDrug6">
+                    <th>末次药品剂量</th>
+                    <td>
+                        <input nurse_eval="vital_sign:DRUG_LAST_3;" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtDrugLast3" />
+                    </td>
+                    <td colspan="4"></td>
+                </tr>
+                <tr id="trDrug7">
+                    <th>药品名称</th>
+                    <td>
+                        <input nurse_eval="vital_sign:DRUG_NAME_4;" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtDrugName4" />
+                    </td>
+                    <th>药品用量</th>
+                    <td>
+                        <input nurse_eval="vital_sign:DRUG_SIZE_4;" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtDrugSize4" />
+                    </td>
+                    <th>药品频率</th>
+                    <td>
+                        <input nurse_eval="vital_sign:DRUG_RATE_4;" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtDrugRate4" />
+                    </td>
+                </tr>
+                <tr id="trDrug8">
+                    <th>末次药品剂量</th>
+                    <td>
+                        <input nurse_eval="vital_sign:DRUG_LAST_4;" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtDrugLast4" />
+                    <td colspan="4"></td>
+                </tr>
+                <tr>
+                    <th>特殊用药</th>
+                    <td>
+                        <input nurse_eval="vital_sign:SPECIAL_DRUG;combo_data:ishas" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="selSpecialDrug" />
+                    </td>
+                    <td colspan="4"></td>
+                </tr>
+                <tr id="trSpecialDrug1">
+                    <th></th>
+                    <td colspan="2">
+                        <input type="checkbox" value="1" name="SpecialDrugItem" id="chkSpecialDrugItem1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkSpecialDrugItem1" id="lbSpecialDrugItem1">长期细胞毒性药</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="2" name="SpecialDrugItem" id="chkSpecialDrugItem2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkSpecialDrugItem2" id="lbSpecialDrugItem2">皮质激素</label>
+                    </td>
+                    <td colspan="2">
+                        <input type="checkbox" value="3" name="SpecialDrugItem" id="chkSpecialDrugItem3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkSpecialDrugItem3" id="lbSpecialDrugItem3">长期应用抗生素</label>
+                    </td>
+                </tr>
+                <tr id="trSpecialDrug2">
+                    <th></th>
+                    <td colspan="2">
+                        <input type="checkbox" value="4" name="SpecialDrugItem" id="chkSpecialDrugItem4" data-inline="true" data-mini="true" title="4" />
+                        <label for="chkSpecialDrugItem4" id="lbSpecialDrugItem4">抗精神药物</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="5" name="SpecialDrugItem" id="chkSpecialDrugItem5" data-inline="true" data-mini="true" title="5" />
+                        <label for="chkSpecialDrugItem5" id="lbSpecialDrugItem5">利尿剂</label>
+                    </td>
+                    <td colspan="2"></td>
+                </tr>
+            </table>
+        </div>
+        <div title="认知/感知/社会/心理" style="padding: 10px;">
+            <table id="Four" style="width:98%;height:auto;align-content:space-around">
+                <tr>
+                    <th>意识</th>
+                    <td>
+                        <input nurse_eval="vital_sign:CONSCIOUS;combo_data:Consciousness" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="selConscious" />
+                    </td>
+                    <td colspan="5"></td>
+                </tr>
+                <tr>
+                    <th>吞咽反射</th>
+                    <td>
+                        '
+                        <input nurse_eval="vital_sign:SWALLOW;combo_data:Swallow" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="selSwallow" />
+                    </td>
+                    <th>咳嗽反射</th>
+                    <td>
+                        <input nurse_eval="vital_sign:COUGH;combo_data:ishas" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="selCough" />
+                    </td>
+                    <td colspan="3"></td>
+                </tr>
+                <tr>
+                    <th>瞳孔大小</th>
+                    <td>
+                        <input name="Pupil" type="checkbox" id="chkPupil1" value="1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkPupil1" id="lbPupil1">正常</label>
+                    </td>
+                    <td>
+                        <input name="Pupil" type="checkbox" id="chkPupil2" value="2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkPupil2" id="lbPupil2">等大等圆</label>
+                    </td>
+                    <td>
+                        <input name="Pupil" type="checkbox" id="chkPupil3" value="3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkPupil3" id="lbPupil3">散大</label>
+                    </td>
+                    <td>
+                        <input name="Pupil" type="checkbox" id="chkPupil4" value="4" data-inline="true" data-mini="true" title="4" />
+                        <label for="chkPupil4" id="lbPupil4">缩小</label>
+                    </td>
+                    <td>
+                        <input name="Pupil" type="checkbox" id="chkPupil5" value="5" data-inline="true" data-mini="true" title="5" />
+                        <label for="chkPupil5" id="lbPupil5">针尖样</label>
+                    </td>
+                    <td>
+                        <input name="Pupil" type="checkbox" id="chkPupil6" value="6" data-inline="true" data-mini="true" title="6" />
+                        <label for="chkPupil6" id="lbPupil6">瞳孔不等大</label>
+                    </td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <td>左</td>
+                    <td>
+                        <input nurse_eval="vital_sign:PUPIL_LEFT;" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtPupilLeft" />
+                    </td>
+                    <td>右</td>
+                    <td>
+                        <input nurse_eval="vital_sign:PUPIL_RIGHT;" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtPupilRight" />
+                    </td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <th>对光反射</th>
+                    <td>左</td>
+                    <td>
+                        <input nurse_eval="vital_sign:LIGHT_LEFT;combo_data:pupil" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="selLightLeft" />
+                    </td>
+                    <td>右</td>
+                    <td>
+                        <input nurse_eval="vital_sign:LIGHT_RIGHT;combo_data:pupil" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="selLightRight" />
+                    </td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <th>肢体活动</th>
+                    <td>
+                        <input name="Physical" type="checkbox" id="chkPhysical1" value="1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkPhysical1" id="lbPhysical1">正常</label>
+                    </td>
+                    <td>
+                        <input name="Physical" type="checkbox" id="chkPhysical2" value="2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkPhysical2" id="lbPhysical2">力弱</label>
+                    </td>
+                    <td>
+                        <input name="Physical" type="checkbox" id="chkPhysical3" value="3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkPhysical3" id="lbPhysical3">左</label>
+                    </td>
+                    <td>
+                        <input name="Physical" type="checkbox" id="chkPhysical4" value="4" data-inline="true" data-mini="true" title="4" />
+                        <label for="chkPhysical4" id="lbPhysical4">右</label>
+                    </td>
+                    <td>
+                        <input name="Physical" type="checkbox" id="chkPhysical5" value="5" data-inline="true" data-mini="true" title="5" />
+                        <label for="chkPhysical5" id="lbPhysical5">上肢</label>
+                    </td>
+                    <td>
+                        <input name="Physical" type="checkbox" id="chkPhysical6" value="6" data-inline="true" data-mini="true" title="6" />
+                        <label for="chkPhysical6" id="lbPhysical6">下肢</label>
+                    </td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <td>
+                        <input name="Physical" type="checkbox" id="chkPhysical7" value="7" data-inline="true" data-mini="true" title="7" />
+                        <label for="chkPhysical7" id="lbPhysical7">偏瘫</label>
+                    </td>
+                    <td>
+                        <input name="Physical" type="checkbox" id="chkPhysical8" value="8" data-inline="true" data-mini="true" title="8" />
+                        <label for="chkPhysical8" id="lbPhysical8">左侧</label>
+                    </td>
+                    <td>
+                        <input name="Physical" type="checkbox" id="chkPhysical9" value="9" data-inline="true" data-mini="true" title="9" />
+                        <label for="chkPhysical9" id="lbPhysical9">右侧</label>
+                    </td>
+                    <td colspan="3"></td>
+                </tr>
+                <tr>
+                    <th>视觉</th>
+                    <td>
+                        <input name="Visual" type="checkbox" id="chkVisual1" value="1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkVisual1" id="lbVisual1">正常</label>
+                    </td>
+                    <td>
+                        <input name="Visual" type="checkbox" id="chkVisual2" value="2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkVisual2" id="lbVisual2">异常</label>
+                    </td>
+                    <td>
+                        <input name="Visual" type="checkbox" id="chkVisual3" value="3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkVisual3" id="lbVisual3">近视</label>
+                    </td>
+                    <td>
+                        <input name="Visual" type="checkbox" id="chkVisual4" value="4" data-inline="true" data-mini="true" title="4" />
+                        <label for="chkVisual4" id="lbVisual4">远视</label>
+                    </td>
+                    <td>
+                        <input name="Visual" type="checkbox" id="chkVisual5" value="5" data-inline="true" data-mini="true" title="5" />
+                        <label for="chkVisual5" id="lbVisual5">眼镜</label>
+                    </td>
+                    <td>
+                        <input name="Visual" type="checkbox" id="chkVisual7" value="7" data-inline="true" data-mini="true" title="7" />
+                        <label for="chkVisual7" id="lbVisual7">失明</label>
+                    </td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <td colspan="2">
+                        <input name="Visual" type="checkbox" id="chkVisual6" value="6" data-inline="true" data-mini="true" title="6" />
+                        <label for="chkVisual6" id="lbVisual6">视力模糊</label>
+                    </td>
+                    <td>
+                        <input name="Visual" type="checkbox" id="chkVisual8" value="8" data-inline="true" data-mini="true" title="8" />
+                        <label for="chkVisual8" id="lbVisual8">其他</label>
+                    </td>
+                    <td colspan="3"></td>
+                </tr>
+                <tr>
+                    <th>听觉</th>
+                    <td>
+                        <input name="Auditory" type="checkbox" id="chkAuditory1" value="1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkAuditory1" id="lbAuditory1">正常</label>
+                    </td>
+                    <td>
+                        <input name="Auditory" type="checkbox" id="chkAuditory2" value="2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkAuditory2" id="lbAuditory2">弱听</label>
+                    </td>
+                    <td>
+                        <input name="Auditory" type="checkbox" id="chkAuditory3" value="3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkAuditory3" id="lbAuditory3">失聪</label>
+                    </td>
+                    <td>
+                        <input name="Auditory" type="checkbox" id="chkAuditory4" value="4" data-inline="true" data-mini="true" title="4" />
+                        <label for="chkAuditory4" id="lbAuditory4">助听器</label>
+                    </td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <th>思维</th>
+                    <td>
+                        <input name="Thinking" type="checkbox" id="chkThinking1" value="1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkThinking1" id="lbThinking1">正常</label>
+                    </td>
+                    <td>
+                        <input name="Thinking" type="checkbox" id="chkThinking2" value="2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkThinking2" id="lbThinking2">混乱</label>
+                    </td>
+                    <td>
+                        <input name="Thinking" type="checkbox" id="chkThinking3" value="3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkThinking3" id="lbThinking3">注意力分散</label>
+                    </td>
+                    <td>
+                        <input name="Thinking" type="checkbox" id="chkThinking4" value="4" data-inline="true" data-mini="true" title="4" />
+                        <label for="chkThinking4" id="lbThinking4">记忆力下降</label>
+                    </td>
+                    <td>
+                        <input name="Thinking" type="checkbox" id="chkThinking5" value="5" data-inline="true" data-mini="true" title="5" />
+                        <label for="chkThinking5" id="lbThinking5">其他</label>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>语言沟通</th>
+                    <td>
+                        <input name="Language" type="checkbox" id="chkLanguage1" value="1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkLanguage1" id="lbLanguage1">正常</label>
+                    </td>
+                    <td>
+                        <input name="Language" type="checkbox" id="chkLanguage2" value="2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkLanguage2" id="lbLanguage2">言语不清</label>
+                    </td>
+                    <td>
+                        <input name="Language" type="checkbox" id="chkLanguage3" value="3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkLanguage3" id="lbLanguage3">语言困难</label>
+                    </td>
+                    <td>
+                        <input name="Language" type="checkbox" id="chkLanguage4" value="4" data-inline="true" data-mini="true" title="4" />
+                        <label for="chkLanguage4" id="lbLanguage4">失语</label>
+                    </td>
+                    <td>
+                        <input name="Language" type="checkbox" id="chkLanguage5" value="5" data-inline="true" data-mini="true" title="5" />
+                        <label for="chkLanguage5" id="lbLanguage5">英语</label>
+                    </td>
+                    <td>
+                        <input name="Language" type="checkbox" id="chkLanguage6" value="6" data-inline="true" data-mini="true" title="6" />
+                        <label for="chkLanguage6" id="lbLanguage6">其他国家语言</label>
+                    </td>
+                </tr>
+                <tr>
+                    <th>对疾病的认识</th>
+                    <td>
+                        <input name="Cognition" type="checkbox" id="chkCognition1" value="1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkCognition1" id="lbCognition1">认识</label>
+                    </td>
+                    <td>
+                        <input name="Cognition" type="checkbox" id="chkCognition2" value="2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkCognition2" id="lbCognition2">不理解</label>
+                    </td>
+                    <td colspan="2">
+                        <input name="Cognition" type="checkbox" id="chkCognition3" value="3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkCognition3" id="lbCognition3">不能正视</label>
+                    </td>
+                    <td>
+                        <input name="Cognition" type="checkbox" id="chkCognition4" value="4" data-inline="true" data-mini="true" title="4" />
+                        <label for="chkCognition4" id="lbCognition4">隐瞒</label>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>心理疾病</th>
+                    <td>
+                        <input nurse_eval="vital_sign:MENTAL_ILLNESS;combo_data:ishas" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="selMentalIllness" />
+                    </td>
+                    <td>病程及治疗</td>
+                    <td colspan="2">
+                        <input nurse_eval="vital_sign:ILLNESS_DESC;" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtIllnessDesc" />
+                    </td>
+                    <td>和家人的关系</td>
+                    <td>
+                        <input nurse_eval="vital_sign:FAMILY;" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtFamily" />
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+        <div title="饮食及营养状况" style="padding: 10px;">
+            <table id="Five" style="width:98%;height:auto;align-content:space-around">
+                <tr>
+                    <th>饮食</th>
+                    <td>
+                        <input type="checkbox" value="1" name="Diet" id="chkDiet1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkDiet1" id="lbDiet1">正常</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="2" name="Diet" id="chkDiet2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkDiet2" id="lbDiet2">差</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="3" name="Diet" id="chkDiet3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkDiet3" id="lbDiet3">流食</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="4" name="Diet" id="chkDiet4" data-inline="true" data-mini="true" title="4" />
+                        <label for="chkDiet4" id="lbDiet4">半流食</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="5" name="Diet" id="chkDiet5" data-inline="true" data-mini="true" title="5" />
+                        <label for="chkDiet5" id="lbDiet5">禁食</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="6" name="Diet" id="chkDiet6" data-inline="true" data-mini="true" title="6" />
+                        <label for="chkDiet6" id="lbDiet6">鼻饲</label>
+                    </td>
+                </tr>
+                <tr>
+                    <th>咀嚼</th>
+                    <td>
+                        <input nurse_eval="vital_sign:CHEW;combo_data:Chew" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="selChew" />
+                    </td>
+                    <td colspan="5"></td>
+                </tr>
+                <tr>
+                    <th>营养</th>
+                    <td>
+                        <input type="checkbox" value="1" name="Nutrition" id="chkNutrition1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkNutrition1" id="lbNutrition1">正常</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="2" name="Nutrition" id="chkNutrition2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkNutrition2" id="lbNutrition2">消瘦</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="3" name="Nutrition" id="chkNutrition3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkNutrition3" id="lbNutrition3">肥胖</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="4" name="Nutrition" id="chkNutrition4" data-inline="true" data-mini="true" title="4" />
+                        <label for="chkNutrition4" id="lbNutrition4">恶液质</label>
+                    </td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <td>
+                        <input type="checkbox" value="5" name="Nutrition" id="chkNutrition5" data-inline="true" data-mini="true" title="5" />
+                        <label for="chkNutrition5" id="lbNutrition5">贫血</label>
+                    </td>
+                    <td>
+                        血红蛋白(g/l)
+                    </td>
+                    <td>
+                        <input nurse_eval="vital_sign:HEMOGLOBIN;" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtHemoglobin" />
+                    </td>
+                    <td>
+                        <input type="checkbox" value="6" name="Nutrition" id="chkNutrition6" data-inline="true" data-mini="true" title="6" />
+                        <label for="chkNutrition6" id="lbNutrition6">其他</label>
+                    </td>
+                    <td colspan="2">
+                        <input nurse_eval="vital_sign:NUTRITION_OTHER;" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtNutritionOther" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>嗜好</th>
+                    <td>
+                        <input type="checkbox" value="1" name="Hobby" id="chkHobby1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkHobby1" id="lbHobby1">无</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="2" name="Hobby" id="chkHobby2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkHobby2" id="lbHobby2">甜食</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="3" name="Hobby" id="chkHobby3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkHobby3" id="lbHobby3">咸食</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="4" name="Hobby" id="chkHobby4" data-inline="true" data-mini="true" title="4" />
+                        <label for="chkHobby4" id="lbHobby4">其他</label>
+                    </td>
+                    <td colspan="2">
+                        <input nurse_eval="vital_sign:HOBBY_OTHER;" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtHobbyOther" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div title="自理程度" style="padding: 10px;">
+            <table id="Six" style="width:98%;height:auto;align-content:space-around">
+                <tr>
+                    <th>自理程度</th>
+                    <td>
+                        <input type="checkbox" value="1" name="Independent" id="chkIndependent1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkIndependent1" id="lbIndependent1">自理</label>
+                    </td>
+                    <td colspan="2">
+                        <input type="checkbox" value="2" name="Independent" id="chkIndependent2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkIndependent2" id="lbIndependent2">需协助</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="3" name="Independent" id="chkIndependent3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkIndependent3" id="lbIndependent3">(进食</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="4" name="Independent" id="chkIndependent4" data-inline="true" data-mini="true" title="4" />
+                        <label for="chkIndependent4" id="lbIndependent4">洗漱</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="5" name="Independent" id="chkIndependent5" data-inline="true" data-mini="true" title="5" />
+                        <label for="chkIndependent5" id="lbIndependent5">排泄）</label>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <td colspan="2">
+                        <input type="checkbox" value="6" name="Independent" id="chkIndependent6" data-inline="true" data-mini="true" title="6" />
+                        <label for="chkIndependent6" id="lbIndependent6">完全依赖</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="7" name="Independent" id="chkIndependent7" data-inline="true" data-mini="true" title="7" />
+                        <label for="chkIndependent7" id="lbIndependent7">其他</label>
+                    </td>
+                    <td colspan="4"></td>
+                </tr>
+                <tr>
+                    <th>跌倒史</th>
+                    <td>
+                        <input type="checkbox" value="1" name="Fall" id="chkFall1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkFall1" id="lbFall1">无</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="2" name="Fall" id="chkFall2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkFall2" id="lbFall2">有</label>
+                    </td>
+                    <td colspan="2">
+                        <input type="checkbox" value="3" name="Fall" id="chkFall3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkFall3" id="lbFall3">90天内</label>
+                    </td>
+                    <td colspan="3"></td>
+                </tr>
+                <tr>
+                    <th>活动辅助装置</th>
+                    <td>
+                        <input nurse_eval="vital_sign:ACTIVITIES;combo_data:ishas" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="selActivities" />
+                    </td>
+                    <td colspan="6"></td>
+                </tr>
+                <tr id="trActivities1">
+                    <th></th>
+                    <td>
+                        <input type="checkbox" value="1" name="ActivitiesYes" id="chkActivitiesYes1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkActivitiesYes1" id="lbActivitiesYes1">拐杖</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="2" name="ActivitiesYes" id="chkActivitiesYes2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkActivitiesYes2" id="lbActivitiesYes2">轮椅</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="3" name="ActivitiesYes" id="chkActivitiesYes3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkActivitiesYes3" id="lbActivitiesYes3">假肢</label>
+                    </td>
+                    <td colspan="2">
+                        <input type="checkbox" value="4" name="ActivitiesYes" id="chkActivitiesYes4" data-inline="true" data-mini="true" title="4" />
+                        <label for="chkActivitiesYes4" id="lbActivitiesYes4">助步车</label>
+                    </td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr id="trActivities2">
+                    <th></th>
+                    <td>
+                        <input type="checkbox" value="5" name="ActivitiesYes" id="chkActivitiesYes5" data-inline="true" data-mini="true" title="5" />
+                        <label for="chkActivitiesYes5" id="lbActivitiesYes5">其他</label>
+                    </td>
+                    <td colspan="6">
+                        <input nurse_eval="vital_sign:ACTIVITIES_OTHER" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtActivitiesOther" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>体位</th>
+                    <td colspan="2">
+                        <input type="checkbox" value="1" name="Position" id="chkPosition1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkPosition1" id="lbPosition1">自主体位</label>
+                    </td>
+                    <td colspan="2">
+                        <input type="checkbox" value="2" name="Position" id="chkPosition2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkPosition2" id="lbPosition2">强迫体位</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" value="3" name="Position" id="chkPosition3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkPosition3" id="lbPosition3">(坐位</label>
+                    </td>
+                    <td colspan="2">
+                        <input type="checkbox" value="4" name="Position" id="chkPosition4" data-inline="true" data-mini="true" title="4" />
+                        <label for="chkPosition4" id="lbPosition4">半卧床)</label>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div title="皮肤和排泄" style="padding: 10px;">
+            <table id="Seven" style="width:98%;height:auto;align-content:space-around">
+                <tr>
+                    <th>皮肤及粘膜颜色</th>
+                    <td>
+                        <input name="SkinColor" type="checkbox" id="chkSkinColor1" value="1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkSkinColor1" id="lbSkinColor1">正常</label>
+                    </td>
+                    <td>
+                        <input name="SkinColor" type="checkbox" id="chkSkinColor2" value="2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkSkinColor2" id="lbSkinColor2">苍白</label>
+                    </td>
+                    <td>
+                        <input name="SkinColor" type="checkbox" id="chkSkinColor3" value="3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkSkinColor3" id="lbSkinColor3">潮红</label>
+                    </td>
+                    <td>
+                        <input name="SkinColor" type="checkbox" id="chkSkinColor4" value="4" data-inline="true" data-mini="true" title="4" />
+                        <label for="chkSkinColor4" id="lbSkinColor4">黄染</label>
+                    </td>
+                    <td>
+                        <input name="SkinColor" type="checkbox" id="chkSkinColor5" value="5" data-inline="true" data-mini="true" title="5" />
+                        <label for="chkSkinColor5" id="lbSkinColor5">发绀</label>
+                    </td>
+                    <td colspan="3"></td>
+                </tr>
+                <tr>
+                    <th>皮肤弹性</th>
+                    <td>
+                        <input name="SkinElasticity" type="checkbox" id="chkSkinElasticity1" value="1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkSkinElasticity1" id="lbSkinElasticity1">正常</label>
+                    </td>
+                    <td>
+                        <input name="SkinElasticity" type="checkbox" id="chkSkinElasticity2" value="2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkSkinElasticity2" id="lbSkinElasticity2">脱水</label>
+                    </td>
+                    <td>
+                        <input name="SkinElasticity" type="checkbox" id="chkSkinElasticity3" value="3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkSkinElasticity3" id="lbSkinElasticity3">水肿</label>
+                    </td>
+                    <td colspan="5"></td>
+                </tr>
+                <tr>
+                    <th>皮肤完整性</th>
+                    <td>
+                        <input name="SkinFull" type="checkbox" id="chkSkinFull1" value="1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkSkinFull1" id="lbSkinFull1">完整</label>
+                    </td>
+                    <td>
+                        <input name="SkinFull" type="checkbox" id="chkSkinFull2" value="2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkSkinFull2" id="lbSkinFull2">破损</label>
+                    </td>
+                    <td>
+                        <input name="SkinFull" type="checkbox" id="chkSkinFull3" value="3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkSkinFull3" id="lbSkinFull3">压疮</label>
+                    </td>
+                    <td colspan="5"></td>
+                </tr>
+                <tr>
+                    <th>部位</th>
+                    <td>
+                        <input nurse_eval="vital_sign:ULCERS_IN" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtUlcersIn" />
+                    </td>
+                    <th>面积</th>
+                    <td colspan="2">
+                        <input nurse_eval="vital_sign:ULCERS_SIZE" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtUlcersSize" />
+                    </td>
+                    <th>程度</th>
+                    <td colspan="3">
+                        <input nurse_eval="vital_sign:ULCERS_DEGREE" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtUlcersDegree" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>皮肤其他</th>
+                    <td>
+                        <input name="SkinOther" type="checkbox" id="chkSkinOther1" value="1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkSkinOther1" id="lbSkinOther1">皮疹</label>
+                    </td>
+                    <td colspan="2">
+                        <input name="SkinOther" type="checkbox" id="chkSkinOther2" value="2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkSkinOther2" id="lbSkinOther2">出血点</label>
+                    </td>
+                    <td colspan="5"></td>
+                </tr>
+                <tr>
+                    <th>排尿</th>
+                    <td>
+                        <input name="Micturition" type="checkbox" id="chkMicturition1" value="1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkMicturition1" id="lbMicturition1">正常</label>
+                    </td>
+                    <td>
+                        <input name="Micturition" type="checkbox" id="chkMicturition2" value="2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkMicturition2" id="lbMicturition2">潴留</label>
+                    </td>
+                    <td>
+                        <input name="Micturition" type="checkbox" id="chkMicturition3" value="3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkMicturition3" id="lbMicturition3">失禁</label>
+                    </td>
+                    <td colspan="2">
+                        <input name="Micturition" type="checkbox" id="chkMicturition4" value="4" data-inline="true" data-mini="true" title="4" />
+                        <label for="chkMicturition4" id="lbMicturition4">尿频等</label>
+                    </td>
+                    <td colspan="3"></td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <td colspan="2">
+                        <input name="Micturition" type="checkbox" id="chkMicturition5" value="5" data-inline="true" data-mini="true" title="5" />
+                        <label for="chkMicturition5" id="lbMicturition5">留置导尿管</label>
+                    </td>
+                    <td colspan="6"></td>
+                </tr>
+                <tr>
+                    <th>排便</th>
+                    <td>
+                        <input name="Defecation" type="checkbox" id="chkDefecation1" value="1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkDefecation1" id="lbDefecation1">正常</label>
+                    </td>
+                    <td>
+                        <input name="Defecation" type="checkbox" id="chkDefecation2" value="2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkDefecation2" id="lbDefecation2">便秘</label>
+                    </td>
+                    <td>
+                        <input name="Defecation" type="checkbox" id="chkDefecation3" value="3" data-inline="true" data-mini="true" title="3" onclick="ChangeLabel(this)" />
+                        <label for="chkDefecation3" id="lbDefecation3">腹泻</label>
+                    </td>
+                    <td>
+                        <input nurse_eval="vital_sign:DEFECATION_COUNT" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtDefecationCount" />
+                    </td>
+                    <td>次/天</td>
+                    <td>
+                        <input name="Defecation" type="checkbox" id="chkDefecation4" value="4" data-inline="true" data-mini="true" title="4" />
+                        <label for="chkDefecation4" id="lbDefecation4">失禁</label>
+                    </td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <td>
+                        <input name="Defecation" type="checkbox" id="chkDefecation5" value="5" data-inline="true" data-mini="true" title="5" />
+                        <label for="chkDefecation5" id="lbDefecation5">造口</label>
+                    </td>
+                    <td>
+                        <input name="Defecation" type="checkbox" id="chkDefecation6" value="6" data-inline="true" data-mini="true" title="6" onclick="ChangeLabel(this)" />
+                        <label for="chkDefecation6" id="lbDefecation6">部位</label>
+                    </td>
+                    <td colspan="6">
+                        <input nurse_eval="vital_sign:DEFECATION_NAME" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtDefecationName" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>引流</th>
+                    <td>
+                        <input nurse_eval="vital_sign:DRAINAGE;combo_data:ishas" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="selDrainage" />
+                    </td>
+                    <td colspan="7"></td>
+                </tr>
+                <tr id="trDrainage">
+                    <th></th>
+                    <td>
+                        <input nurse_eval="vital_sign:DRAINAGE_TYPE" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtDrainageType" />
+                    </td>
+                    <td>引流液性状</td>
+                    <td colspan="2">
+                        <input nurse_eval="vital_sign:DRAINAGE_LEAD" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtDrainageLead" />
+                    </td>
+                    <td>颜色</td>
+                    <td>
+                        <input nurse_eval="vital_sign:DRAINAGE_COLOR" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtDrainageColor" />
+                    </td>
+                    <td>量</td>
+                    <td>
+                        <input nurse_eval="vital_sign:DRAINAGE_SIZE" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtDrainageSize" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>引流</th>
+                    <td>
+                        <input nurse_eval="vital_sign:DRAINAGE_1;combo_data:ishas" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="selDrainage1" />
+                    </td>
+                    <td colspan="7"></td>
+                </tr>
+                <tr id="trDrainage1">
+                    <th></th>
+                    <td>
+                        <input nurse_eval="vital_sign:DRAINAGE_TYPE_1" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtDrainageType1" />
+                    </td>
+                    <td>引流液性状</td>
+                    <td colspan="2">
+                        <input nurse_eval="vital_sign:DRAINAGE_LEAD_1" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtDrainageLead1" />
+                    </td>
+                    <td>颜色</td>
+                    <td>
+                        <input nurse_eval="vital_sign:DRAINAGE_COLOR_1" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtDrainageColor1" />
+                    </td>
+                    <td>量</td>
+                    <td>
+                        <input nurse_eval="vital_sign:DRAINAGE_SIZE_1" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtDrainageSize1" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div title="休息及睡眠" style="padding: 10px;">
+            <table id="Eight" style="width:98%;height:auto;align-content:space-around">
+                <tr>
+                    <th>睡眠</th>
+                    <td>
+                        <input name="Sleep" type="checkbox" id="chkSleep1" value="1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkSleep1" id="lbSleep1">正常</label>
+                    </td>
+                    <td>
+                        <input name="Sleep" type="checkbox" id="chkSleep2" value="2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkSleep2" id="lbSleep2">难以入睡</label>
+                    </td>
+                    <td>
+                        <input name="Sleep" type="checkbox" id="chkSleep3" value="3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkSleep3" id="lbSleep3">多梦易醒</label>
+                    </td>
+                    <td>
+                        <input name="Sleep" type="checkbox" id="chkSleep4" value="4" data-inline="true" data-mini="true" title="4" />
+                        <label for="chkSleep4" id="lbSleep4">其他</label>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>辅助睡眠</th>
+                    <td>
+                        <input nurse_eval="vital_sign:SLEEP_AIDS;combo_data:ishas" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="selSleepAids" />
+                    </td>
+                    <td colspan="4"></td>
+                </tr>
+                <tr id="trSleepAids">
+                    <th>药物</th>
+                    <td colspan="5">
+                        <input nurse_eval="vital_sign:SLEEP_DRUG" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtSleepDrug" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div title="文化/宗教信仰" style="padding: 10px;">
+            <table id="Nine" style="width:98%;height:auto;align-content:space-around">
+                <tr>
+                    <th>文化/宗教信仰</th>
+                    <td>
+                        <input nurse_eval="vital_sign:RELIGION;combo_data:ishas" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="selReligion" />
+                    </td>
+                    <td colspan="5"></td>
+                </tr>
+                <tr id="trReligion">
+                    <th>
+                        名称
+                    </th>
+                    <td colspan="6">
+                        <input nurse_eval="vital_sign:RELIGION_OTHER" style="width:60px" easyui-ctl="textbox" data-options="panelHeight:'auto'" id="txtReligionOther" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div title="入院宣教" style="padding: 10px;">
+            <table id="Ten" style="width:98%;height:auto;align-content:space-around">
+                <tr>
+                    <th>入院宣教</th>
+                    <td>
+                        <input nurse_eval="vital_sign:ADMISSION_EDUCATION;combo_data:admissioneducation" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="selAdmissionEducation" />
+                    </td>
+                    <td colspan="7"></td>
+                </tr>
+                <tr>
+                    <th>入院宣教方法</th>
+                    <td>
+                        <input name="AdmissionMethod" type="checkbox" id="chkAdmissionMethod1" value="1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkAdmissionMethod1" id="lbAdmissionMethod1">讲解</label>
+                    </td>
+                    <td>
+                        <input name="AdmissionMethod" type="checkbox" id="chkAdmissionMethod2" value="2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkAdmissionMethod2" id="lbAdmissionMethod2">示范</label>
+                    </td>
+                    <td>
+                        <input name="AdmissionMethod" type="checkbox" id="chkAdmissionMethod3" value="3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkAdmissionMethod3" id="lbAdmissionMethod3">视频</label>
+                    </td>
+                    <td colspan="2">
+                        <input name="AdmissionMethod" type="checkbox" id="chkAdmissionMethod4" value="4" data-inline="true" data-mini="true" title="4" />
+                        <label for="chkAdmissionMethod4" id="lbAdmissionMethod4">免费资料</label>
+                    </td>
+                    <td>
+                        <input name="AdmissionMethod" type="checkbox" id="chkAdmissionMethod5" value="5" data-inline="true" data-mini="true" title="5" />
+                        <label for="chkAdmissionMethod5" id="lbAdmissionMethod5">讨论</label>
+                    </td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <th>宣教对象</th>
+                    <td>
+                        <input name="AdmissionObject" type="checkbox" id="chkAdmissionObject1" value="1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkAdmissionObject1" id="lbAdmissionObject1">患者</label>
+                    </td>
+                    <td>
+                        <input name="AdmissionObject" type="checkbox" id="chkAdmissionObject2" value="2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkAdmissionObject2" id="lbAdmissionObject2">父母</label>
+                    </td>
+                    <td>
+                        <input name="AdmissionObject" type="checkbox" id="chkAdmissionObject3" value="3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkAdmissionObject3" id="lbAdmissionObject3">子女</label>
+                    </td>
+                    <td>
+                        <input name="AdmissionObject" type="checkbox" id="chkAdmissionObject4" value="4" data-inline="true" data-mini="true" title="4" />
+                        <label for="chkAdmissionObject4" id="lbAdmissionObject4">配偶</label>
+                    </td>
+                    <td>
+                        <input name="AdmissionObject" type="checkbox" id="chkAdmissionObject5" value="5" data-inline="true" data-mini="true" title="5" />
+                        <label for="chkAdmissionObject5" id="lbAdmissionObject5">朋友</label>
+                    </td>
+                    <td>
+                        <input name="AdmissionObject" type="checkbox" id="chkAdmissionObject6" value="6" data-inline="true" data-mini="true" title="6" />
+                        <label for="chkAdmissionObject6" id="lbAdmissionObject6">其他</label>
+                    </td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <th>首选语言</th>
+                    <td>
+                        <input name="AdmissionLanguage" type="checkbox" id="chkAdmissionLanguage1" value="1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkAdmissionLanguage1" id="lbAdmissionLanguage1">汉语</label>
+                    </td>
+                    <td colspan="2">
+                        <input name="AdmissionLanguage" type="checkbox" id="chkAdmissionLanguage2" value="2" data-inline="true" data-mini="true" title="2" onclick="ChangeLabel(this)" />
+                        <label for="chkAdmissionLanguage2" id="lbAdmissionLanguage2">第二语言</label>
+                    </td>
+                    <td>
+                        <input id="txtSecondLanguage" nurse_eval="vital_sign:SECOND_LANGUAGE" easyui-ctl="textbox" />
+                    </td>
+                    <td colspan="2">
+                        <input name="AdmissionLanguage" type="checkbox" id="chkAdmissionLanguage3" value="3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkAdmissionLanguage3" id="lbAdmissionLanguage3">要求翻译</label>
+                    </td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <th>接收能力</th>
+                    <td>
+                        <input name="AdmissionReceive" type="checkbox" id="chkAdmissionReceive1" value="1" data-inline="true" data-mini="true" title="1" />
+                        <label for="chkAdmissionReceive1" id="lbAdmissionReceive1">能接受</label>
+                    </td>
+                    <td colspan="2">
+                        <input name="AdmissionReceive" type="checkbox" id="chkAdmissionReceive2" value="2" data-inline="true" data-mini="true" title="2" />
+                        <label for="chkAdmissionReceive2" id="lbAdmissionReceive2">不能接受</label>
+                    </td>
+                    <td colspan="2">
+                        <input name="AdmissionReceive" type="checkbox" id="chkAdmissionReceive3" value="3" data-inline="true" data-mini="true" title="3" />
+                        <label for="chkAdmissionReceive3" id="lbAdmissionReceive3">语言障碍</label>
+                    </td>
+                    <td colspan="3">
+                        <input name="AdmissionReceive" type="checkbox" id="chkAdmissionReceive4" value="4" data-inline="true" data-mini="true" title="4" />
+                        <label for="chkAdmissionReceive4" id="lbAdmissionReceive4">文化差异</label>
+                    </td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <td colspan="2">
+                        <input name="AdmissionReceive" type="checkbox" id="chkAdmissionReceive5" value="5" data-inline="true" data-mini="true" title="5" />
+                        <label for="chkAdmissionReceive5" id="lbAdmissionReceive5">听力障碍</label>
+                    </td>
+                    <td colspan="2">
+                        <input name="AdmissionReceive" type="checkbox" id="chkAdmissionReceive6" value="6" data-inline="true" data-mini="true" title="6" />
+                        <label for="chkAdmissionReceive6" id="lbAdmissionReceive6">理解能力障碍</label>
+                    </td>
+                    <td colspan="2">
+                        <input name="AdmissionReceive" type="checkbox" id="chkAdmissionReceive7" value="7" data-inline="true" data-mini="true" title="7" />
+                        <label for="chkAdmissionReceive7" id="lbAdmissionReceive7">情感障碍</label>
+                    </td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <th>疼痛评估</th>
+                    <td>
+                        <input nurse_eval="vital_sign:PAIN_ASSESSMENT;combo_data:yesorno" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="selPainAssessment" />
+                    </td>
+                    <th>意识评估</th>
+                    <td>
+                        <input nurse_eval="vital_sign:CONSCIOUSNESS_ASSESSMENT;combo_data:yesorno" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="selConsciousnessAssessment" />
+                    </td>
+                    <th>压疮评估</th>
+                    <td>
+                        <input nurse_eval="vital_sign:PRESSURE_ASSESSMENT;combo_data:yesorno" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="selPressureAssessment" />
+                    </td>
+                    <td colspan="3"></td>
+                </tr>
+                <tr>
+                    <th>跌倒评估</th>
+                    <td>
+                        <input nurse_eval="vital_sign:FALL_ASSESSMENT;combo_data:yesorno" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="selFallAssessment" />
+                    </td>
+                    <th>生活自理评估</th>
+                    <td>
+                        <input nurse_eval="vital_sign:SELF_ASSESSMENT;combo_data:yesorno" style="width:60px" easyui-ctl="combobox" data-options="panelHeight:'auto'" id="selSelfAssessment" />
+                    </td>
+                    <td colspan="5"></td>
+                </tr>
+                <tr>
+                    <th>护理要点</th>
+                    <td colspan="8">
+                        <input id="txtNursePoint" nurse_eval="vital_sign:NURSE_POINT" easyui-ctl="textbox" data-options="multiline:true" style="width:360px;height:40px" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>护理要点</th>
+                    <td colspan="8">
+                        <input id="txtNursePoint1" nurse_eval="vital_sign:NURSE_POINT_1" easyui-ctl="textbox" data-options="multiline:true" style="width:360px;height:40px" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>护理要点</th>
+                    <td colspan="8">
+                        <input id="txtNursePoint2" nurse_eval="vital_sign:NURSE_POINT_2" easyui-ctl="textbox" data-options="multiline:true" style="width:360px;height:40px" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>护理要点</th>
+                    <td colspan="8">
+                        <input id="txtNursePoint3" nurse_eval="vital_sign:NURSE_POINT_3" easyui-ctl="textbox" data-options="multiline:true" style="width:360px;height:40px" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>护理要点</th>
+                    <td colspan="8">
+                        <input id="txtNursePoint4" nurse_eval="vital_sign:NURSE_POINT_4" easyui-ctl="textbox" data-options="multiline:true" style="width:360px;height:40px" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>护理要点</th>
+                    <td colspan="8">
+                        <input id="txtNursePoint5" nurse_eval="vital_sign:NURSE_POINT_5" easyui-ctl="textbox" data-options="multiline:true" style="width:360px;height:40px" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>护理要点</th>
+                    <td colspan="8">
+                        <input id="txtNursePoint6" nurse_eval="vital_sign:NURSE_POINT_6" easyui-ctl="textbox" data-options="multiline:true" style="width:360px;height:40px" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>评估人</th>
+                    <td>
+                        <input easyui-ctl="textbox" nurse_eval="vital_sign:NURSE_SIGN" id="lbNurseSign" />
+                    </td>
+                    <th>评估时间</th>
+                    <td colspan="2">
+                        <input easyui-ctl="datebox" nurse_eval="vital_sign:SIGN_TIME" id="txtSignTime" data-options="formatter:dateFormatter,parser:dateParser" />
+                    </td>
+                    <td colspan="4"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div style="visibility: hidden;" id="checks">
+        <input nurse_eval="vital_sign:SYNCHRONOUS" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtSynchronous" /> 同步至体温单选项
+        <input nurse_eval="vital_sign:CARDIOVASCULAR" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtCardiovascular" /> 心血管系统相关疾病史选项
+        <input nurse_eval="vital_sign:OTHERSYSTEMH" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtOtherSystemH" /> 其他系统相关病史
+        <input nurse_eval="vital_sign:ASSISTEDITEM" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtAssistedItem" />辅助护理选项
+        <input nurse_eval="vital_sign:LIFE" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtLife" />生活
+        <input nurse_eval="vital_sign:ALLERGYMETHOD" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtAllergyMethod" />针对过敏反应的措施
+        <input nurse_eval="vital_sign:SPECIALDRUGITEM" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtSpecialDrugItem" />特殊用药选项
+        <input nurse_eval="vital_sign:PUPIL" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtPupil" />瞳孔大小
+        <input nurse_eval="vital_sign:PHYSICAL" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtPhysical" />肢体活动
+        <input nurse_eval="vital_sign:VISUAL" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtVisual" />视觉
+        <input nurse_eval="vital_sign:AUDITORY" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtAuditory" />听觉
+        <input nurse_eval="vital_sign:THINKING" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtThinking" />思维
+        <input nurse_eval="vital_sign:LANGUAGE" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtLanguage" /> 语言沟通
+        <input nurse_eval="vital_sign:COGNITION" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtCognition" />对疾病的认识
+        <input nurse_eval="vital_sign:DIET" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtDiet" />饮食
+        <input nurse_eval="vital_sign:NUTRITION" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtNutrition" />营养
+        <input nurse_eval="vital_sign:HOBBY" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtHobby" />嗜好
+        <input nurse_eval="vital_sign:INDEPENDENT" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtIndependent" /> 自理程度
+        <input nurse_eval="vital_sign:FALL" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtFall" /> 跌倒史
+        <input nurse_eval="vital_sign:ACTIVITIESYES" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtActivitiesYes" />活动辅助装置选项
+        <input nurse_eval="vital_sign:POSITION" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtPosition" />体位
+        <input nurse_eval="vital_sign:SKINCOLOR" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtSkinColor" />皮肤及粘膜颜色
+        <input nurse_eval="vital_sign:SKINELASTICITY" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtSkinElasticity" /> 皮肤弹性
+        <input nurse_eval="vital_sign:SKINFULL" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtSkinFull" /> 皮肤完整性
+        <input nurse_eval="vital_sign:SKINOTHER" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtSkinOther" /> 皮肤其他
+        <input nurse_eval="vital_sign:MICTURITION" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtMicturition" />排尿
+        <input nurse_eval="vital_sign:DEFECATION" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtDefecation" /> 排便
+        <input nurse_eval="vital_sign:SLEEP" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtSleep" /> 睡眠
+        <input nurse_eval="vital_sign:ADMISSIONMETHOD" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtAdmissionMethod" /> 入院宣教方法
+        <input nurse_eval="vital_sign:ADMISSIONOBJECT" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtAdmissionObject" /> 宣教对象
+        <input nurse_eval="vital_sign:ADMISSIONLANGUAGE" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtAdmissionLanguage" /> 首选语言
+        <input nurse_eval="vital_sign:ADMISSIONRECEIVE" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtAdmissionReceive" /> 接收能力
+    </div>
+</body>
+<script type="text/javascript">
+    var patient;
+    var arr = new Array();
+    var visitid;
+    var HISData = [];
+    var InputData = [];
+    //获取全科病人，绑定下拉框
+    $(function () {
+        var tabs = $('#inputTabs').tabs("tabs")
+        $(tabs).attr("parsestatus", false);
+        $("#ccPatients").combobox({
+            onSelect: PatientsData,
+            filter: filterPatient
+        });
+        $.ajax({
+            url: BaseData.WebApiUrl + "nurse/getPatientListByWard/",
+
+            type: "get",
+            success: (function (data) {
+
+                var jsonData = $.parseJSON(data);
+                if (jsonData.length > 0) {
+                    for (var i = 0; i < jsonData.length; i++) {
+                        jsonData[i].Name = "(" + jsonData[i].Bed_No + ")" + jsonData[i].Name;
+                    }
+                    $("#ccPatients").combobox('loadData', jsonData);
+                    //   $("#ccPatients").combobox('setValue', jsonData[0].Patient_id);
+                    //   PatientsData();
+                }
+            })
+        });
+
+        $("#inputTabs").tabs({
+            onSelect: function (title) {
+                SelectTab(title);
+            }
+        });
+        SelectTab($("#inputTabs").tabs("getSelected").panel("options").title);
+        $("#btnSaveInput").click(saveData);
+        $("#btnDelete").click(delData);
+        $("table").addClass("inputTable");
+    });
+    //选择TAB页事件
+    function SelectTab(title) {
+        var selectTab = $('#inputTabs').tabs("getTab", title);
+        if (!selectTab.attr("parsestatus")) {
+            selectTab.find("[easyui-ctl]").each(function () {
+                var obj = $(this)
+                obj.addClass("easyui-" + obj.attr("easyui-ctl"));
+            })
+            $.parser.parse(selectTab);
+            selectTab.attr("parsestatus", true);
+        }
+    }
+
+    //从his提取病人数据并赋值
+    function PatientsComboChange() {
+        clearEditInfo();
+        //    var patient_id = $("#ccPatients").combobox('getValue');
+        // var visit_id = $("#ccvisitid").textbox('getValue');
+        $.ajax({
+            url: BaseData.WebApiUrl + "nurserecordeval/getDataFromHIS",
+            data: "patientid=" + patient.Patient_id + "&visitid=" + patient.Visit_id,//+visit_id,
+            type: "get",
+            success: (function (data) {
+                var jsonData = data["Table"][0];
+                if (jsonData != null) {
+                    InitEasyUIInputData($("#inputTabs"), jsonData);
+                    //            $("#ccvisitid").textbox('setValue', jsonData.VISIT_ID);
+                    $("#checks").find("input[" + AttrName + "]").each(function (index, obj) {
+                        var strName = $(obj).attr("id").replace("txt", "");
+                        setDataList(jsonData, strName);
+                    });
+                    if (jsonData.NURSE_SIGN == null) {
+                        var date = new Date();
+                        $('#txtSignTime').datebox('setValue', dateFormatter(date));
+                        $("#lbNurseSign").textbox('setValue', getLoginUser().UserName);
+                    }
+                }
+                else {
+                    PatientsData();
+                }
+            })
+        });
+    }
+    //根据pid取病人基本信息
+    function PatientsData() {
+        var patient_id = $("#ccPatients").combobox('getValue');
+        $.ajax({
+            url: BaseData.WebApiUrl + "nurse/getPatientInfoByPatientID",
+            data: "patientid=" + patient_id,
+            type: "get",
+            success: (function (data) {
+                var jsonData = $.parseJSON(data);
+                patient = jsonData;
+                if (jsonData) {
+                    InitEasyUIInputData($("#inputTabs"), jsonData);
+                    //       visitid = jsonData.Visit_id;
+                    PatientsComboChange();
+                }
+            })
+        });
+    }
+    //Array.prototype.contains = function (obj) {
+    //    var i = this.length;
+    //    while (i--) {
+    //        if (this[i] === obj) {
+    //            return true;
+    //        }
+    //    }
+    //    return false;
+    //}
+    //拼接复选框
+    //function arrayList() {
+    //    $("#inputTabs").find("input[" + AttrEval + "]").each(function (index, obj) {
+    //        var evalName =$(obj).attr(AttrEval).split(':')[1]
+    //        if (!arr.contains(evalName)) { arr.push(evalName); }
+    //    });
+    //    GetCheckboxValues();
+    //}
+    //拼接复选框
+    function GetDataList(o) {
+        var value = "";
+        var eles = $("#inputTabs").find("input[name='" + o + "']");
+        for (var index = 0; index < eles.length; index++) {
+            if (eles[index].checked) {
+                value = value + eles[index].value + "|";
+            }
+        }
+        return value;
+    }
+    //清除复选框
+    function clearEditInfo() {
+        $("#inputTabs").find("input[type='checkbox']").each(function (inputIndex) {
+            $(this).prop("checked", false);
+            $(this).removeAttr("checked");
+            strVar = $(this).attr("id");
+            strVar = "lb" + strVar.replace("chk", "");
+            $("#" + strVar).removeClass("ui-checkbox-on");
+            $("#" + strVar).addClass("ui-checkbox-off");
+        });
+    }
+    //绑定复选框
+    function setDataList(jsonData, strName) {
+        var Name = strName.toUpperCase();
+        for (var data in jsonData) {
+            var Strvalue = jsonData[data];
+
+            if (data == Name) {
+                $("#inputTabs").find("input[name='" + strName + "']").each(function (index, obj) {
+                    if ($(this).attr("type") == "checkbox" && Strvalue != null) {
+                        if (Strvalue.indexOf($(this).attr("title")) != -1) {
+                            document.getElementById($(this).attr("id")).checked = true;
+                            var strVar = $(this).attr("id");
+                            strVar = "lb" + strVar.replace("chk", "");
+                            $("#" + strVar).removeClass("ui-checkbox-off");
+                            $("#" + strVar).addClass("ui-checkbox-on");
+                        }
+                    }
+                })
+            }
+        }
+    }
+    function GetCheckboxValues() {
+        // 同步至体温单选项
+        var Synchronous = GetDataList("Synchronous");
+        $("#txtSynchronous").textbox("setValue", Synchronous);
+        //心血管系统相关疾病史选项
+        var Cardiovascular = GetDataList("Cardiovascular");
+        $("#txtCardiovascular").textbox("setValue", Cardiovascular);
+        //其他系统相关病史
+        var OtherSystemH = GetDataList("OtherSystemH");
+        $("#txtOtherSystemH").textbox("setValue", OtherSystemH);
+        //辅助护理选项
+        var AssistedItem = GetDataList("AssistedItem");
+        $("#txtAssistedItem").textbox("setValue", AssistedItem);
+        //生活
+        var Life = GetDataList("Life");
+        $("#txtLife").textbox("setValue", Life);
+        //针对过敏反应的措施
+        var AllergyMethod = GetDataList("AllergyMethod");
+        $("#txtAllergyMethod").textbox("setValue", AllergyMethod);
+        //特殊用药选项
+        var SpecialDrugItem = GetDataList("SpecialDrugItem");
+        $("#txtSpecialDrugItem").textbox("setValue", SpecialDrugItem);
+        //瞳孔大小
+        var Pupil = GetDataList("Pupil");
+        $("#txtPupil").textbox("setValue", Pupil);
+        //肢体活动
+        var Physical = GetDataList("Physical");
+        $("#txtPhysical").textbox("setValue", Physical);
+        //视觉
+        var Visual = GetDataList("Visual");
+        $("#txtVisual").textbox("setValue", Visual);
+        //听觉
+        var Auditory = GetDataList("Auditory");
+        $("#txtAuditory").textbox("setValue", Auditory);
+        //思维
+        var Thinking = GetDataList("Thinking");
+        $("#txtThinking").textbox("setValue", Thinking);
+        //语言沟通
+        var Language = GetDataList("Language");
+        $("#txtLanguage").textbox("setValue", Language);
+        //对疾病的认识
+        var Cognition = GetDataList("Cognition");
+        $("#txtCognition").textbox("setValue", Cognition);
+        //饮食
+        var Diet = GetDataList("Diet");
+        $("#txtDiet").textbox("setValue", Diet);
+        //营养
+        var Nutrition = GetDataList("Nutrition");
+        $("#txtNutrition").textbox("setValue", Nutrition);
+        //嗜好
+        var Hobby = GetDataList("Hobby");
+        $("#txtHobby").textbox("setValue", Hobby);
+        //自理程度
+        var Independent = GetDataList("Independent");
+        $("#txtIndependent").textbox("setValue", Independent);
+        //跌倒史
+        var Fall = GetDataList("Fall");
+        $("#txtFall").textbox("setValue", Fall);
+        //活动辅助装置选项
+        var ActivitiesYes = GetDataList("ActivitiesYes");
+        $("#txtActivitiesYes").textbox("setValue", ActivitiesYes);
+        //体位
+        var Position = GetDataList("Position");
+        $("#txtPosition").textbox("setValue", Position);
+        //皮肤及粘膜颜色
+        var SkinColor = GetDataList("SkinColor");
+        $("#txtSkinColor").textbox("setValue", SkinColor);
+        //皮肤弹性
+        var SkinElasticity = GetDataList("SkinElasticity");
+        $("#txtSkinElasticity").textbox("setValue", SkinElasticity);
+        //皮肤完整性
+        var SkinFull = GetDataList("SkinFull");
+        $("#txtSkinFull").textbox("setValue", SkinFull);
+        //皮肤其他
+        var SkinOther = GetDataList("SkinOther");
+        $("#txtSkinOther").textbox("setValue", SkinOther);
+        //排尿
+        var Micturition = GetDataList("Micturition");
+        $("#txtMicturition").textbox("setValue", Micturition);
+        //排便
+        var Defecation = GetDataList("Defecation");
+        $("#txtDefecation").textbox("setValue", Defecation);
+        //睡眠
+        var Sleep = GetDataList("Sleep");
+        $("#txtSleep").textbox("setValue", Sleep);
+        //入院宣教方法
+        var AdmissionMethod = GetDataList("AdmissionMethod");
+        $("#txtAdmissionMethod").textbox("setValue", AdmissionMethod);
+        //宣教对象
+        var AdmissionObject = GetDataList("AdmissionObject");
+        $("#txtAdmissionObject").textbox("setValue", AdmissionObject);
+        //首选语言
+        var AdmissionLanguage = GetDataList("AdmissionLanguage");
+        $("#txtAdmissionLanguage").textbox("setValue", AdmissionLanguage);
+        //接收能力
+        var AdmissionReceive = GetDataList("AdmissionReceive");
+        $("#txtAdmissionReceive").textbox("setValue", AdmissionReceive);
+    }
+    //保存数据
+    function saveData() {
+        GetCheckboxValues();
+        var postData = "";
+
+        postData += '{';
+        postData += '"Patient_id":"' + patient.Patient_id + '",';
+        postData += 'Visit_id:"' + patient.Visit_id + '"';
+        $("#inputTabs").find("input[" + AttrName + "]").each(function (index, obj) {
+            var bodyChart = $(obj).attr(AttrName).split(';');
+            for (var s in bodyChart) {
+                var p = bodyChart[s].replace(/(^\s*)|(\s*$)/g, "");
+                var length = JsonPro.length;
+                if (p.substr(0, length).toLowerCase() == JsonPro) {
+                    var value;
+                    if ($(obj).hasClass("easyui-combobox")) {
+                        value = $(obj).combobox("getValue");
+                        if (value != "" && value != NurseRecordEvlDefaultValues.defaultValue[0].value) {
+                            value = '"' + value + '"';
+                        }
+                        else {
+                            value = 'null';
+                        }
+                    }
+                    else {
+                        value = $(obj).numberbox("getValue");
+                        if (value != "") {
+                            value = '"' + value + '"';
+                        }
+                        else {
+                            value = 'null';
+                        }
+                    }
+
+                    postData += ',"' + p.substr(length) + '":' + value;
+                }
+            }
+        });
+        postData += "}";
+        postData = "[" + postData + "]";
+        $.ajax({
+            url: BaseData.WebApiUrl + "nurserecordeval/saveNurseEval",
+            type: "POST",
+            data: { '': postData },
+            success: (function (data) {
+                if (data) {
+                    $.messager.alert("提示", data);
+                    PatientsComboChange();
+                }
+            })
+        });
+    }
+    function delData() {
+
+        $.ajax({
+            url: BaseData.WebApiUrl + "nurserecordeval/delNurseEval",
+            data: "patient_id=" + patient.Patient_id + "&visit_id=" + patient.Visit_id,
+            type: "get",
+            success: (function (data) {
+                if (data) {
+                    $.messager.alert("提示", data);
+                    PatientsComboChange();
+                }
+            })
+        });
+    }
+    //日期样式
+    function tdDateFormatter(jsonObj) {
+        return dateTimeFormatter(new Date(jsonObj.Admission_Date_Time), "yyyy-mm-dd");
+    }
+    //日期样式
+    function inputListDateFormatter(date) {
+        var showDate = new Date(date);
+        var hour = showDate.getHours() + showDate.getTimezoneOffset() / 60;
+
+        if (hour < 0) {
+
+            hour = hour + 24;
+        }
+        showDate = showDate.setHours(hour);
+        return dateTimeFormatter(new Date(showDate), "hh:mi");
+    }
+    function print() {
+        window.open(BaseData.WebApiUrl + "print/printNurseRecordEval?patient_id=" + patient.Patient_id + "&visit_id=" + patient.Visit_id);
+    }
+</script>
+
+</html>

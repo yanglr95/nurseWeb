@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/Common.js"></script>
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../CSS/default.css" rel="stylesheet" />
+</head>
+<body>
+    <table id="First" style="width: 98%; height: auto; align-content: space-around;background-color:white;">
+        <tbody id="tabPatientInfo">
+            <tr>
+                <td>试卷编号</td>
+                <td id="Papernumber" field="Papernumber"></td>
+
+                <td>试卷名称</td>
+                <td id="Papername" field="Papername"></td>
+
+                <td>录入者</td>
+                <td id="User" field="User"></td>
+
+                <td>总分</td>
+                <td id="Totalscore" field="Totalscore"></td>
+
+                <td>时限</td>
+                <td id="Timelimit" field="Timelimit"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
+<script type="text/javascript">
+     $(function () {
+            $.ajax({
+                url: BaseData.WebApiUrl + "OnlineExam/getExamManagement",
+
+                type: "get",
+                data:"paperType=在线考试&id=1",
+                success: (function (data) {
+                    var jsonData = $.parseJSON(data);
+                    if (jsonData) {
+                        SetTableValue("tabPatientInfo", jsonData);
+                    }
+                })
+    });
+      });
+</script>

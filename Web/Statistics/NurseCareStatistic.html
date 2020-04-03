@@ -1,0 +1,149 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>护理统计</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+
+    <script src="../js/Common.js"></script>
+
+   
+    <script src="../js/easyui-extends.js"></script>
+    <script src="../../JavaScript/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <link href="../../JavaScript/easyui/themes/metro/messager.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/default/datagrid.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/default/combobox.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/default/dialog.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <script src="../../JavaScript/Highcharts-4.1.9/js/highcharts.js"></script>
+    <link href="../../CSS/default.css" rel="stylesheet" />
+</head>
+<body>
+    <div>
+        <input class="easyui-datebox" id="dateStartDate" data-options="formatter:dateFormatter,parser:dateParser" />
+        <input class="easyui-datebox" id="dateEndDate" data-options="formatter:dateFormatter,parser:dateParser" />
+        <a href="#" id="BtnSearch" class="easyui-linkbutton" iconcls="icon-huayi-search">查询</a>
+    </div>
+    <div>
+        <table id="tbStatistic" class="easyui-datagrid" style="width:98%;"></table>
+    </div>
+    <div id="container" style="width:98%;height:400px"></div>
+</body>
+</html>
+<script type="text/javascript">
+    $(function () {
+        var date = new Date()
+        $("#dateEndDate").datebox("setValue", dateFormatter(date));
+        date = date.valueOf() - 24 * 60 * 60 * 1000;
+        $("#dateStartDate").datebox("setValue", dateFormatter(new Date(date)));
+
+        $("#tbStatistic").datagrid({
+            width: '98%',
+            style: { 'text-align': 'center' },
+
+            columns: [
+                [
+                    { field: 'UserName', title: '姓名', width: '12%', rowspan: 2 },
+                    { title: '护理统计', colspan: 4 },
+                         { title: '医嘱统计', colspan: 5 }
+                ],
+                [
+
+                 { field: '体温', title: '体温数量', width: '8%' },
+                { field: '脉搏', title: '脉搏数量', width: '10%' },
+                { field: '血压', title: '血压数量', width: '10%' },
+                 { field: '护理记录', title: '护理记录数量', width: '12%' },
+                   { field: '执行', title: '执行', width: '8%' },
+                     { field: '配药', title: '配药', width: '10%' },
+                     { field: '核药', title: '核药', width: '10%' },
+                     { field: '换药', title: '换药', width: '10%' },
+                     { field: '拔针', title: '拔针', width: '10%' },
+                ]],
+            onClickRow: selectedNurse
+
+        });
+        $("#BtnSearch").click(getStatisticData);
+        getStatisticData();
+    });
+    function selectedNurse() {
+        var selectRow = $("#tbStatistic").datagrid("getSelections");
+        var selectData = new Array();
+        if (selectRow.length == 0) {
+            selectData = statisticData;
+        }
+        else {
+            selectData = selectRow;
+        }
+        InitChart(selectData, "UserName", "container", "column", "护理工作量统计");
+    }
+    var statisticData = new Array()
+    function getStatisticData() {
+        var start_date = $("#dateStartDate").datebox("getValue");
+        var end_date = $("#dateEndDate").datebox("getValue");
+        $.ajax({
+            url: BaseData.WebApiUrl + "Statistic/getNurseCareStatistic/",
+            data: "startTime=" + start_date + "&endTime=" + end_date,
+            type: "get",
+            success: (function (data) {
+                if (data) {
+                    statisticData = $.parseJSON(data);
+                    $("#tbStatistic").datagrid("loadData", statisticData);
+                    InitChart(statisticData, "UserName", "container", "column", "护理工作量统计");
+                }
+            })
+        });
+    }
+    function dateFormatter(date) {
+        return dateTimeFormatter(date, "yyyy-mm-dd");
+    }
+    function InitChart(jsonData, xColumnName, chartID, chartType, chartTitle) {
+        var userlist = new Array();
+        var data = [];
+        for (var i in jsonData[0]) {
+            if (i != xColumnName) {
+                data[i] = new Array();
+            }
+        }
+        for (var i in jsonData) {
+            userlist.push(jsonData[i].UserName);
+            for (var item in jsonData[i]) {
+                if (item != xColumnName) {
+                    data[item].push(jsonData[i][item]);
+                }
+            }
+        }
+        var chartData = new Array();
+        for (var i in data) {
+            chartData.push({ name: i, data: data[i] });
+        }
+
+        $('#' + chartID).highcharts({
+            chart: {
+                type: chartType
+            },
+            title: {
+                text: chartTitle
+            },
+            yAxis: {
+                allowDecimals: false,
+                min: 0,
+                title: {
+                    text: '次'
+                }
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            xAxis: {
+                categories: userlist,
+                crosshair: true
+            },
+            series: chartData
+        });
+    }
+</script>

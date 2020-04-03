@@ -1,0 +1,11 @@
+﻿body {
+}
+
+.fieldTable {
+    display: none;
+    width: 400px;
+}
+
+.fieldTableShow {
+    display: block;
+}

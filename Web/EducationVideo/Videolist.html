@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>宣教视频</title>
+    <link href="style/css.css" rel="stylesheet" />
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../js/Common.js"></script>
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <style type="text/css">
+        .ui-page {
+            background: #b5d8fa;
+        }
+        .groupName {
+            font-size: 8px;
+            text-align: center;
+            /*line-height: 10px;*/
+        }
+
+        ul li {
+            display: inline-block;
+            text-align: center;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="fl" style="margin-left: 10px;min-height:500px;">
+            <ul id="ulid">
+            
+            </ul>
+     </div>
+</body>
+</html>
+<script>
+
+    $(function () {
+        showVideo();
+    });
+
+    function showVideo()
+    {
+        $.ajax({
+            url: BaseData.WebApiUrl + "Video/getVideoList",
+            type: "get",
+            success: function (data) {
+                if (data != "null") {
+                    jsonData = $.parseJSON(data);
+                    var strli="";
+                    for (var i = 0; i < jsonData.length; i++) {
+                        var imgpath = jsonData[i].Imgpath;
+                        var index = imgpath.indexOf("imge");
+                        var imgurl = imgpath.substring(index);
+
+                        var viedeopath = jsonData[i].Videopath;
+                        var viedeindex = viedeopath.indexOf("video");
+                        var viedeurl = viedeopath.substring(viedeindex);
+                       
+                        strli = strli + "       <li><a href=\"NURSEvideolist.html?videoname=" + jsonData[i].Videoname + "&poster=" + imgurl + "&videosrc=" + viedeurl + "&imgsrc=" + imgurl + "\" target=\"MainFrame\"> <img style=\"width: 200px; height: 150px;\" src=" + imgurl + " /></a><br /><a href=\"NURSEvideolist.html?videoname=" + jsonData[i].Videoname + "&poster=" + imgurl + "&videosrc=" + viedeurl + "&imgsrc=" + imgurl + "\" target=\"MainFrame\">" + jsonData[i].Videoname + "</a> </li>   ";
+                    }
+                    $("#ulid").append(strli);
+                } 
+            }
+        })
+    }
+</script>

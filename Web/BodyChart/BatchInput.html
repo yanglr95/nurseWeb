@@ -1,0 +1,388 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>流水录入</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/Common.js"></script>
+    <script src="../js/BatchInput.js"></script>
+    <script src="../../JavaScript/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../CSS/default.css" rel="stylesheet" />
+</head>
+<body>
+    <div>
+        <table style="width: 98%">
+            <tr>
+                <td>
+                    日期：<input id="TxtDate" class="easyui-datebox" style="width: 120px;" data-options="formatter:dateFormatter,parser:dateParser" />
+                    时间：<input id="ComHour" class="easyui-combobox" style="width: 50px;" name="BoxHour" data-options="panelHeight:'auto'" />
+                </td>
+                <td>
+                </td>
+                <td>
+                    
+                </td>
+                <td></td>
+                <td>
+                    病人筛选：<input id="FilterType" class="easyui-combobox" name="FilterType" data-options="panelHeight:'auto'" />
+                    <a href="#" id="BtnSearch" class="easyui-linkbutton" iconcls="icon-huayi-search">查询</a>
+                    <a href="#" id="BtnSave" class="easyui-linkbutton" iconcls="icon-huayi-save">保存</a>
+                </td>
+                <td></td>
+            </tr>
+        </table>
+        <table id="grid" class="easyui-datagrid" style="width: 98%;">
+            <thead>
+                <tr>
+                    <th batchinput="vital_sign:患者;combo_data:pid" data-options="field:'Patient_id',width:'9%'">id
+                    </th>
+                    <th batchinput="vital_sign:患者;combo_data:pid" data-options="field:'Visit_id',width:'11%'">vid
+                    </th>
+                    <th batchinput="vital_sign:床号;combo_data:bedno" data-options="field:'Bed_No',width:'7%'">
+                        床号
+                    </th>
+                    <th batchinput="vital_sign:患者;combo_data:name" data-options="field:'Name',width:'8%'">患者
+                    </th>
+                    <th batchinput="vital_sign:体温;combo_data:twinput" class="easyui-combobox" data-options="field:'体温',width:'12%',formatter:foramtdata,editor:'combobox'">
+                        体温
+                    </th>
+                    <th batchinput="vital_sign:脉搏;combo_data:twinput" class="easyui-combobox" data-options="field:'脉搏',width:'12%',formatter:foramtdata,editor:'combobox'">
+                        脉搏
+                    </th>
+
+                    <th batchinput="vital_sign:呼吸;combo_data:breath" class="easyui-combobox" data-options="field:'呼吸',width:'12%',formatter:foramtbreath,editor:'combobox'">
+                        呼吸
+                    </th>
+                    <th batchinput="vital_sign:大便;combo_data:excrement" class="easyui-combobox" data-options="field:'大便',width:'12%',formatter:foramtexcrement,editor:'combobox'">
+                        大便
+                    </th>
+                    <th batchinput="vital_sign:收缩压;combo_data:twinput" class="easyui-combobox" data-options="field:'收缩压',width:'12%',formatter:foramtdata,editor:'combobox'">
+                        收缩压
+                    </th>
+                    <th batchinput="vital_sign:舒张压;combo_data:twinput" class="easyui-combobox" data-options="field:'舒张压',width:'12%',formatter:foramtdata,editor:'combobox'">
+                        舒张压
+                    </th>
+                    <th batchinput="vital_sign:体重;combo_data:weight" class="easyui-combobox" data-options="field:'体重',width:'12%',formatter:foramtweight,editor:'combobox'">
+                        体重
+                    </th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+</body>
+<script type="text/javascript">
+    var lastIndex;
+    var jsonData = null;
+
+    $(function LoadTimeList() {
+        $("#grid").datagrid('hideColumn', 'Patient_id');
+        $("#grid").datagrid('hideColumn', 'Visit_id');
+        $('#TxtDate').datebox('setValue', dateFormatter(new Date()));
+        $('#ComHour').combobox('loadData', BatchInputList.TimeList);
+        $('#ComHour').combobox('setValue', BatchInputList.TimeList[0].text);
+        $('#FilterType').combobox('loadData', fFilterType);
+        $('#FilterType').combobox('setValue', fFilterType[0].value);
+        $("#grid").datagrid({
+            onClickRow: function (rowIndex) {
+                if (xyzdendEditing()) {
+                    $('#grid').datagrid('selectRow', rowIndex).datagrid('beginEdit', rowIndex);
+                    xyzdeditIndex = rowIndex;
+                } else {
+                    $('#grid').datagrid('selectRow', xyzdeditIndex);
+                }
+
+                //if (lastIndex != rowIndex) {
+                //    $('#grid').datagrid('endEdit', lastIndex);
+                //    $('#grid').datagrid('beginEdit', rowIndex);
+                //}
+                lastIndex = rowIndex;
+
+                //获取当前编辑行
+                var editors = $('#grid').datagrid('getEditors', rowIndex);
+
+                editors[0].target.combobox("loadData", BodyChartDefaultValues.twinput);
+                editors[1].target.combobox("loadData", BodyChartDefaultValues.twinput);
+                editors[2].target.combobox("loadData", BodyChartDefaultValues.breath);
+                editors[3].target.combobox("loadData", BodyChartDefaultValues.excrement);
+                editors[4].target.combobox("loadData", BodyChartDefaultValues.twinput);
+                editors[5].target.combobox("loadData", BodyChartDefaultValues.twinput);
+                editors[6].target.combobox("loadData", BodyChartDefaultValues.weight);
+            },
+        });
+        QueryData();
+        $("#BtnSearch").click(QueryData);
+        $("#BtnSave").click(SaveDate);
+    });
+
+    var strtw, strmb, strhx, strdb, strssy, strszy,strtz;
+    var xyzdeditIndex = undefined;
+    function xyzdendEditing() {
+        if (xyzdeditIndex == undefined) { return true }
+        if ($('#grid').datagrid('validateRow', xyzdeditIndex)) {
+            var ed = $('#grid').datagrid('getEditor', { index: xyzdeditIndex, field: '体温' });  //editIndex编辑时记录下的行号
+            if (ed != null) {
+                strtw = $(ed.target).combobox('getText');
+                $('#grid').datagrid('getRows')[xyzdeditIndex]['体温'] = strtw;
+            }
+            $('#grid').datagrid('endEdit', xyzdeditIndex);
+            xyzdeditIndex = undefined;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function foramtdata(value, row) {
+        var num=0;
+        for (var i = 0; i < BodyChartDefaultValues.twinput.length; i++) {
+            if (value == BodyChartDefaultValues.twinput[i].value) {
+                num = 1;
+                return BodyChartDefaultValues.twinput[i].text;
+            } 
+        }
+        if (num==0) {
+            return value;
+        }
+    }
+
+    function foramtbreath(value, row)
+    {
+        var num = 0;
+        for (var i = 0; i < BodyChartDefaultValues.breath.length; i++) {
+            if (value == BodyChartDefaultValues.breath[i].value) {
+                num = 1;
+                return BodyChartDefaultValues.breath[i].text;
+            }
+        }
+        if (num == 0) {
+            return value;
+        }
+    }
+
+    function foramtexcrement(value, row)
+    {
+        var num = 0;
+        for (var i = 0; i < BodyChartDefaultValues.excrement.length; i++) {
+            if (value == BodyChartDefaultValues.excrement[i].value) {
+                num = 1;
+                return BodyChartDefaultValues.excrement[i].text;
+            }
+        }
+        if (num == 0) {
+            return value;
+        }
+    }
+
+    function foramtweight(value, row)
+    {
+        var num = 0;
+        for (var i = 0; i < BodyChartDefaultValues.weight.length; i++) {
+            if (value == BodyChartDefaultValues.weight[i].value) {
+                num = 1;
+                return BodyChartDefaultValues.weight[i].text;
+            }
+        }
+        if (num == 0) {
+            return value;
+        }
+    }
+
+    function getFormattwinputValue(value) {
+        var num = 0;
+        for (var i = 0; i < BodyChartDefaultValues.twinput.length; i++) {
+            if (value == BodyChartDefaultValues.twinput[i].text) {
+                num = 1;
+                return BodyChartDefaultValues.twinput[i].value;
+            }
+        }
+        if (num == 0) {
+            return value;
+        }
+    }
+
+    function getForamtbreathValue(value) {
+        var num = 0;
+        for (var i = 0; i < BodyChartDefaultValues.breath.length; i++) {
+            if (value == BodyChartDefaultValues.breath[i].text) {
+                num = 1;
+                return BodyChartDefaultValues.breath[i].value;
+            }
+        }
+        if (num == 0) {
+            return value;
+        }
+    }
+
+    function getforamtexcrementValue(value) {
+        var num = 0;
+        for (var i = 0; i < BodyChartDefaultValues.excrement.length; i++) {
+            if (value == BodyChartDefaultValues.excrement[i].text) {
+                num = 1;
+                return BodyChartDefaultValues.excrement[i].value;
+            }
+        }
+        if (num == 0) {
+            return value;
+        }
+    }
+
+    function getforamtweightValue(value) {
+        var num = 0;
+        for (var i = 0; i < BodyChartDefaultValues.weight.length; i++) {
+            if (value == BodyChartDefaultValues.weight[i].text) {
+                num = 1;
+                return BodyChartDefaultValues.weight[i].value;
+            }
+        }
+        if (num==0) {
+            return value;
+        }
+    }
+
+    function QueryData() {
+        $("#grid").datagrid("endEdit", lastIndex);
+        var filterType = $("#FilterType").combobox('getValue');
+        var recordingDate = $("#TxtDate").datebox("getValue") + " " + $('#ComHour').combobox('getValue') + ":00";
+        $.ajax({
+            url: BaseData.WebApiUrl + "bodychart/getPatientListByFilterType/",
+            data: "recording_date=" + recordingDate + "&filterType=" + filterType,
+            type: "get",
+            success: (function (data) {
+                if (data && data != "null") {
+                    jsonData = $.parseJSON(data);
+                    $("#grid").datagrid('loadData', jsonData);
+                    load();
+                } else {
+                    clearDataGrid("grid");
+                }
+            })
+        });
+       
+    }
+    //function filter() {
+    //    var filterType = $("#FilterType").combobox('getValue');
+    //    for (var i = 0; i < fFilterType.length;i++){
+    //        if (filterType == fFilterType[i].text) {
+    //            return fFilterType[i].value;
+    //        }
+    //    }
+    //}
+    function load() {
+        var recordingDate = $("#TxtDate").datebox("getValue") + " " + $('#ComHour').combobox('getValue') + ":00";
+        var filterType = $("#FilterType").combobox('getValue');
+        $.ajax({
+            url: BaseData.WebApiUrl + "bodychart/getPatientInfo",
+            data: "recording_date=" + recordingDate + "&filterType=" + filterType,
+            type: "get",
+            success: function (data) {
+                var inputData = $.parseJSON(data);
+                if (inputData != null) {
+                    for (var i = 0; i < jsonData.length; i++) {
+                        for (var j = 0; j < inputData.length; j++) {
+                            if (jsonData[i].Patient_id == inputData[j].Patient_id) {
+                                inputData[j]["Name"] = jsonData[i].Name;
+                            }
+                        }
+                    }
+                }
+                if (inputData != null && inputData != "") {
+                    $("td[field='Patient_id']").each(function (index, row) {
+                        var patientid = $(row).text();
+                        InitInputData(inputData)
+                       
+                        var result = -1;
+                        for (var i in inputData) {
+                            if (inputData[i].Patient_id == patientid || isNaN(patientid)) {
+                                result = 1;
+                            }
+                        }
+                        if (result < 0) {
+                            for (var i = 0; i < jsonData.length; i++) {
+                                if (jsonData[i].Patient_id == patientid) {
+                                    name = jsonData[i].Name;
+                                    vid = jsonData[i].Visit_id;
+                                    inputData.push({ "Patient_id": patientid, "Name": name, "Visit_id": vid });
+                                }
+                            }
+                        }
+                    })
+                    $("#grid").datagrid('loadData', inputData);
+                }
+
+            }
+        })
+    }
+    function InitInputData( data) {
+        for (var i = 0; i < data.length;i++) {
+                $("#grid").find("th").each(function (index, obj) {
+                    var value = $(obj).attr(AttrName).split(';')[1].split(':')[1];
+                    var text = $(obj).attr(AttrName).split(';')[0].split(':')[1];
+                    for (var jsonIndex in BodyChartDefaultValues[value]) {
+                        for (var obj in data) {
+                            if (data[obj][text] == BodyChartDefaultValues[value][jsonIndex]["value"]) {
+                                data[obj][text] = BodyChartDefaultValues[value][jsonIndex]["text"];
+                            }
+                        }
+                    }
+                })
+        }
+       
+    }
+    function SaveDate() {
+        $("#grid").datagrid("endEdit", lastIndex);
+        var postData = "";
+        var recording_Date = $("#TxtDate").datebox("getValue") + " " + $('#ComHour').combobox('getValue') + ":00";
+        $("td[field='Patient_id']").each(function (index, row) {
+            if (index != 0) {
+                var tr = $("td[field='Patient_id']")[index].parentNode;
+                $(tr).each(function (index, obj) {
+                    postData += ',{"Recording_Date":"' + $("#TxtDate").datebox("getValue") + '","hour":' + $('#ComHour').combobox('getValue') + "";
+                    for (var i = 0; i < obj.children.length; i++) {
+                        var value = $(obj.children[i]).text();
+                        var vitalsign = $(obj.children[i]).attr("field");
+                        if (value != "") {
+                            if (vitalsign=="体温" || vitalsign == "脉搏" || vitalsign == "收缩压" || vitalsign == "舒张压") {
+                                value = '"' + getFormattwinputValue(value) + '"';
+                            }else if (vitalsign == "呼吸") {
+                                value = '"' + getForamtbreathValue(value) + '"';
+                            } else if (vitalsign == "大便") {
+                                value = '"' + getforamtexcrementValue(value) + '"';
+                            } else if (vitalsign == "体重") {
+                                value = '"' + getforamtweightValue(value) + '"';
+                            } else {
+                                value = '"' + value + '"';
+                            }
+                        } else {
+                            value = 'null';
+                        }
+                        postData += ',"' + vitalsign + '":' + value;
+                    }
+                });
+                postData += "}";
+
+            }
+
+        })
+        postData = "[" + postData.substr(1) + "]";
+
+        $.ajax({
+            url: BaseData.WebApiUrl + "bodychart/saveBatchInputData",
+            type: "POST",
+            data: { '': postData },
+            success: (function (data) {
+                $.messager.alert("提示", data);
+                QueryData();
+            })
+
+        });
+    }
+    function dateFormatter(date) {
+        return dateTimeFormatter(date, "yyyy-mm-dd");
+    }
+</script>
+</html>

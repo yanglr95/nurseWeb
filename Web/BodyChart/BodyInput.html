@@ -1,0 +1,1112 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>个体录入</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/jquerysession.js"></script>
+    <script src="../js/Common.js"></script>
+    <script src="../js/BodyChart.js"></script>
+    <script src="../js/NursingCare/BTLine.js"></script>
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <script src="../js/easyui-extends.js"></script>
+    <script src="../js/publicPatient.js"></script>
+    <script src="../js/PatientInfo.js"></script>
+    <script src="../../JavaScript/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <link href="../../JavaScript/easyui/themes/default/datagrid.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/default/combobox.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/default/dialog.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <style type="text/css">
+    </style>
+</head>
+<body>
+    <div>
+        <table style="width:98%">
+            <tr>
+                <td><input id="ccPatients" name="ccPatients" style="width:120px" class="easyui-combobox" data-options="valueField:'Patient_id',textField:'Name'" /></td>
+                <td>
+                    日期：<input id="txtDate" class="easyui-datebox" style="width:180px;" data-options="formatter:dateFormatter,parser:dateParser" />
+                    <a href="#" id="btnQuery" class="easyui-linkbutton" iconcls="icon-huayi-search">查询</a>
+                    <a href="#" class="easyui-linkbutton" iconcls="icon-huayi-print" onclick="printTList()">T表打印</a>
+                    <a href="#" class="easyui-linkbutton" iconcls="icon-huayi-print" onclick="printBloodGlucose()">打印血糖单</a>
+                    <a href="#" class="easyui-linkbutton" iconcls="icon-huayi-print" onclick="printCrl()">打印出入量</a>
+                    <a href="#" style="width:120px" class="easyui-linkbutton" onclick="showBTLine()" iconcls="icon-huayi-print">打印体温单</a>
+                </td>
+            </tr>
+        </table>
+        <table id="tabPatientInfo" class="patientTable" style="width:98%;background: #fff;">
+        </table>
+        <div class="easyui-tabs" style="width: 98%; " id="inputTabs">
+            <div title="随时" style="padding:10px;box-sizing: border-box;">
+                <table id="tbBodyInputList" class="easyui-datagrid " style="width:98%;height:auto">
+
+                    <thead>
+                        <tr>
+                            <th data-options="field:'Time_Point',width:'10%',align:'center',formatter:inputListDateFormatter">
+                                时间
+                            </th>
+                            <th data-options="field:'体温',width:'7%',align:'center',formatter:hourInputFormatter">
+                                体温
+                            </th>
+
+                            <th data-options="field:'降温后体温',width:'10%',align:'center'">
+                                降温后体温
+                            </th>
+                            <th data-options="field:'脉搏',width:'7%',align:'center',formatter:hourInputFormatter">
+                                脉搏
+                            </th>
+                            <th data-options="field:'呼吸',width:'7%',align:'center',formatter:breathFormatter">
+                                呼吸
+                            </th>
+                            <th data-options="field:'心率',width:'7%',align:'center',formatter:hourInputFormatter">
+                                心率
+                            </th>
+                          
+                            <th data-options="field:'舒张压',width:'7%',align:'center',formatter:hourInputFormatter">
+                                舒张压
+                            </th>
+                            <th data-options="field:'收缩压',width:'7%',align:'center',formatter:hourInputFormatter">
+                                收缩压
+                            </th>
+                            <th data-options="field:'血氧',width:'7%',align:'center'">
+                                血氧
+                            </th>
+                            <th data-options="field:'血糖',width:'7%',align:'center',editor:'text',bloodGlucoseFormatter">
+                                血糖
+                            </th>
+                            <th data-options="width:'20%', field:'aaa',align:'center',formatter:InputListOperateField">
+                                操作
+                            </th>                        
+                    </thead>
+                </table>
+                <table id="tbInput" class="inputTable" style=" margin-top:5px; width:98%;height:auto;align-content:space-around;font-size:20px" >
+                    <tr>
+                        <td>
+                            录入时间
+                        </td>
+                        <td colspan="4">
+                            <input class="easyui-timespinner" id="dtInput" style="width:80px" data-options="showSeconds:false" />
+                        </td>
+
+                        <td>
+                        <a href="#" id="btnSaveInput" class="easyui-linkbutton" iconcls="icon-huayi-save">保存</a>
+                        <a href="#" class="easyui-linkbutton" iconcls="icon-huayi-reset" onclick="ClearHtml()">清空</a>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            体温
+                        </td>
+                        <td>
+                            <input bodychart="vital_sign:体温;combo_data:hourInput" style="width:100px;height:25px" class="easyui-combobox" data-options="panelHeight:'auto',numbercombo:'111'">
+                        </td>
+                        <td>
+                            降温后体温
+                        </td>
+                        <td>
+                            <input bodychart="vital_sign:降温后体温" style="width:100px;height:25px" class="easyui-numberbox" data-options="panelHeight:'auto',precision:2">
+
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            脉搏
+                        </td>
+                        <td>
+                            <input bodychart="vital_sign:脉搏;combo_data:hourInput" style="width:60px" class="easyui-combobox" data-options="panelHeight:'auto'">
+                        </td>
+                        <td>
+                            呼吸
+                        </td>
+                        <td>
+                            <input bodychart="vital_sign:呼吸;combo_data:breath" style="width:60px" class="easyui-combobox" data-options="panelHeight:'auto'">
+                        </td>
+
+
+                        <td>
+                            心率
+                        </td>
+                        <td>
+                            <input bodychart="vital_sign:心率;combo_data:hourInput" style="width:60px" class="easyui-combobox" data-options="panelHeight:'auto'">
+                        </td>
+
+
+                    </tr>
+                    <tr>
+
+                        <td>
+                            血压
+                        </td>
+                        <td colspan="2">
+                            <input bodychart="vital_sign:收缩压;combo_data:hourInput" style="width:60px" class="easyui-combobox" data-options="panelHeight:'auto'">&nbsp;-&nbsp;
+                            <input bodychart="vital_sign:舒张压;combo_data:hourInput" style="width:60px" class="easyui-combobox" data-options="panelHeight:'auto'">&nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td>
+                            <input bodychart="combo_data:bloodPressure" style="width:100px" class="easyui-combobox" data-options="panelHeight:'auto',editable:false">
+                        </td>
+                        <td>
+                            动脉压
+                        </td>
+                        <td>
+                            <input bodychart="vital_sign:动脉压" style="width:60px" class="easyui-numberbox" data-options="panelHeight:'auto'">
+                        </td>
+
+
+
+                    </tr>
+                    <tr>
+                        <td>
+                            血糖
+                        </td>
+                        <td>
+                            <input bodychart="vital_sign:血糖;combo_data:bloodGlucose" style="width:60px" class="easyui-combobox" data-options="panelHeight:'auto'">
+                        </td>
+                        <td colspan="2">
+                            <input bodychart="combo_data:auto" id="bg_type0" style="width:60px" class="easyui-combobox" data-options="panelHeight:'auto',editable:false">
+                            <input bodychart="combo_data:gluType" id="bg_type1" style="width:80px" class="easyui-combobox" data-options="panelHeight:'auto',editable:false">
+                        </td>
+                        <td>
+                            血氧
+                        </td>
+                        <td>
+                            <input bodychart="vital_sign:血氧" style="width:60px" class="easyui-numberbox" data-options="panelHeight:'auto'">
+                        </td>
+
+
+                    </tr>
+
+
+                    <tr>
+                        <td>
+                            左瞳孔
+                        </td>
+                        <td colspan="3">
+                            光 <input bodychart="vital_sign:左瞳孔（光）;combo_data:pupil" style="width:60px" class="easyui-combobox" data-options="panelHeight:'auto',editable:false">
+
+                            大小 <input bodychart="vital_sign:左瞳孔（大小）" style="width:60px" class="easyui-numberbox" data-options="panelHeight:'auto',precision:2">
+
+
+
+
+                        </td>
+                        <td>
+                            意识
+                        </td>
+                        <td>
+                            <input bodychart="vital_sign:意识;combo_data:Consciousness" style="width:100px" class="easyui-combobox" data-options="panelHeight:'auto',editable:false">
+                        </td>
+                    </tr>
+
+                    <tr>
+
+                        <td> 右瞳孔</td>
+                        <td colspan="3">
+                            光 <input bodychart="vital_sign:右瞳孔（光）;combo_data:pupil" style="width:60px" class="easyui-combobox" data-options="panelHeight:'auto',editable:false">
+
+                            大小 <input bodychart="vital_sign:右瞳孔（大小）" style="width:60px" class="easyui-numberbox" data-options="panelHeight:'auto',precision:2">
+                        </td>
+
+                        <td>
+                            CCU心率
+                        </td>
+                        <td>
+                            <input bodychart="vital_sign: CCU心率;combo_data:CCU" style="width:100px" class="easyui-combobox" data-options="panelHeight:'auto',editable:false">
+
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            体重
+                        </td>
+                        <td>
+                            <input bodychart="vital_sign:体重;combo_data:weight" style="width:60px" class="easyui-combobox" data-options="panelHeight:'auto'">
+                        </td>
+
+                        <td>
+                            身高
+                        </td>
+                        <td>
+                            <input bodychart="vital_sign:身高" style="width:60px" class="easyui-numberbox" data-options="panelHeight:'auto',precision:2">
+                        </td>
+                        <td>
+                            体重指数
+                        </td>
+                        <td>
+                            <input bodychart="vital_sign:体重指数" style="width:60px" class="easyui-numberbox" data-options="panelHeight:'auto',precision:2">
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            大腿围
+                        </td>
+                        <td>
+                            <input bodychart="vital_sign:大腿围" style="width:60px" class="easyui-numberbox" data-options="panelHeight:'auto',precision:2">
+                        </td>
+
+                        <td>
+                            小腿围
+                        </td>
+                        <td>
+                            <input bodychart="vital_sign:小腿围" style="width:60px" class="easyui-numberbox" data-options="panelHeight:'auto',precision:2">
+                        </td>
+                        <td>
+                            臂围
+                        </td>
+                        <td>
+                            <input bodychart="vital_sign:臂围" style="width:60px" class="easyui-numberbox" data-options="panelHeight:'auto',precision:2">
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            腹围
+                        </td>
+                        <td>
+                            <input bodychart="vital_sign:腹围" style="width:60px" class="easyui-numberbox" data-options="panelHeight:'auto',precision:2">
+                        </td>
+                        <td>
+                            体表面积
+                        </td>
+                        <td>
+                            <input bodychart="vital_sign:体表面积" style="width:60px" class="easyui-numberbox" data-options="panelHeight:'auto',precision:2">
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+                </table>
+            </div>
+            <div title="出入量" closable="false" style="padding:10px;box-sizing: border-box;">
+                总入量：<input id="All_In" style="width:60px" class="easyui-numberbox" data-options="panelHeight:'auto',precision:2">
+                总出量：<input id="All_Out" style="width:60px" class="easyui-numberbox" data-options="panelHeight:'auto',precision:2">
+                <a id="addCrl" href="#" class="easyui-linkbutton" style="width:100px;float:right" data-options="iconCls:'icon-huayi-add'">添加记录</a>
+                <table id="tbCrl" class="easyui-datagrid" style="width:98%;height:300px"></table>
+
+            </div>
+            <div title="护理事件" closable="false" style="padding:10px;box-sizing: border-box;">
+                <a id="addEvent" href="#" class="easyui-linkbutton" style="width:100px;float:right" data-options="iconCls:'icon-huayi-add'">添加记录</a>
+                <table class="easyui-datagrid" id="tbEventRecord" style="width:98%;height:300px"> </table>
+            </div>
+        </div>
+
+    </div>
+    <div id="dd" editwindow title="出入量信息" style="width:700px;height:180px;line-height:40px">
+        <table>
+            <tr>
+                <td style="width:10%">日期：</td>
+                <td style="width:15%"><input id="dateCrl" class="easyui-datebox" style="width:100px;" data-options="formatter:dateFormatter,parser:dateParser" /></td>
+                <td style="width:10%">时间：</td>
+                <td style="width:10%"><input class="easyui-timespinner" id="tsCrl" style="width:60px" data-options="showSeconds:false" /></td>
+                <td style="width:20%">出入量类型：</td>
+                <td style="width:25%"><input class="easyui-combobox" id="cbCrlType" data-options="valueField:'Xm',textField:'Xm',panelHeight:'120px'"></td>
+            </tr>
+            <tr style="width:100%;height:33%">
+
+                <td>类型：</td>
+                <td><span id="spCrlNote"></span></td>
+                <td>单位：</td>
+                <td><span id="spCrlUnit"></span></td>
+                <td>出入量数量：</td>
+                <td id="td1">
+                    <input id="txtCrlValue" class="easyui-numberbox" style="width:60px;" />
+                </td>
+                <td id="td2" style="display:none">
+                    <input id="txtCrlValuenew" class="easyui-combobox" style="width:60px;" />
+                </td>
+            </tr>
+            <tr style="width:100%;height:33%">
+                <td colspan="8" align="center">
+                    <a id="addCrlData" href="#" class="easyui-linkbutton" style="width:60px" data-options="iconCls:'icon-huayi-add'" onclick="saveCrl()">添加</a>
+                    <a id="saveCrlData" href="#" class="easyui-linkbutton" style="width:60px" data-options="iconCls:'icon-huayi-save'" onclick="saveCrl()">保存</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="windowEditEvent" editwindow title="护理事件" style="width:700px;height:180px;line-height:40px">
+        <table>
+            <tr>
+                <td style="width:10%">日期：</td>
+                <td style="width:20%"><input id="dateEvent" class="easyui-datebox" style="width:100px;" data-options="formatter:dateFormatter,parser:dateParser" /></td>
+                <td style="width:10%">时间：</td>
+                <td style="width:10%"><input class="easyui-timespinner" id="tsEvent" style="width:60px"  data-options="showSeconds:false" /></td>
+                <td style="width:20%">事件类型：</td>
+                <td style="width:30%"><input class="easyui-combobox" id="cbEventType" data-options="valueField:'Item_name',textField:'Item_name',panelHeight:'120px'"></td>
+            </tr>
+            <tr>
+
+
+                <td>备注：</td>
+                <td colspan="5"><input id="txtEventNote" class="easyui-textbox" style="width:240px;" /></td>
+            </tr>
+            <tr>
+                <td colspan="8" align="center">
+                    <a id="addEventData" href="#" class="easyui-linkbutton" style="width:60px" data-options="iconCls:'icon-huayi-add'" onclick="saveEvent()">添加</a>
+                    <a id="saveEventData" href="#" class="easyui-linkbutton" style="width:60px" data-options="iconCls:'icon-huayi-save'" onclick="saveEvent()">保存</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="printDiv">
+        <img id="imgBTLine" style="width:98%">
+    </div>
+</body>
+</html>
+<script type="text/javascript">
+
+    var patient;
+    var Crl_Item;
+    var menu_id = getUrlParam("menu_id");
+    var eventItem;
+    var crlEditRowIndex;
+    var eventEditRowIndex;
+    $(function () {
+        $.ajax({
+            url: BaseData.WebApiUrl + "nurse/getCrlDic",
+            type: "get",
+            data: "menu_id=" + 38,
+            success: (function (data) {
+                if (data) {
+                    Crl_Item = $.parseJSON(data);
+
+                    $("#cbCrlType").combobox("loadData", Crl_Item);
+
+                    $("#cbCrlType").combobox({
+                        onSelect: function (record) {
+                            var Note = "";
+                            if (record.Kind == 0) {
+                                Note = "入量";
+                            }
+                            else {
+                                Note = "出量";
+                            }
+                            if (record.Xm == "大便次数")
+                            {
+                                $("#td1").css("display", "none");
+                                $("#td2").css("display", "block");
+                                $("#txtCrlValuenew").combobox("loadData", [{ text: " ", value: "" },
+                                        { text: "※", value: "-1" },
+                                        { text: "☆", value: "-2" }, ]);
+                            }
+                            else
+                            {
+                                $("#td2").css("display", "none");
+                                $("#td1").css("display", "block");
+                            }
+                            $("#spCrlNote").html(Note);
+                            $("#spCrlUnit").html(record.Unit);
+                        },
+                        onChange:SearchByCode
+                    });
+                    //      $("#cbCrlType").combobox("select", Crl_Item[0].Xm);
+                }
+                //  alert(data);
+            })
+        });
+        $.ajax({
+            url: BaseData.WebApiUrl + "OtherSet/getData",
+            type: "get",
+            success: (function (data) {
+                eventItem = $.parseJSON(data);
+                $("#cbEventType").combobox("loadData", eventItem);
+                $("#cbEventType").combobox("setValue", eventItem[0].Item_name);
+
+            })
+        })
+        //$("#cbDB").css("display", "none");
+
+        //$("#cbDB").combobox({
+        //    onSelect: DBSelect
+        //});
+        $("#tbCrl").datagrid({
+            singleSelect: true,
+            style: { 'text-align': 'center' },
+            columns: [[
+              { field: 'Recording_Date', title: '日期', width: '10%', formatter: function (value) { return dateFormatter(new Date(value.replace(/-/g, "/").replace(/T/g, " "))); } },
+              {
+                  field: 'Time_Point', title: '时间', width: '8%', formatter: function (value) { return inputListDateFormatter(value); },
+              },
+               {
+                   field: 'Vital_Signs', title: '出入量类别', width: '17%',
+               },
+              {
+                  field: 'Vital_Signs_Values', title: '出入量数量', width: '14%', formatter: OutFormatter,
+              },
+               {
+                   field: 'Note', title: '类型', width: '19%',
+               },
+               { field: 'Units', title: '单位', width: '10%' },
+              {
+                  field: 'operate', title: '操作', width: '18%', formatter: function (value, Rowdata, rowIndex) {
+                      var str = "<a href='#' onclick='editCrlList(" + rowIndex + ")' >编辑</a>";
+                      str += "&nbsp;&nbsp;";
+                      str += "<a href='#' onclick='delCrl(" + rowIndex + ")' >删除</a>";
+                      return str;
+                  }
+              },
+            ]]
+        });
+        $("#tbEventRecord").datagrid({
+            singleSelect: true,
+            style: { 'text-align': 'center' },
+            columns: [[
+             { field: 'Recording_Date', title: '日期', width: '15%', formatter: function (value) { return dateFormatter(new Date(value.replace(/-/g, "/").replace(/T/g, " "))); } },
+             {
+                 field: 'Time_Point', title: '时间', width: '14%', formatter: function (value) { return inputListDateFormatter(value); },
+             },
+              {
+                  field: 'Event_Type', title: '事件', width: '15%',
+              },
+
+              {
+                  field: 'Note', title: '备注', width: '38%',
+              },
+
+             {
+                 field: 'Record_id', title: '操作', width: '15%', formatter: function (value, Rowdata, rowIndex) {
+                     var str = "<a href='#'  onclick='editEvent(" + rowIndex + ")' >编辑</a>";
+                     str += "&nbsp;&nbsp;";
+                     str += "<a href='#' onclick='delEvent(" + value + ")' >删除</a>";
+                     return str;
+                 }
+             },
+            ]]
+        });
+
+        var date = new Date();
+        $('#txtDate').datebox('setValue', dateFormatter(date));
+        var patient_id = getUrlParam("pid");
+        var type = getUrlParam("LeaveInput");
+        if (type && type == "0") {
+            $("#ccPatients").combobox("destroy");
+            $("#tabPatientInfo").css("display", "none");
+
+            $.ajax({
+                url: BaseData.WebApiUrl + "HistoryInfo/getOutPatientInfo",
+                data: "pid=" + patient_id,
+                type: "get",
+                success: (function (data) {
+                    var jsonData = $.parseJSON(data);
+                    if (jsonData) {
+
+                        patient = jsonData;
+                        patient.Visit_id=getUrlParam("vid");
+                        InitInputData();
+                        InitCrlData();
+                    }
+                })
+            });
+
+        }
+        else {
+            $("#ccPatients").combobox({
+                onSelect: PatientsComboChange,
+                filter: filterPatient,
+                panelHeight:document.documentElement.clientHeight
+            });
+
+            var ward_code = getSession("ward_code") == undefined ? "null" : getSession("ward_code");
+            $.ajax({
+                url: BaseData.WebApiUrl + "nurse/getPatientListByWard/",
+                data: "ward_code=" + ward_code,
+                type: "get",
+                success: (function (data) {
+
+                    var jsonData = $.parseJSON(data);
+                    if (jsonData.length > 0) {
+                        for (var i = 0; i < jsonData.length; i++) {
+                            jsonData[i].Name = "(" + jsonData[i].Bed_No + ")" + jsonData[i].Name;
+                        }
+                        $("#ccPatients").combobox('loadData', jsonData);
+                        //if (patient_id) {
+                        //    $("#ccPatients").combobox('setValue', patient_id);
+                        //    PatientsComboChange();
+                        //}
+
+                        var patientid = getSession("Patient_Id");
+                        if (patientid != null && patientid != "null") {
+                            $("#ccPatients").combobox('setValue', patientid);
+                            PatientsComboChange();
+                        } else {
+                            setSession(jsonData[0].Patient_id);
+                            $("#ccPatients").combobox('setValue', jsonData[0].Patient_id);
+                            PatientsComboChange();
+                        }
+                    }
+                })
+            });
+        }
+
+
+
+
+        $("#btnQuery").click(InitInputData);
+        $("#btnSaveInput").click(saveInputData);
+        $("#tbBodyInputList").datagrid({
+
+            fitColumns: true,
+            singleSelect: true,
+            emptyMsg:'暂无数据!'
+        });
+        $("#tbBodyInputList td").css("text-align", "center");
+        $('[editwindow]').window({
+            modal: true,
+            collapsible: false,
+            minimizable: false,
+            maximizable: false,
+            closed: true
+        });
+        $("#addCrl").click(function () {
+            crlEditRowIndex = -1;
+            $("#dateCrl").datebox({
+                disabled: false
+            });
+            $("#tsCrl").timespinner({
+                disabled: false
+            });
+
+            $("#dateCrl").datebox("setValue", dateFormatter(new Date()));
+            $("#tsCrl").timespinner("setValue", dateTimeFormatter(new Date(), "hh:mi"));
+            //$("#cbCrlType").combobox("select", Crl_Item[0].Xm);
+            $("#txtCrlValue").numberbox("setValue", 0);
+
+            $("#txtCrlValuenew").combobox("setValue", 0);
+
+            $("#addCrlData").css("display", "block");
+            $("#saveCrlData").css("display", "none");
+            $('#dd').window('open');
+        });
+        $("#addEvent").click(function () {
+            eventEditRowIndex = -1;
+            $("#dateEvent").datebox({
+                disabled: false
+            });
+            $("#tsEvent").timespinner({
+                disabled: false
+            });
+
+            $("#dateEvent").datebox("setValue", dateFormatter(new Date()));
+            $("#tsEvent").timespinner("setValue", dateTimeFormatter(new Date(), "hh:mi"));
+            //$("#cbCrlType").combobox("select", Crl_Item[0].Xm);
+            //$("#txtCrlValue").numberbox("setValue", 0);
+
+            $("#cbEventType").combobox("setValue", eventItem[0].Item_name);
+            $("#txtEventNote").textbox("setValue", "");
+
+            $("#addEventData").css("display", "block");
+            $("#saveEventData").css("display", "none");
+            $('#windowEditEvent').window('open');
+        });
+    });
+    function PatientsComboChange() {
+        var patient_id = $("#ccPatients").combobox('getValue');
+        $.ajax({
+            url: BaseData.WebApiUrl + "nurse/getPatientInfoByPatientID",
+            data: "patientid=" + patient_id,
+            type: "get",
+            success: (function (data) {
+                var jsonData = $.parseJSON(data);
+                if (jsonData) {
+                    SetTableValue("tabPatientInfo", jsonData);
+                    patient = jsonData;
+                    $.session.set('patientData', JSON.stringify(patient));
+                    InitInputData();
+                    InitCrlData();
+                    InitEventData();
+
+                    removeSession("patient_id");
+                    setSession(patient_id);
+                }
+            })
+        });
+
+    }
+    function InitInputData() {
+
+        var recording_Date = $("#txtDate").datebox("getValue");
+        $.ajax({
+            url: BaseData.WebApiUrl + "bodychart/getBodyInputListData",
+            data: "patient_id=" + patient.Patient_id + "&recording_Date=" + recording_Date,
+            type: "get",
+            success: (function (data) {
+                var jsonData = $.parseJSON(data);
+                if (!jsonData) {
+                    jsonData = { total: 0, rows: [] };
+                }
+                $("#tbBodyInputList").datagrid("loadData", jsonData);
+            })
+        });
+        InitComboData($("#tbInput"), null);
+        InitNumberBoxData($("#tbInput"), null);
+        $("#dtInput").timespinner("setValue", dateTimeFormatter(new Date(), "hh:mi"));
+        InitEventData();
+    }
+
+    function InitCrlData() {
+        var recording_Date = $("#txtDate").datebox("getValue");
+        $.ajax({
+            url: BaseData.WebApiUrl + "bodychart/getCrlListData",
+            data: "patient_id=" + patient.Patient_id + "&recording_Date=" + recording_Date,
+            type: "get",
+            success: (function (data) {
+
+                var jsonData = $.parseJSON(data);
+                if (!jsonData) {
+                    jsonData = { total: 0, rows: [] };
+                }
+                $("#tbCrl").datagrid("loadData", jsonData);
+            })
+        });
+        $.ajax({
+            url: BaseData.WebApiUrl + "bodychart/getCrlListData_OutIn",
+            data: "patient_id=" + patient.Patient_id + "&recording_Date=" + recording_Date,
+            type: "get",
+            success: (function (data) {
+
+                var jsonData = $.parseJSON(data);
+                if (!jsonData) {
+                    jsonData = { total: 0, rows: [] };
+                }
+                for (var i=0;i<jsonData.length;i++)
+                {
+                    if (jsonData[i].Vital_Signs == "总出量")
+                        $("#All_Out").numberbox("setValue", jsonData[i].Vital_Signs_Values);
+                    if (jsonData[i].Vital_Signs == "总入量")
+                        $("#All_In").numberbox("setValue", jsonData[i].Vital_Signs_Values);
+
+                }
+            })
+        });
+    }
+
+    function InitEventData() {
+        var recording_Date = $("#txtDate").datebox("getValue");
+
+        $.ajax({
+            url: BaseData.WebApiUrl + "bodychart/getEventRecord",
+            data: "patient_id=" + patient.Patient_id + "&recording_Date=" + recording_Date,
+            type: "get",
+            success: (function (data) {
+
+                var jsonData = $.parseJSON(data);
+
+                if (!jsonData) {
+                    jsonData = { total: 0, rows: [] };
+
+                }
+                $("#tbEventRecord").datagrid("loadData", jsonData);
+            })
+        });
+    }
+
+    function tdDateFormatter(jsonObj) {
+        var date = jsonObj.Admission_Date_Time.replace(/-/g, "/").replace(/T/g, " ");
+        return dateTimeFormatter(new Date(date), "yyyy-mm-dd");
+    }
+
+
+    function inputListDateFormatter(date) {
+         var showDate = new Date(date.replace(/-/g, "/").replace(/T/g, " "));
+        //var hour = showDate.getHours() + showDate.getTimezoneOffset() / 60;
+
+        //if (hour < 0) {
+
+        //    hour = hour + 24;
+        //}
+        //showDate = showDate.setHours(hour);
+        return dateTimeFormatter(new Date(showDate), "hh:mi");
+    }
+    function InputListOperateField(value, rowData, rowIndex) {
+        dateTime = rowData.Time_Point;
+        var str = "<a href='#' name='btnEdit' onclick='editInputList(\"" + dateTime + "\",this)' >编辑</a>";
+        str += "&nbsp;&nbsp;"
+        str += "<a href='#' onclick='delInputList(\"" + dateTime + "\",this)' >删除</a>";
+
+        return str;
+    }
+
+    function editInputList(timepoint, obj) {
+        var state = $(obj).html();
+        $("a[name='btnEdit']").html("编辑");
+        if (state == "编辑") {
+            $.ajax({
+                url: BaseData.WebApiUrl + "bodychart/getBodyInputModel",
+                data: "patient_id=" + patient.Patient_id + "&time_point=" + timepoint,
+                type: "get",
+                success: (function (data) {
+                    var jsonData = $.parseJSON(data);
+                    InitComboData($("#tbInput"), jsonData);
+                    InitNumberBoxData($("#tbInput"), jsonData);
+                    //血糖类型ComboBox做特殊处理
+                    if (jsonData["血糖_类型"] && jsonData["血糖_类型"].split(';').length > 1) {
+                        for (var i = 0; i < jsonData["血糖_类型"].split(';').length ; i++) {
+                            $("#bg_type" + i).combobox("setValue", jsonData["血糖_类型"].split(';')[i]);
+                        }
+                    }
+                    var date = new Date(jsonData.Time_Point);
+                    $("#dtInput").timespinner("setValue", inputListDateFormatter(jsonData.Time_Point));
+                    $(obj).html("取消");
+                })
+            });
+        }
+        else {
+            $(obj).html("编辑");
+            ClearHtml();
+        }
+    }
+    //清空这个页面
+    function ClearHtml()
+    {
+        InitComboData($("#tbInput"), null);
+        InitNumberBoxData($("#tbInput"), null);
+        $("#dtInput").timespinner("setValue", dateTimeFormatter(new Date(), "hh:mi"));
+    }
+    function delInputList(timepoint, obj) {
+        $.ajax({
+            url: BaseData.WebApiUrl + "bodychart/delBodyInputModel",
+            data: "patient_id=" + patient.Patient_id + "&visit_id="+ patient.Visit_id+"&time_point=" + timepoint,
+            type: "get",
+            success: (function (data) {
+                if (data) {
+                    $.messager.alert("提示", data);
+                    InitInputData();
+                    InitTableData(null);
+                    $("#dtInput").timespinner("setValue", dateTimeFormatter(new Date(), "hh:mi"));
+                }
+            })
+        });
+    }
+
+    function saveInputData() {
+        if (!patient) {
+            $.messager.alert("提示", "请选择病人！");
+            return;
+        }
+        var postData = "";
+
+        var recording_Date = $("#txtDate").datebox("getValue");
+        var time_point = recording_Date + " " + $("#dtInput").timespinner("getValue");
+        var postData = "";
+        postData += '{';
+        postData += '"Patient_id":"' + patient.Patient_id + '",';
+        postData += '"Visit_id":"' + patient.Visit_id + '",';
+        postData += '"Recording_Date":"' + recording_Date + '",';
+        postData += '"Time_Point":"' + time_point + '"';
+
+        $("#tbInput").find("input[" + AttrName + "]").each(function (index, obj) {
+            var bodyChart = $(obj).attr(AttrName).split(';');
+            for (var s in bodyChart) {
+                var p = bodyChart[s].replace(/(^\s*)|(\s*$)/g, "");
+                var length = JsonPro.length;
+                if (p.substr(0, length).toLowerCase() == JsonPro) {
+                    // data[p.substr(length)] = $(obj).combobox("getValue");
+                    var value;
+                    if ($(obj).hasClass("easyui-combobox")) {
+                        value = $(obj).combobox("getValue");
+                        if (value != "" && value != BodyChartDefaultValues.defaultValue[0].value) {
+                            value = '"' + value + '"';
+                        }
+                        else {
+                            value = 'null';
+                        }
+                    }
+                    else if ($(obj).hasClass("easyui-numberbox")) {
+                        value = $(obj).numberbox("getValue");
+                        if (value != "") {
+                            value = '"' + value + '"';
+                        }
+                        else {
+                            value = 'null';
+                        }
+                    }
+                    postData += ',"' + p.substr(length) + '":' + value;
+                }
+            }
+        });
+
+        if ($.parseJSON(postData + "}")["血糖"]) {
+            var bg_type = $("#bg_type0").combobox("getValue").replace("0", "") + ";" + $("#bg_type1").combobox("getValue").replace("0", "");
+            postData += ',"血糖_类型":"' + bg_type + '"';
+        }
+        postData += "}";
+        postData = "[" + postData + "]";
+        $.ajax({
+            url: BaseData.WebApiUrl + "bodychart/saveBodyInputData",
+            type: "POST",
+            data: { '': postData },
+            success: (function (data) {
+                $.messager.alert("提示", data);
+                InitInputData();
+            })
+        });
+    }
+
+
+    function editCrlList(rowIndex) {
+        crlEditRowIndex = rowIndex;
+        $("#dateCrl").datebox({
+            disabled: true
+        });
+        $("#tsCrl").timespinner({
+            disabled: true
+        });
+
+        var row = $('#tbCrl').datagrid('getData').rows[rowIndex];
+        $("#dateCrl").datebox("setValue", row.Recording_Date);
+        $("#tsCrl").timespinner("setValue", inputListDateFormatter(row.Time_Point));
+        $("#cbCrlType").combobox("select", row.Vital_Signs);
+        $("#txtCrlValue").numberbox("setValue", row.Vital_Signs_Values);
+        $("#txtCrlValuenew").combobox("setValue", OutFormatter(row.Vital_Signs_Values,"",""));
+        $("#addCrlData").css("display", "none");
+        $("#saveCrlData").css("display", "block");
+        $('#dd').window('open');
+
+    }
+    function editEvent(rowIndex) {
+        eventEditRowIndex = rowIndex;
+        $("#dateEvent").datebox({
+            disabled: true
+        });
+        $("#tsEvent").timespinner({
+            disabled: true
+        });
+        var row = $('#tbEventRecord').datagrid('getData').rows[rowIndex];
+        $("#dateEvent").datebox("setValue", row.Recording_Date);
+        $("#tsEvent").timespinner("setValue", inputListDateFormatter(row.Time_Point));
+
+        $("#cbEventType").combobox("setValue", row.Event);
+        $("#txtEventNote").textbox("setValue", row.Note);
+
+
+        $("#addEventData").css("display", "none");
+        $("#saveEventData").css("display", "block");
+        $('#windowEditEvent').window('open');
+    }
+
+
+    function saveEvent() {
+        if (!patient) {
+            $.messager.alert("提示", "请选择病人！");
+            return;
+        }
+        var dataStr = "";
+        var event = $("#cbEventType").combobox("getValue");
+        var note = $("#txtEventNote").textbox("getValue");
+        if (eventEditRowIndex != -1) {
+            var data = $('#tbEventRecord').datagrid('getData').rows[eventEditRowIndex];
+
+            data.Event = event;
+            data.Event_Type = event;
+            data.Note = note
+
+            dataStr += JSON.stringify(data);
+
+        }
+        else {
+
+            var recording_Date = $("#dateEvent").datebox("getValue");
+            var time_point = recording_Date + " " + $("#tsEvent").timespinner("getValue");
+
+            dataStr += '{';
+            dataStr += '"Patient_id":"' + patient.Patient_id + '",';
+            dataStr += '"Visit_id":"' + patient.Visit_id + '",';
+            dataStr += '"Recording_Date":"' + recording_Date + '",';
+            dataStr += '"Time_Point":"' + time_point + '",';
+            dataStr += '"Event":"' + event + '",';
+            dataStr += '"Event_Type":"' + event + '",';
+
+            dataStr += '"Note":"' + note + '"}';
+        }
+        dataStr = "[" + dataStr + "]";
+
+        $.ajax({
+            url: BaseData.WebApiUrl + "bodychart/saveEventData",
+            type: "POST",
+            data: { '': dataStr },
+            success: (function (data) {
+                $.messager.alert("提示", data);
+                InitEventData();
+            })
+        });
+        $('#windowEditEvent').window('close');
+    }
+
+    function saveCrl() {
+        if (!patient) {
+            $.messager.alert("提示", "请选择病人！");
+            return;
+        }
+        var dataStr = "";
+        if (crlEditRowIndex != -1) {
+            var data = $('#tbCrl').datagrid('getData').rows[crlEditRowIndex];
+            data["Operate"] = "original";
+            dataStr += JSON.stringify(data);
+            dataStr += ',';
+        }
+        var recording_Date = $("#dateCrl").datebox("getValue");
+        var time_point = recording_Date + " " + $("#tsCrl").timespinner("getValue");
+
+        dataStr += '{';
+        dataStr += '"Patient_id":"' + patient.Patient_id + '",';
+        dataStr += '"Visit_id":"' + patient.Visit_id + '",';
+        dataStr += '"Recording_Date":"' + recording_Date + '",';
+        dataStr += '"Time_Point":"' + time_point + '",';
+        dataStr += '"Vital_Signs":"' + $("#cbCrlType").combobox("getValue") + '",';
+        if ($("#cbCrlType").combobox("getValue")=="大便次数")
+            dataStr += '"Vital_Signs_Values":"' + $("#txtCrlValuenew").combobox("getValue") + '",';
+        else
+            dataStr += '"Vital_Signs_Values":"' + $("#txtCrlValue").numberbox("getValue") + '",';
+        dataStr += '"Units":"' + $("#spCrlUnit").html() + '",';
+        dataStr += '"Note":"' + $("#spCrlNote").html() + '"}';
+        dataStr = "[" + dataStr + "]";
+        $.ajax({
+            url: BaseData.WebApiUrl + "bodychart/saveCrlData",
+            type: "POST",
+            data: { '': dataStr },
+            success: (function (data) {
+                $.messager.alert("提示", data);
+                InitCrlData();
+            })
+        });
+        $('#dd').window('close');
+    }
+    function delEvent(record_id) {
+        $.messager.confirm("删除记录", "确定删除记录？", function (r) {
+            if (r) {
+                $.ajax({
+                    url: BaseData.WebApiUrl + "bodychart/deleteEventRecord?record_id=" + record_id,
+                    type: "get",
+                    success: (function (data) {
+                        $.messager.alert("提示", data);
+                        InitEventData();
+                    })
+                })
+            }
+        })
+
+    }
+    function delCrl(rowIndex) {
+        $.messager.confirm("删除记录", "确定删除记录？", function (r) {
+            if (r) {
+                var row = $('#tbCrl').datagrid('getData').rows[rowIndex];
+                $.ajax({
+
+                    url: BaseData.WebApiUrl + "bodychart/deleteCrl?patient_id=" + row.Patient_id + "&time_point=" + row.Time_Point + "&vital_signs=" + row.Vital_Signs,
+                    type: "get",
+                    success: (function (data) {
+                        $.messager.alert("提示", data);
+                        InitCrlData();
+                    })
+                })
+            }
+        })
+    }
+    function printBloodGlucose() {
+        if (!patient) {
+            $.messager.alert("提示", "请选择病人！");
+            return;
+        }
+        var WinPrint = window.open('../Print/BloodPrint.html?patient_id=' + patient.Patient_id + "&visit_id=" + patient.Visit_id);
+        // window.open(BaseData.WebApiUrl + "print/printBloodGlucoseReport?patient_id=" + patient.Patient_id + "&visit_id=" + patient.Visit_id);
+    }
+    function printTList(){
+         //开始打印
+        var WinPrint = window.open('../Print/TListPrint.html?date='+$("#txtDate").datebox("getValue"), '_blank');
+    }
+    function printCrl() {
+        if (!patient) {
+            $.messager.alert("提示", "请选择病人！");
+            return;
+        }
+        var WinPrint = window.open('../Print/IntakePrint.html?patient_id=' + patient.Patient_id + "&visit_id=" + patient.Visit_id);
+        // window.open(BaseData.WebApiUrl + "print/printCrlReport?patient_id=" + patient.Patient_id + "&visit_id=" + patient.Visit_id);
+    }
+
+    function hourInputFormatter(value, rowData, rowIndex)
+    {
+        var hourInput = BodyChartDefaultValues.hourInput;
+        var br = 0;
+        for (var i = 0; i < hourInput.length; i++)
+        {
+            if (hourInput[i].value == value)
+            {
+                br = 1;
+                return hourInput[i].text;
+            }
+        }
+        if (br == 0)
+        {
+            return value;
+        }
+    }
+
+    function breathFormatter(value, rowData, rowIndex) {
+        var breath = BodyChartDefaultValues.breath;
+        var br = 0;
+        for (var i = 0; i < breath.length; i++)
+        {
+            if (breath[i].value == value)
+            {
+                br = 1;
+                return breath[i].text;
+            }
+
+        }
+        if (br == 0) {
+            return value;
+        }
+    }
+
+    function bloodGlucoseFormatter(value, rowData, rowIndex) {
+        var bloodGlucose = BodyChartDefaultValues.bloodGlucose;
+        var br = 0;
+        for (var i = 0; i < bloodGlucose.length; i++)
+        {
+            if (bloodGlucose[i].value == value)
+            {
+                br = 1;
+                return bloodGlucose[i].text;
+            }
+        }
+        if (br == 0) {
+            return value;
+        }
+    }
+    function OutFormatter(value, rowData, rowIndex)
+    {
+        var out = BodyChartDefaultValues.excrement;
+        var br = 0;
+        for (var i = 0; i < out.length; i++) {
+            if (out[i].value == value) {
+                br = 1;
+                return out[i].text;
+            }
+        }
+        if (br == 0) {
+            return value;
+        }
+    }
+    //首字母检索
+
+    function SearchByCode(){
+        var patrn=/[\u4E00-\u9FA5]|[\uFE30-\uFFA0]/gi;
+        var code=$("#cbCrlType").combobox("getValue");
+     if(!patrn.exec(code)){
+        $.ajax({
+            url: BaseData.WebApiUrl + "InOut/getData/",
+            data: "xm=&code=" + code + "&kind=0&Menuid=-1",
+            type: "get",
+            success: (function (data) {
+                var jsonData = $.parseJSON(data);
+                if(jsonData!=null){
+                    $("#cbCrlType").combobox("loadData", jsonData);
+                }
+            })
+        });
+    }
+    }
+</script>

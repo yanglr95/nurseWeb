@@ -1,0 +1,361 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>护理不良事件报告</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/jquerysession.js"></script>
+    <script src="../js/Common.js"></script>
+    <script src="../js/easyui-extends.js"></script>
+    <script src="../js/publicPatient.js"></script>
+    <script src="../js/PatientInfo.js"></script>
+    <script src="../../JavaScript/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <script src="../js/NursingCare/SRecord_NurseRecordAdverseReport.js"></script>
+    <script src="../../JavaScript/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <style>
+        .textbox {
+            margin-top:3px
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <table style="width:98%">
+            <tr>
+                <td>
+                    <span id="spanSingle">
+                        <input id="ccPatients" name="ccPatients" style="width:120px" class="easyui-combobox" data-options="valueField:'Patient_id',textField:'Name'" />
+                    </span>
+                </td>
+            </tr>
+        </table>
+        <table id="tabPatientInfo" class="patientTable" style="width:98%;font-size:10pt;background:#fff;margin-top:5px;">
+        </table>
+        <table id="tbNurseRecordAdverseReportList" class="easyui-datagrid" style="width:98%;height:auto" data-options="singleSelect:true">
+            <thead>
+                <tr>
+                    <th data-options="field:'Bgfs',width:'20%',align:'center',formatter:FormatterSBFS" class="auto-style1">
+                        报告方式
+                    </th>
+                    <th data-options="field:'Fssj',width:'20%',align:'center',formatter:formatterTime" class="auto-style1">
+                        发生时间
+                    </th>
+                    <th data-options="field:'Sbsj',width:'30%',align:'center'" class="auto-style1">
+                        上报日期
+                    </th>
+                    <th data-options="field:'Visit_id',width:'25%',align:'center'" class="auto-style1" hidden="hidden">
+                    </th>
+                    <th data-options="width:'20%', field:'Id',align:'center',formatter:InputListOperateField " class=" auto-style1">
+                        操作
+                    </th>
+                </tr>
+            </thead>
+        </table>
+        <table class="inputTable" width="98%">
+            <tr>
+                <td>
+                    科别: &nbsp;<label id="DEPT_NAME" style="width:100px"></label>  
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="#" id="tbts" style=" text-decoration:none">填表提示</a>
+                </td>
+            </tr>
+        </table>
+        <table class="inputTable"  width="100%" id="T1" style="display:none;">
+            <tr>
+                <td>
+                    ●非惩罚性护理不良事件是指在护理过程中发生的对病人安全造成不良影响的事件。一般指病人跌倒，用药错误，走失，误吸，窒息和烫伤等。<br />
+                    ●不良事件报告制度的建立和管理，是通过对事件的讨论分析，找出系统中的问题，加以改进，避免类似问题再次发生，确保病人安全，从而建立正面且不断进步的安全文化。<br />
+                    ●及时，如实上报护理不良事件，重在学习，而非责备，与同行分享经验和教训，实现共同进步是每一名护士的职业素养。<br />
+                    ●上报资料不作为护理工作质量的评价依据。
+                </td>
+            </tr>
+        </table>
+        <table class="inputTable" width="98%" style="margin-top:5px; ">
+            <tr>
+                <td>报告方式：</td>
+                <td>
+                    <input id="BGFS1" style="width:100px" class="easyui-combobox" data-options="panelHeight:'auto'">
+                    &nbsp;&nbsp; 距事发时间(<input id="JSFSJDAY" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'">)天
+                    (<input id="JSFSJHR" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'">)小时&nbsp;&nbsp;
+                    上报日期:<input id="SBSJ" style="width:180px" class="easyui-datebox" data-options="panelHeight:'auto',formatter:dateFormatter,parser:dateParser">
+                </td>
+            </tr>
+        </table>
+        <div class="easyui-tabs" style="width: 98%;margin-top:10px" id="inputTabs" >
+            <div title="不良事件情况" style="padding: 10px;box-sizing: border-box;">
+                <table class="inputTable" width="98%" >
+                    <tr>
+                        <td>
+                            <b>1.事件描述：</b>因为<input id="SJMSYY" nurse_adverse="vital_sign:Sjmsyy" style="width:350px" class="easyui-textbox" data-options="panelHeight:'auto'">
+                            导致<input id="SJMSJG" style="width:350px" class="easyui-textbox" nurse_adverse="vital_sign:Sjmsjg" data-options="panelHeight:'auto'">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>2.发生时间：</b>
+                            <input id="FSSJ" style="width:180px" class="easyui-datebox" nurse_adverse="vital_sign:Fssj" data-options="panelHeight:'auto',formatter:dateFormatter,parser:dateParser">
+                            &nbsp;&nbsp;星期
+                            <input id="FSSJXQ" style="width:50px" class="easyui-textbox" nurse_adverse="vital_sign:Fssjxq" data-options="panelHeight:'auto'">
+                            &nbsp;&nbsp;
+                            班次：
+                            <input type="checkbox" value="1" title="1"  id="BC1" name="Bc" />白班
+                            <input type="checkbox" value="2" title="2" id="BC2" name="Bc" />夜班
+                            <input type="checkbox" value="3" title="3" id="BC3" name="Bc" />连班
+                            <input type="checkbox" value="4" title="4" id="BC4" name="Bc" />其他
+                            <input id="BCQT" nurse_adverse="vital_sign:Bcqt" style="width:150px" class="easyui-textbox" data-options="panelHeight:'auto'">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>3.责 任 人：</b>来院工作年限
+                            <input id="ZRRGZNX" style="width:80px" nurse_adverse="vital_sign:Zrrgznx" class="easyui-textbox" data-options="panelHeight:'auto'">
+                            &nbsp;&nbsp; 技术职称
+                            <input id="ZRRJSZC" style="width:160px" nurse_adverse="vital_sign:Zrrjszc" class="easyui-textbox" data-options="panelHeight:'auto'">
+                            &nbsp; 任职年限
+                            <input id="ZRRRZNX" style="width:80px" nurse_adverse="vital_sign:Zrrrznx" class="easyui-textbox" data-options="panelHeight:'auto'">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>4.发 现 人：</b>
+                            <input type="checkbox" value="1" title="1" id="FXR1" name="Fxr" />责任人
+                            <input type="checkbox" value="2" title="2" id="FXR2" name="Fxr" />其他工作人员
+                            ( 工作时间
+                            <input id="FXRGZSJ" nurse_adverse="vital_sign:Fxrgzsj" style="width:180px" class="easyui-datebox" data-options="panelHeight:'auto'">
+                            &nbsp;&nbsp; 
+                            技术职称
+                            <input id="FXRJSZC" nurse_adverse="vital_sign:Fxrjszc" style="width:130px" class="easyui-textbox" data-options="panelHeight:'auto'">
+                            &nbsp; 任职年限
+                            <input id="FXRRZNX" nurse_adverse="vital_sign:Fxrrznx" style="width:40px" class="easyui-textbox" data-options="panelHeight:'auto'">
+                            )
+                            <br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="checkbox" value="3" title="3" id="FXR3" name="Fxr" />患者本人
+                            <input type="checkbox" value="4" title="4" id="FXR4" name="Fxr" />患者家属
+                            <input type="checkbox" value="5" title="5" id="FXR5" name="Fxr" />其他
+                            <input id="FXRQT" nurse_adverse="vital_sign:Fxrqt" style="width:150px" class="easyui-textbox" data-options="panelHeight:'auto'">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>5.事件发生时病人所处的地点：</b><br />
+                            <input type="checkbox" value="1" title="1" id="SJFSDD1" name="Sjfsdd" />病室
+                            <input type="checkbox" value="2" title="2" id="SJFSDD2" name="Sjfsdd" />病区走廊
+                            <input type="checkbox" value="3" title="3" id="SJFSDD3" name="Sjfsdd" />卫生
+                            <input type="checkbox" value="4" title="4" id="SJFSDD4" name="Sjfsdd" />医护操作间
+                            <input type="checkbox" value="5" title="5" id="SJFSDD5" name="Sjfsdd" />手术
+                            <input type="checkbox" value="6" title="6" id="SJFSDD6" name="Sjfsdd" />产房
+                            <input type="checkbox" value="7" title="7" id="SJFSDD7" name="Sjfsdd" />转运途中
+                            <input type="checkbox" value="8" title="8" id="SJFSDD8" name="Sjfsdd" />其他
+                            <input id="SJFSDDQT" nurse_adverse="vital_sign:Sjfsddqt" style="width:150px" class="easyui-textbox" data-options="panelHeight:'auto'">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>6.事件发生前病人的状态：</b><br />
+                            状 态：
+                            <input type="checkbox" value="1" title="1" id="SJFSZT1" name="Sjfszt" />一般病人
+                            <input type="checkbox" value="2" title="2" id="SJFSZT2" name="Sjfszt" />病重
+                            <input type="checkbox" value="3" title="3" id="SJFSZT3" name="Sjfszt" />病危
+                            <input type="checkbox" value="4" title="4" id="SJFSZT4" name="Sjfszt" />抢救
+                            <input type="checkbox" value="5" title="5" id="SJFSZT5" name="Sjfszt" />手术
+                            <input type="checkbox" value="6" title="6" id="SJFSZT6" name="Sjfszt" />其他
+                            <input id="SJFSZTQT" nurse_adverse="vital_sign:Sjfsztqt" style="width:150px" class="easyui-textbox" data-options="panelHeight:'auto'">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>7.事件发生前病人所处的服务层次和环节：</b><br />
+                            服务层次：
+                            <input type="checkbox" value="1" title="1" id="FWCC1" name="Fwcc" />门诊&nbsp;
+                            <input type="checkbox" value="2" title="2" id="FWCC2" name="Fwcc" />急诊&nbsp;
+                            <input type="checkbox" value="3" title="3" id="FWCC3" name="Fwcc" />留观&nbsp;
+                            <input type="checkbox" value="4" title="4" id="FWCC4" name="Fwcc" />住院&nbsp;
+                            <input type="checkbox" value="5" title="5" id="FWCC5" name="Fwcc" />三级护理&nbsp;
+                            <input type="checkbox" value="6" title="6" id="FWCC6" name="Fwcc" />二级护理&nbsp;
+                            <input type="checkbox" value="7" title="7" id="FWCC7" name="Fwcc" />一级护理&nbsp;
+                            <input type="checkbox" value="8" title="8" id="FWCC8" name="Fwcc" />特级护理&nbsp;
+                            <br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="checkbox" value="9" title="9" id="FWCC9" name="Fwcc" />ICU级护理
+                            <input type="checkbox" value="10" title="10" id="FWCC10" name="Fwcc" />其他
+                            <input id="FWCCQT" nurse_adverse="vital_sign:Fwccqt" style="width:150px" class="easyui-textbox" data-options="panelHeight:'auto'">
+                            <br />
+                            环&nbsp;&nbsp;&nbsp;&nbsp;节：
+                            <input type="checkbox" value="1" title="1" id="HJ1" name="Hj" />输液&nbsp;
+                            <input type="checkbox" value="2" title="2" id="HJ2" name="Hj" />输血&nbsp;
+                            <input type="checkbox" value="3" title="3" id="HJ3" name="Hj" />镇痛&nbsp;
+                            <input type="checkbox" value="4" title="4" id="HJ4" name="Hj" />麻醉&nbsp;
+                            <input type="checkbox" value="5" title="5" id="HJ5" name="Hj" />手术&nbsp;
+                            <input type="checkbox" value="6" title="6" id="HJ6" name="Hj" />分娩&nbsp;
+                            <input type="checkbox" value="7" title="7" id="HJ7" name="Hj" />急诊留观&nbsp;
+                            <input type="checkbox" value="8" title="8" id="HJ8" name="Hj" />饮食&nbsp;
+                            <input type="checkbox" value="9" title="9" id="HJ9" name="Hj" />洗浴
+                            <input type="checkbox" value="10" title="10" id="HJ10" name="Hj" />入厕
+                            <br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="checkbox" value="11" title="11" id="HJ11" name="Hj" />转运途中
+                            (起止点:
+                            <input id="ZYTZQZD" style="width:180px" nurse_adverse="vital_sign:Zytzqzd" class="easyui-textbox" data-options="panelHeight:'auto'">
+                            )
+                            <input type="checkbox" value="12" title="12" id="HJ12" name="Hj" />治疗
+                            <input id="ZL" style="width:130px" nurse_adverse="vital_sign:Zl" class="easyui-textbox" data-options="panelHeight:'auto'">
+                            )&nbsp;<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="checkbox" value="13" title="13" id="HJ13" name="Hj" />处置
+                            (
+                            <input id="CZ" style="width:150px" nurse_adverse="vital_sign:Cz" class="easyui-textbox" data-options="panelHeight:'auto'">
+                            )&nbsp;
+                            <input type="checkbox" value="14" title="14" id="HJ14" name="Hj" />医技检查
+                            (
+                            <input id="YJJC" style="width:150px" nurse_adverse="vital_sign:Yjjc" class="easyui-textbox" data-options="panelHeight:'auto'">
+                            )&nbsp;<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="checkbox" value="15" title="15" id="HJ15" name="Hj" />介入诊疗(导管)
+                            (
+                            <input id="JRZL" style="width:150px" nurse_adverse="vital_sign:Jrzl" class="easyui-textbox" data-options="panelHeight:'auto'">
+                            )&nbsp;
+                            <input type="checkbox" value="16" title="16" name="HJ" />其他
+                            (
+                            <input id="HJQT" style="width:150px" nurse_adverse="vital_sign:Hjqt" class="easyui-textbox" data-options="panelHeight:'auto'">
+                            )
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>8.事件发生后病人损害的结果(3级以上须经医疗判定)：</b><br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" value="1" title="1" id="SHJG1" name="Shjg" />0级：事件在执行前被制止。<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" value="2" title="2" id="SHJG2" name="Shjg" />1级：事件发生并执行，但未造成伤害。<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" value="3" title="3" id="SHJG3" name="Shjg" />2级：轻微伤害，生命体征无改变，需进行临床观察及轻微处理。<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" value="4" title="4" id="SHJG4" name="Shjg" />3级：中度伤害，部分生命体征有改变，需进一步临床观察及简单处理。<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" value="5" title="5" id="SHJG5" name="Shjg" />4级：重度伤害，生命体征明显有改变，需提升护理等级及紧急处理。<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" value="6" title="6" id="SHJG6" name="Shjg" />5级：永久性功能丧失。<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" value="7" title="7" id="SHJG7" name="Shjg" />6级：患者死亡。<br />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>9.事件发生后及时处理和分析</b><br />
+                            &nbsp; 立即通知的人员：
+                            <input type="checkbox" value="1" title="1" id="LJTZRY1" name="Ljtzry" />医生
+                            <input type="checkbox" value="2" title="2" id="LJTZRY2" name="Ljtzry" />护士长
+                            <input type="checkbox" value="3" title="3" id="LJTZRY3" name="Ljtzry" />行政后勤
+                            <input type="checkbox" value="4" title="4" id="LJTZRY4" name="Ljtzry" />家属
+                            <input type="checkbox" value="5" title="5" id="LJTZRY5" name="Ljtzry" />其他人员
+                            <input id="LJTZRYQT" nurse_adverse="vital_sign:Ljtzryqt" style="width:150px" class="easyui-textbox" data-options="panelHeight:'auto'">
+                            <br />
+                            &nbsp; 可能相关因素：&nbsp;
+                            <input type="checkbox" value="1" title="1" id="XGYS1" name="Knxgys" />技术性因素
+                            <input type="checkbox" value="2" title="2" id="XGYS2" name="Knxgys" />责任性因素
+                            <input type="checkbox" value="3" title="3" id="XGYS3" name="Knxgys" />设备设施不良
+                            <input type="checkbox" value="4" title="4" id="XGYS4" name="Knxgys" />工作流程不良
+                            <br />
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
+                            <input type="checkbox" value="5" title="5" id="XGYS5" name="Knxgys" />工作环境不良
+                            <input type="checkbox" value="6" title="6" id="XGYS6" name="Knxgys" />其他
+                            <input id="XGYSQT" nurse_adverse="vital_sign:Knxgysqt" style="width:150px" class="easyui-textbox" data-options="panelHeight:'auto'">
+                            <br />
+                            &nbsp; 立即采取的措施：
+                            <input id="CQCS" nurse_adverse="vital_sign:Ljcqcs"  class="easyui-textbox" data-options="multiline:true" style="width: 80%; height: 40px; ">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div title="持续改进措施" style="padding: 10px;box-sizing: border-box;">
+                <table class="inputTable" width="98%" style="margin-top: 5px;">
+                    <tr>
+                        <td>
+                            <b>1.科级改进：（工作制度、流程等方面的修改）</b>&nbsp;<br />
+                            &nbsp;
+                            <input id="KJGJ" nurse_adverse="vital_sign:Kjgj" class="easyui-textbox" data-options="multiline:true" style="width: 99%; height: 50px;">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>2.建议院级改进的具体内容：（工作制度、流程等）</b>&nbsp;<br />
+                            &nbsp;
+                            <input id="YJGJ" nurse_adverse="vital_sign:Yjgj" class="easyui-textbox" data-options="multiline:true" style="width: 99%; height: 50px;">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>3.其他方面改进措施：</b>&nbsp;<br />
+                            &nbsp;
+                            <input id="QTGJ" nurse_adverse="vital_sign:Qtgj" class="easyui-textbox" data-options="multiline:true"  style="width: 99%; height: 50px;">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div title="不良事件评价" style="padding: 10px;box-sizing: border-box;">
+                <table class="inputTable" width="98%" style="margin-top: 5px;">
+                    <tr>
+                        <td>
+                            <b>1.护理安全管理小组意见：</b>&nbsp;<br />
+                            &nbsp;
+                            <input id="GLXZYJ" nurse_adverse="vital_sign:Glxzyj" class="easyui-textbox" data-options="multiline:true" style="width: 99%; height: 50px;">
+                            <br />
+                            <br />
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                            &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                            &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                            &nbsp; 签字：
+                            <input id="GLXZQZ" nurse_adverse="vital_sign:Glxzqz" style="width:120px" class="easyui-textbox" data-options="panelHeight:'auto'">
+                            日期：
+                            <input id="GLXZTIME" nurse_adverse="vital_sign:Glxztime" style="width:180px" class="easyui-datebox" data-options="panelHeight:'auto',formatter:dateFormatter,parser:dateParser">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>2.护理部意见：</b>&nbsp;<br />
+                            &nbsp;
+                            <input id="HLBYJ" nurse_adverse="vital_sign:Hlbyj" class="easyui-textbox" data-options="multiline:true" style="width: 99%; height: 50px;">
+                            <br />
+                            <br />
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                            &nbsp;&nbsp; 签字：
+                            <input id="HLBQZ" nurse_adverse="vital_sign:Hlbqz" style="width:120px" class="easyui-textbox" data-options="panelHeight:'auto'">
+                            日期：
+                            <input id="HLBTIME" nurse_adverse="vital_sign:Hlbtime" style="width:180px" class="easyui-datebox" data-options="panelHeight:'auto',formatter:dateFormatter,parser:dateParser">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <table id="ContentSign" class="inputTable" style="width: 98%; height: auto; align-content: space-around">
+            <tr>
+                <td ><b>科主任签字：</b></td>
+                <td><input id="txtKZRQZ" class="easyui-textbox" style="width:120px" data-options="panelHeight:'auto'" /></td>
+                <td><b>病房护士长签字：</b>:</td>
+                <td><input id="txtBFHSZQZ" class="easyui-textbox" style="width:120px" data-options="panelHeight:'auto'" /></td>
+                <td ><b>填表日期：</b></td>
+                <td><input id="txtTBRQ" class="easyui-datebox" data-options="panelHeight:'auto',formatter:dateFormatter,parser:dateParser" /></td>
+            </tr>
+            <tr>
+                <td align="center" colspan="6">
+                    <a href="#" id="btnSave" class="easyui-linkbutton" iconcls="icon-huayi-save">保存</a>
+                </td>
+            </tr>
+        </table>
+     </div>
+    <div style="visibility: hidden;" id="checks">
+        <input nurse_adverse="vital_sign:Bc" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtBc" />班次
+        <input nurse_adverse="vital_sign:Fxr" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtFxr" />发现人
+        <input nurse_adverse="vital_sign:Sjfsdd" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtSjfsdd" />事件发生时病人所处的地点
+        <input nurse_adverse="vital_sign:Sjfszt" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtSjfszt" />事件发生前病人的状态
+        <input nurse_adverse="vital_sign:Fwcc" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtFwcc" />服务层次
+        <input nurse_adverse="vital_sign:Hj" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtHj" />环节
+        <input nurse_adverse="vital_sign:Shjg" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtShjg" />事件发生后病人损害的结果
+        <input nurse_adverse="vital_sign:Ljtzry" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtLjtzry" />立即通知的人员
+        <input nurse_adverse="vital_sign:Knxgys" style="width:60px" class="easyui-textbox" data-options="panelHeight:'auto'" id="txtKnxgys" />可能相关因素
+    </div>
+</body>
+</html>

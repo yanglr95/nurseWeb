@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>在线模拟</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/Common.js"></script>
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <script src="../js/OnLineExam/OnlineSimulation.js"></script>
+</head>
+<body class="easyui-layout" >
+
+    <div data-options="region:'west',title:'选择章节',collapsible:'false'" style="width:240px;">
+        <ul id="dd" class="easyui-tree"></ul>
+    </div>
+    <div data-options="region:'center',title:'护理满意度问卷设置'" style="padding:5px">
+        <a id="addCrl" href="#" class="easyui-linkbutton" onclick="addModel()" iconcls="icon-huayi-add" style="float:right">添加</a>
+        <div id="information" editwindow title="满意度问卷信息" style="width:500px;height:120px;">
+            <table>
+
+                <tr>
+
+                    <td>编号：</td>
+                    <td><input id="Papernumber" style="width: 60px" class="easyui-textbox" data-options="panelHeight:'auto'" /></td>
+                    <td>测试时限：</td>
+                    <td><input id="Timelimit" style="width: 60px" class="easyui-textbox" data-options="panelHeight:'auto'" /></td>
+                </tr>
+                <tr>
+                    <td>试卷名称：</td>
+                    <td colspan="3"><input id="Papername" style="width: 60px" class="easyui-textbox" data-options="panelHeight:'auto'" /></td>
+
+
+                </tr>
+                <tr>
+                    <td>单选题：</td>
+                    <td><input id="problem1" type="text" class="easyui-numberbox" data-options="min:0,precision:0" /></td>
+                    <td>多选题：</td>
+                    <td><input id="problem2" type="text" class="easyui-numberbox" data-options="min:0,precision:0" /></td>
+                </tr>
+                <tr>
+                    <td>判断题：</td>
+                    <td><input id="problem3" type="text" class="easyui-numberbox" data-options="min:0,precision:0" /></td>
+                    <td>简答题：</td>
+                    <td><input id="problem4" type="text" class="easyui-numberbox" data-options="min:0,precision:0" /></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <a href="#" class="easyui-linkbutton" onclick="saveContentData()" iconcls="icon-huayi-save" style="float:right">保存</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <table id="tbConfig" class="easyui-datagrid" width="98%"></table>
+        </div>
+
+
+</body>
+</html>

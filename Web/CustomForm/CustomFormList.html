@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/jquerysession.js"></script>
+    <script src="/Web/js/Common.js"></script>
+    <script src="../js/publicPatient.js"></script>
+    <script src="../js/PatientInfo.js"></script>
+    <script src="/Web/js/easyui-extends.js"></script>
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <link href="/JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <script src="../js/CustomForm/CustomFormList.js"></script>
+</head>
+<body>
+
+    <table style="width:98%">
+        <tr>
+            <td colspan="2" align="center">
+                <span id="spanTitle"></span>
+            </td>
+        </tr>
+        <tr>
+            <td><input id="ccPatients" name="ccPatients" style="width:120px" class="easyui-combobox" data-options="valueField:'Patient_id',textField:'Name',panelHeight:'auto'" /></td>
+
+            <td>
+                <a class="easyui-linkbutton" onclick="addForm()">新建表单</a>
+            </td>
+        </tr>
+    </table>
+    <table id="tabPatientInfo" class="patientTable" style="width:98%;background: #fff;margin-top:5px;">
+    </table>
+
+
+    <table id="tbFormList" class="easyui-datagrid" style="width:1000px"></table>
+
+    <!--<div id="dd" class="easyui-dialog" title="输入表单名称" style="width:260px;height:100px;"
+         data-options="iconCls:'icon-save',resizable:true,modal:true">
+        <div> <input id="txtFormName" class="easyui-textbox" style="width:240px" /></div>
+    </div>-->
+
+    <iframe id="frameMain" width="1020" height="600"></iframe>
+
+</body>
+</html>

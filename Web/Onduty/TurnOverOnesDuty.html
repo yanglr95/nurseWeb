@@ -1,0 +1,1259 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>交班管理</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/jquerysession.js"></script>
+    <script src="../js/Common.js"></script>
+    <script src="../js/TrunOverOnesDuty.js"></script>
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <style>
+        .toggleList {
+            border: none;
+        }
+
+        .conList li {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="width: 98%">
+        <table style="width: 98%">
+            <tr>
+                <td>
+                    <input id="ccPatients" name="ccPatients" style="width: 120px" class="easyui-combobox"
+                        data-options="valueField:'Patient_id',textField:'Name',panelHeight:'auto'" />
+                    日期：<input id="txtDate" class="easyui-datebox" style="width: 180px;"
+                        data-options="formatter:dateFormatter,parser:dateParser" />
+                    <a href="#" class="easyui-linkbutton" iconcls="icon-huayi-print" onclick="printData()">打印</a>
+                </td>
+
+            </tr>
+        </table>
+        <table id="tabPatientInfo" style="width: 98%;" class="patientTable">
+            <tr>
+                <td>姓名：</td>
+                <td field="Name"></td>
+                <td>性别：</td>
+                <td field="Sex"></td>
+                <td>年龄：</td>
+                <td field="Age"></td>
+
+            </tr>
+            <tr>
+                <td>病案号：</td>
+                <td field="Patient_id"></td>
+                <td>护理等级：</td>
+                <td field="Nursing_Class"></td>
+
+                <td>入院时间：</td>
+                <td field="Admission_Date_Time" formatfun="tdDateFormatter"></td>
+            </tr>
+            <tr>
+                <td>主任医师：</td>
+                <td field="Doctor_In_Charge"></td>
+                <td>诊断
+                </td>
+                <td colspan="3" field="Diagnosis"></td>
+            </tr>
+        </table>
+        <div class="easyui-tabs" style="width: 98%;" id="inputTabs">
+            <div title="病人统计" style="padding: 10px;">
+                <div style="padding-left: 600px; padding-bottom: 10px;text-align:right">
+                    <a href="#" id="btnSeachPatientCount" class="easyui-linkbutton" iconcls="icon-save">查询</a>
+                    <a href="#" id="btnPatientCount" class="easyui-linkbutton" iconcls="icon-save">保存</a>
+                </div>
+                <table id="tdPatientList" class="easyui-datagrid" style="width: 98%; height: auto">
+                    <thead>
+                        <tr>
+                            <th trunover="vital_sign:BC;" data-options="field:'BC',width:'9%'">班别
+                            </th>
+                            <th trunover="vital_sign:XYS;" class="easyui-combobox"
+                                data-options="field:'XYS',width:'5%',editor:'text','text-align': 'center' ">病人总数
+                            </th>
+                            <th trunover="vital_sign:RYS;" class="easyui-combobox"
+                                data-options="field:'RYS',width:'6%',editor:'text','text-align': 'center' ">入院
+                            </th>
+
+                            <th trunover="vital_sign:CYS;" class="easyui-combobox"
+                                data-options="field:'CYS',width:'6%',editor:'text','text-align': 'center' ">出院
+                            </th>
+                            <th trunover="vital_sign:ZRS;" class="easyui-combobox"
+                                data-options="field:'ZRS',width:'6%',editor:'text','text-align': 'center' ">转入
+                            </th>
+                            <th trunover="vital_sign:ZCS;" class="easyui-combobox"
+                                data-options="field:'ZCS',width:'6%',editor:'text','text-align': 'center' ">转出
+                            </th>
+                            <th trunover="vital_sign:BWS;"
+                                data-options="field:'BWS',width:'6%',editor:'text','text-align': 'center' ">病危
+                            </th>
+                            <th trunover="vital_sign:BZBR;"
+                                data-options="field:'BZBR',width:'6%',editor:'text','text-align': 'center' ">病重
+                            </th>
+                            <th trunover="vital_sign:FMS;" class="easyui-combobox"
+                                data-options="field:'FMS',width:'6%',editor:'text','text-align': 'center' ">分娩
+                            </th>
+                            <th trunover="vital_sign:YJHL;" class="easyui-combobox"
+                                data-options="field:'YJHL',width:'8%',editor:'text','text-align': 'center' ">一级护理
+                            </th>
+                            <th trunover="vital_sign:TJHL;"
+                                data-options="field:'TJHL',width:'6%',editor:'text','text-align': 'center' ">特护
+                            </th>
+                            <th trunover="vital_sign:SSS;"
+                                data-options="field:'SSS',width:'6%',editor:'text','text-align': 'center' ">手术
+                            </th>
+                            <th trunover="vital_sign:SWS;"
+                                data-options="field:'SWS',width:'6%',editor:'text','text-align': 'center' ">死亡
+                            </th>
+                            <th trunover="vital_sign:BZ;" cslass="easyui-combobox"
+                                data-options="field:'BZ',width:'8%',editor:'text','text-align': 'center' ">备注
+                            </th>
+                            <th trunover="vital_sign:SIGN;" class="easyui-combobox"
+                                data-options="field:'SIGN',width:'10%',editor:'text','text-align': 'center' ">签名
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div title="交班内容" style="padding: 10px;">
+
+                <table id="tbCareList" class="easyui-datagrid" style="width: 98%; height: auto"></table>
+                <table class="middleTalbe" id="middleTalbe">
+                    <tr>
+                        <th>住院号：</th>
+                        <td>
+                            <input name="text" class="easyui-textbox" id="txtPatientId" />
+                        </td>
+                        <td>住院次数
+                            <input style="width: 60px" class="easyui-combobox" data-options="panelHeight:'auto'"
+                                id="txtVisit" />
+                        </td>
+                        <td>
+                            <a href="#" id="searchOutPatient" class="easyui-linkbutton"
+                                iconcls="icon-huayi-search">查出院</a>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <!--<input trunover="vital_sign:selAPN;combo_data:selAPN" style="width: 60px" class="easyui-combobox" data-options="panelHeight:'auto'" id="selAPN" onChange ="InitInputData"/>-->
+                            <select id="selAPN" name="selAPN" class="easyui-combobox" data-options="panelHeight:'65'"
+                                required="true">
+                                <option value="A">白班</option>
+                                <option value="P">小夜班</option>
+                                <option value="N">大夜班</option>
+                            </select>
+                        </td>
+                        <td>
+                            <a href="#" id="ShiftT"><label id="shifttime"></label></a>
+                        </td>
+                        <td>
+                            <input type="checkbox" id="chkSaveToCareRecord" />
+                            <label for="chkSaveToCareRecord">同步到护理记录单</label>
+                        </td>
+                        <td>
+                            <a href="#" id="btnSeach" class="easyui-linkbutton" iconcls="icon-save">查询</a>
+                            <a href="#" id="btnSaveInput" class="easyui-linkbutton" iconcls="icon-save">保存</a>
+                            <a href="#" id="btnAutoSave" class="easyui-linkbutton" iconcls="icon-save">自动保存</a>
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+                    <tr>
+                        <th style="width: 80px;">床号</th>
+                        <td colspan="4">
+                            <input trunover="vital_sign:Bed_no;" class="easyui-textbox" style="width: 60px;"
+                                readonly="readonly" id="txtBedNo" /></td>
+                    </tr>
+                    <tr>
+                        <th style="width: 80px;">诊断</th>
+                        <td style="width: 300px;">
+                            <input class="easyui-textbox" trunover="vital_sign:Diagnosis;" id="txtZhenZhi" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th rowspan="2" style="width: 80px;">状态</th>
+                        <td colspan="4">
+                            <input class="easyui-textbox" trunover="vital_sign:Status;" name="txtStatus" id="txtStatus"
+                                placeholder="状态栏" /></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <div>
+                                <table border="0" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <td style="width: 180px;">
+
+                                            <input type="checkbox" id="chkStatus1" value="新入" name="status"
+                                                onclick="StatusClick(1)" />
+                                            <label for="chkStatus1" id="lbStatus1" onclick="StatusClick(1)">新入</label>
+                                        </td>
+                                        <td style="width: 180px;">
+                                            <input type="checkbox" id="chkStatus2" value="转入" name="status"
+                                                onclick="StatusClick(2)" />
+                                            <label for="chkStatus2" id="lbStatus2" onclick="StatusClick(2)">转入</label>
+                                        </td>
+                                        <td style="width: 180px;">
+                                            <input type="checkbox" id="chkStatus3" value="出院" name="status"
+                                                onclick="StatusClick(3)" />
+                                            <label for="chkStatus3" id="lbStatus3" onclick="StatusClick(3)">出院</label>
+                                        </td>
+                                        <td style="width: 180px;">
+                                            <input type="checkbox" id="chkStatus4" value="转出" name="status"
+                                                onclick="StatusClick(4)" />
+                                            <label for="chkStatus4" id="lbStatus4" onclick="StatusClick(4)">转出</label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 180px;">
+                                            <input type="checkbox" id="chkStatus5" value="危重" name="status"
+                                                onclick="StatusClick(5)" />
+                                            <label for="chkStatus5" id="lbStatus5" onclick="StatusClick(5)">危重</label>
+                                        </td>
+                                        <td style="width: 180px;">
+                                            <input type="checkbox" id="chkStatus6" value="手术" name="status"
+                                                onclick="StatusClick(6)" />
+                                            <label for="chkStatus6" id="lbStatus6" onclick="StatusClick(6)">手术</label>
+                                        </td>
+                                        <td style="width: 180px;">
+                                            <input type="checkbox" id="chkStatus7" value="预手术" name="status"
+                                                onclick="StatusClick(7)" />
+                                            <label for="chkStatus7" id="lbStatus7" onclick="StatusClick(7)">预手术</label>
+                                        </td>
+                                        <td style="width: 180px;">
+                                            <input type="checkbox" id="chkStatus8" value="死亡" name="status"
+                                                onclick="StatusClick(8)" />
+                                            <label for="chkStatus8" id="lbStatus8" onclick="StatusClick(8)">死亡</label>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+
+                    </tr>
+
+                    <tr>
+                        <th style="width: 80px;" rowspan="3">&nbsp;交班内容</th>
+                        <td colspan="4">
+                            <table id="jiaoban">
+                                <tr>
+                                    <td style="width: 140px;">T;
+                                        <input style="width: 60px;" class="easyui-textbox" name="txtT" id="txtT" />
+                                    </td>
+                                    <td style="width: 140px;">P;
+                                        <input style="width: 60px;" class="easyui-textbox" name="txtP" id="txtP" /></td>
+                                    <td style="width: 100px;">BP;
+                                        <input style="width: 60px;" class="easyui-textbox" name="txtHuXi"
+                                            id="txtHuXi" /></td>
+                                    <td style="width: 140px;">记录于;
+                                        <input style="width: 60px;" class="easyui-textbox" name="txtRecordTime"
+                                            id="txtRecordTime" /></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <table>
+                                <tr>
+                                    <td style="width: 200px;">
+                                        <label for="chkMoban" id="lbMoban" onchange="MobanUrl(1)">
+                                            <input type="checkbox" id="chkMoban" />
+                                            使用护理记录模板
+
+                                        </label>
+                                    </td>
+                                    <td style="width: 200px;">
+                                        <input style="width: 200px" class="easyui-combobox"
+                                            data-options="valueField:'dict_name',textField:'Dict_code',panelHeight:'auto'"
+                                            id="selMoban" />
+                                    </td>
+                                    <td style="width: 200px;"><a onclick="MobanClickUrl()">设置模板</a></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" style="position: relative;" class="tdd">
+                            <input id="txtMoban" class="easyui-textbox" data-options="multiline:true"
+                                style="width:600px; height: 150px;" />
+                            <div class="toggleList easyui-panel" data-options="closed:true"
+                                style="width:596px;height:115px;position: absolute;top:35px;left:2px;">
+                                <ul class="easyui-datalist conList" style="height:115px;">
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="Shift" title="护士交班时间维护" class="inputTable" style="width:700px;height:250px;line-height:30px">
+        <table style="width:600px;margin-top:10px;text-align:center" align="center" border="1" cellpadding="1"
+            cellspacing="1">
+            <tr>
+                <td data-options="field:'ShiftNo'">班次</td>
+                <td>开始时间</td>
+                <td>结束时间</td>
+            </tr>
+            <tr>
+                <td data-options="field:'A'">白班</td>
+                <td><input id="ASValue" class="easyui-textbox" style="width:150px;height:100%" /></td>
+                <td><input id="AEValue" class="easyui-textbox" style="width: 150px; height: 100%" /></td>
+            </tr>
+            <tr>
+                <td data-options="field:'P'">小夜班</td>
+                <td><input id="PSValue" class="easyui-textbox" style="width: 150px; height: 100%" /></td>
+                <td><input id="PEValue" class="easyui-textbox" style="width: 150px; height: 100%" /></td>
+            </tr>
+            <tr>
+                <td data-options="field:'N'">大夜班</td>
+                <td><input id="NSValue" class="easyui-textbox" style="width: 150px; height: 100%" /></td>
+                <td><input id="NEValue" class="easyui-textbox" style="width: 150px; height: 100%" /></td>
+            </tr>
+            <tr style="width:100%;height:33%">
+                <td colspan="3" align="center">
+                    <a id="saveCrlData" href="#" class="easyui-linkbutton" style="width:60px"
+                        data-options="iconCls:'icon-huayi-save'" onclick="saveCrl()">保存</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+<script type="text/javascript">
+    var AstratT, AendT, PstratT, PendT, NstratT, NendT, time;
+    var lastIndex;
+    var visit_id = "";
+    patientInfo = null;
+    $(function () {
+        GetShiftTime();
+        //GetDutyTime();
+        MobanUrl(0);
+        $("#txtVisit").combobox({
+            width: 80,
+            editable: false,
+            onSelect: PatientsComboChange,
+            valueField: 'Visit_id',
+            textField: 'Visit_id',
+            panelHeight: 'auto'
+        });
+        $("#tbCareList").datagrid({
+            width: '98%',
+            style: {
+                'text-align': 'center'
+            },
+            singleSelect: true,
+            columns: [
+                [{
+                        field: 'Bed_no',
+                        width: 60,
+                        title: '床号'
+                    },
+                    {
+                        field: 'Name',
+                        width: 60,
+                        title: '姓名'
+                    },
+                    {
+                        field: 'Status',
+                        width: 120,
+                        title: '状态',
+                        'max-width': '700px',
+                        'delay': 500
+                    },
+                    {
+                        field: 'Diagnosis',
+                        width: 120,
+                        title: '诊断'
+                    },
+                    {
+                        field: 'A',
+                        width: 250,
+                        title: '白班'
+                    },
+                    {
+                        field: 'P',
+                        width: 250,
+                        title: '小夜班'
+                    },
+                    {
+                        field: 'N',
+                        width: 250,
+                        title: '大夜班'
+                    },
+                    {
+                        field: 'operate',
+                        title: '操作',
+                        width: 40,
+                        formatter: function CrlListOperateField(value, Rowdata, rowIndex) {
+                            var str = "<a href='#' name='btnDel' onclick='delData(" + rowIndex +
+                                ")' >删除</a>";
+                            return str;
+                        }
+                    }
+
+                ]
+            ]
+        });
+        var ward_code = getSession("ward_code") == undefined ? "null" : getSession("ward_code");
+        $.ajax({
+            url: BaseData.WebApiUrl + "nurse/getPatientListByWard/",
+            data: "ward_code=" + ward_code,
+            type: "get",
+            success: (function (data) {
+
+                var jsonData = $.parseJSON(data);
+                if (jsonData.length > 0) {
+                    for (var i = 0; i < jsonData.length; i++) {
+                        jsonData[i].Name = "(" + jsonData[i].Bed_No + ")" + jsonData[i].Name;
+                    }
+                    $("#ccPatients").combobox('loadData', jsonData);
+                    //$("#ccPatients").combobox('setValue', jsonData[0].Patient_id);
+                    //PatientsComboChange();
+                    var patientid = getSession("Patient_Id");
+                    if (patientid != null && patientid != "null") {
+                        $("#ccPatients").combobox('setValue', patientid);
+                        PatientsComboChange();
+                    } else {
+                        setSession(jsonData[0].Patient_id);
+                        $("#ccPatients").combobox('setValue', jsonData[0].Patient_id);
+                        PatientsComboChange();
+                    }
+                }
+            })
+        });
+        $("#ccPatients").combobox({
+            onSelect: patients,
+            editable: false
+        });
+        $("#selAPN").combobox({
+            onSelect: shifttime,
+            editable: false
+        });
+        $("#selMoban").combobox({
+            onSelect: MoBanComboChange,
+            editable: false
+        });
+        $("#tdPatientList").datagrid({
+            onClickRow: function (rowIndex) {
+
+                if (lastIndex != rowIndex) {
+                    $('#tdPatientList').datagrid('endEdit', lastIndex);
+                    $('#tdPatientList').datagrid('beginEdit', rowIndex);
+                }
+                lastIndex = rowIndex;
+            },
+
+        });
+        var date = new Date();
+        $('#txtDate').datebox('setValue', dateFormatter(date));
+        $("#btnSeach").click(search);
+        $("#searchOutPatient").click(searchOutPatient);
+        $("#btnSeachPatientCount").click(checkSum);
+        $("#btnSaveInput").click(saveData);
+        $("#btnAutoSave").click(AutoSaveTudy);
+        $("#btnPatientCount").click(SavePatientCout);
+        checkSum();
+        //patientCount();
+        // $("#btnDelete").click(delData);
+        $("#txtMoban").textbox('textbox').bind('keyup', function (e) {
+            var str="";
+            if ($(this).val() != "" || e.keyCode==13) {
+                $.ajax({
+                    url: BaseData.WebApiUrl + "NursingCommon/GetInitials",
+                    type: "get",
+                    data: "wardcode=" + getLoginUser().DeptCode + "&classcode=HL&initialscode=" + $(this).val(),
+                    success: function (data) {
+                        console.log(JSON.parse(data))
+                        if (data != "null") {
+                            $(".toggleList").panel("open");
+                            var arr = JSON.parse(data);
+                            var dates = [];
+                            for (var i = 0; i < arr.length; i++) {
+                                var obj = {};
+                                obj.valueField = arr[i].Initials_code;
+                                obj.textField = arr[i].Initials_value;
+                                dates.push(obj)
+                            }
+                            $('.conList').datalist({
+                                fit: true,
+                                plain: true,
+                                valueField: 'valueField',
+                                textField: 'textField',
+                                data: dates,
+                                onClickCell: function (index, field, value) {
+                                    str=value;
+                                    $("#txtMoban").textbox('setValue', value);
+                                    $(".toggleList").panel("close");
+                                }
+                            });
+                        } else {
+                            $(".toggleList").panel("close");
+                        }
+                    }
+                });
+            }
+            
+
+        })
+
+
+    });
+    //班次变换
+    function shifttime() {
+        var Stime = $("#selAPN").combobox('getValue');
+        if (Stime == "A") {
+            TimeShow(AstratT, AendT)
+        }
+        if (Stime == "P") {
+            TimeShow(PstratT, PendT)
+        }
+        if (Stime == "N") {
+            TimeShow(NstratT, NendT)
+        }
+        search();
+    }
+    //
+    function TimeShow(starttime, endtime) {
+        var dt_s = new Date(starttime);
+        var Shour = dt_s.getHours();
+        var Smin = dt_s.getMinutes();
+        var dt_e = new Date(endtime);
+        var Ehour = dt_e.getHours();
+        var Emin = dt_e.getMinutes();
+        $("#shifttime").html(Shour + ":" + Smin + "0" + "--" + Ehour + ":" + Emin + "0");
+    }
+    //交班时间显示出来
+    $("#ShiftT").click(function () {
+        $('#Shift').window('open');
+        var dt_As = new Date(AstratT);
+        var dt_Ae = new Date(AendT);
+        var dt_Ps = new Date(PstratT);
+        var dt_Pe = new Date(PendT);
+        var dt_Ns = new Date(NstratT);
+        var dt_Ne = new Date(NendT);
+        $("#ASValue").textbox("setValue", dt_As.getHours() + ":" + dt_As.getMinutes() + "0");
+        $("#AEValue").textbox("setValue", dt_Ae.getHours() + ":" + dt_Ae.getMinutes() + "0");
+        $("#PSValue").textbox("setValue", dt_Ps.getHours() + ":" + dt_Ps.getMinutes() + "0");
+        $("#PEValue").textbox("setValue", dt_Pe.getHours() + ":" + dt_Pe.getMinutes() + "0");
+        $("#NSValue").textbox("setValue", dt_Ns.getHours() + ":" + dt_Ns.getMinutes() + "0");
+        $("#NEValue").textbox("setValue", dt_Ne.getHours() + ":" + dt_Ne.getMinutes() + "0");
+    });
+    $("#Shift").window({
+        modal: true,
+        collapsible: false,
+        minimizable: false,
+        maximizable: false,
+        closed: true
+    });
+
+    function saveCrl() {
+        var dataStr = "";
+        var recording_Date = dateTimeFormatter(new Date(), "yyyy-mm-dd hh:ss:mi");
+        dataStr += '{';
+        dataStr += '"Ward_code":"' + getLoginUser().DeptCode + '",';
+        dataStr += '"Shift_name":"白班",';
+        dataStr += '"Start_time":"' + $("#ASValue").textbox("getValue") + '",';
+        dataStr += '"Stop_time":"' + $("#AEValue").textbox("getValue") + '",';
+        dataStr += '"Db_user":"' + getLoginUser().UserName + '",';
+        dataStr += '"Shift_no":"A",';
+        dataStr += '"Save_date":"' + recording_Date + '"}';
+
+        dataStr += ',{';
+        dataStr += '"Ward_code":"' + getLoginUser().DeptCode + '",';
+        dataStr += '"Shift_name":"小夜班",';
+        dataStr += '"Start_time":"' + $("#PSValue").textbox("getValue") + '",';
+        dataStr += '"Stop_time":"' + $("#PEValue").textbox("getValue") + '",';
+        dataStr += '"Db_user":"' + getLoginUser().UserName + '",';
+        dataStr += '"Shift_no":"P",';
+        dataStr += '"Save_date":"' + recording_Date + '"}';
+
+        dataStr += ',{';
+        dataStr += '"Ward_code":"' + getLoginUser().DeptCode + '",';
+        dataStr += '"Shift_name":"大夜班",';
+        dataStr += '"Start_time":"' + $("#NSValue").textbox("getValue") + '",';
+        dataStr += '"Stop_time":"' + $("#NEValue").textbox("getValue") + '",';
+        dataStr += '"Db_user":"' + getLoginUser().UserName + '",';
+        dataStr += '"Shift_no":"N",';
+        dataStr += '"Save_date":"' + recording_Date + '"}';
+
+        dataStr = "[" + dataStr + "]";
+        $.ajax({
+            url: BaseData.WebApiUrl + "TurnDuty/SaveShiftTime",
+            type: "POST",
+            data: {
+                '': dataStr
+            },
+            success: (function (data) {
+                $.messager.alert("提示", data);
+                GetShiftTime();
+            })
+        });
+        $('#Shift').window('close');
+    }
+    //班次统计
+    function checkSum() {
+        var Date = $("#txtDate").datebox("getValue");
+        var Banci = $("#selAPN").combobox("getValue");
+        $.ajax({
+            url: BaseData.WebApiUrl + "TurnDuty/CheckOnTudy",
+            data: "Date=" + Date + "&Banci=" + Banci,
+            type: "get",
+            success: (function (data) {
+                if (data) {
+                    if (data["BanCiFlag"][0].BanCiFlag == 1) {
+                        $("#tdPatientList").datagrid('loadData', data["Table"]);
+                    } else {
+                        if (confirm("当前班次没有保存数据，是否自动统计?") == true) {
+                            patientCount();
+                        } else {
+                            if (data["Table"] && data["Table"].length > 0) {
+                                $("#tdPatientList").datagrid('loadData', data["Table"]);
+                            }
+                        }
+                    }
+                }
+            })
+        });
+    }
+    //保存统计
+    function SavePatientCout() {
+        var postData = "";
+        $("#tdPatientList").datagrid("endEdit", lastIndex);
+        var patient_id = $("#ccPatients").combobox('getValue');
+        //var visit_id = $("#ccvisitid").textbox('getValue');
+        var Recordtime = $("#txtDate").datebox("getValue");
+
+        $("td[field='BC']").each(function (index, row) {
+
+            if (index != 0) {
+                var tr = $("td[field='BC']")[index].parentNode;
+                if ($(tr).find("td[field='BC']").text()) {
+                    $(tr).each(function (index, obj) {
+                        postData += ',{';
+                        postData += '"DptName":"' + getLoginUser().DeptName + '",';
+                        postData += '"wardcode":"' + getLoginUser().DeptCode + '",';
+                        postData += '"Record_date":"' + Recordtime + '",';
+                        postData += '"datetime":"' + dateTimeFormatter(new Date(),
+                            "yyyy-mm-dd hh:ss:mi") + '"';
+                        //postData += ',{"Recording_Date":"' + $("#TxtDate").datebox("getValue") + '","hour":' + $('#ComHour').combobox('getValue') + "";
+                        for (var i = 0; i < obj.children.length; i++) {
+                            var value = $(obj.children[i]).text();
+                            var vitalsign = $(obj.children[i]).attr("field");
+                            if (value != "") {
+                                value = '"' + value + '"';
+                            } else {
+                                value = 'null';
+                            }
+                            postData += ',"' + vitalsign + '":' + value;
+                        }
+                    });
+                    postData += "}";
+                }
+            }
+        })
+        postData = "[" + postData.substr(1) + "]";
+        $.ajax({
+            url: BaseData.WebApiUrl + "TurnDuty/savePatientCount",
+            type: "POST",
+            data: {
+                '': postData
+            },
+            success: (function (data) {
+                if (data) {
+                    $.messager.alert("提示", data);
+                    checkSum();
+                }
+            })
+        });
+    }
+    //切换病人
+    function patients() {
+        PatientsComboChange();
+        clear();
+        GetDutyTime();
+    }
+    //切换病人
+    function PatientsComboChange() {
+        var patient_id = $("#ccPatients").combobox('getValue');
+        $.ajax({
+            url: BaseData.WebApiUrl + "nurse/getPatientInfoByPatientID",
+            data: "patientid=" + patient_id,
+            type: "get",
+            success: (function (data) {
+                var jsonData = $.parseJSON(data);
+                if (jsonData) {
+                    SetTableValue("tabPatientInfo", jsonData);
+                    visit_id = jsonData.Visit_id;
+                    InitInputData();
+                    $("#txtBedNo").textbox('setValue', jsonData.Bed_No);
+                    $("#txtZhenZhi").textbox('setValue', jsonData.Diagnosis);
+
+                    removeSession("patient_id");
+                    setSession(patient_id);
+                }
+            })
+
+        });
+
+    }
+    //查询出院患者
+    function searchOutPatient() {
+        clear();
+        var pid = $("#txtPatientId").textbox('getValue');
+        $.ajax({
+            url: BaseData.WebApiUrl + "HistoryInfo/getOutPatientInfo",
+            data: "pid=" + pid,
+            type: "get",
+            success: (function (data) {
+                if (data.length) {
+                    patientInfo = $.parseJSON(data);
+                    $("#txtVisit").combobox("loadData", patientInfo.VisitInfo);
+                    $("#txtVisit").combobox("setValue", patientInfo.VisitInfo[0].Visit_id);
+                    $("#txtZhenZhi").textbox('setValue', patientInfo.Diagnosis);
+                    $("#txtStatus").textbox('setValue', "出院");
+                    $("#chkStatus3").attr("checked", "true");
+                } else {
+                    $.messager.alert("提示", "没有查到病人！");
+                }
+            })
+        });
+    }
+    //获取该班次所有病人的交班护理信息
+    function patientCount() {
+        try {
+            if (SstatT == 'undefined')
+                alert("错误");
+        } catch (e) {
+            GetShiftTime();
+        }
+        $("#tdPatientList").datagrid("endEdit", lastIndex);
+        $.ajax({
+            url: BaseData.WebApiUrl + "TurnDuty/GetOnTudySum/",
+            data: "bc=" + $("#selAPN").combobox("getValue") + "&bdate=" + SstatT + "&sdate=" + SendT +
+                "&date=" + $('#txtDate').datebox('getValue') + "&DoctorName=" + getLoginUser().UserName,
+            type: "get",
+            success: (function (data) {
+                if (data && data != "null") {
+                    var jsonData = data["Table"];
+                    $("#tdPatientList").datagrid('loadData', jsonData);
+                }
+            })
+        });
+    }
+    //自动保存该班次的一些入院出院死亡等病人
+    function AutoSaveTudy() {
+        $.ajax({
+            url: BaseData.WebApiUrl + "TurnDuty/AutoSaveTudy/",
+            data: "bc=" + $("#selAPN").combobox("getValue") + "&bdate=" + AstratT + "&sdate=" + SendT +
+                "&date=" + $('#txtDate').datebox('getValue') + "&DoctorName=" + getLoginUser().UserName +
+                "&Word_code=" + getLoginUser().DeptCode,
+            type: "get",
+            success: (function (data) {
+                if (data && data != "null") {
+                    search();
+                    alert("保存成功");
+                }
+            })
+        });
+    }
+    //删除该病人信息
+    function delData(rowIndex) {
+        var data = $('#tbCareList').datagrid('getData').rows[rowIndex];
+        var patient_id = data.Patient_id;
+        var Recordtimes = data.Recordtimes;
+        $.ajax({
+            url: BaseData.WebApiUrl + "TurnDuty/delOnTudy",
+            data: "patient_id=" + patient_id + "&visit_id=" + data.Visit_id + "&datetimes=" + Recordtimes,
+            type: "get",
+            success: (function (data) {
+                if (data) {
+                    $.messager.alert("提示", data);
+                    patients();
+                }
+            })
+        });
+    }
+    //
+    function synchronize(flag) {
+        var Yu = $("#txtRecordTime").val().trim();
+        var times = Yu.substring(0, 2) + ":" + Yu.substring(2, Yu.length);
+        if (flag == 1) {
+            var postData = "{";
+            postData += '"Patient_id":"' + $("#ccPatients").combobox('getValue') + '",';
+            //postData += '"Visit_id":"' + $("#ccvisitid").textbox('getValue') + '",';
+            postData += '"Recording_Date":"' + $("#txtDate").datebox("getValue") + '",';
+            postData += '"Temperature":"' + $("#txtT").val().trim() + '",';
+            postData += '"Pulse":"' + $("#txtP").val().trim() + '",';
+            //postData += '"Breath":"' +$("#txtHuXi").val().trim() + '",';
+            // postData += '"Diastolic_Pressure":"' + patient_id + '",';
+            //postData += '"Systolic_Pressure":"' + visit_id + '",';
+            postData += '"Measure":"' + $("#txtMoban").val().trim() + '",';
+            postData += '"Time_Point":"' + $("#txtDate").datebox("getValue") + " " + times + '"';
+            postData += "}";
+            postData = "[" + postData + "]";
+            $.ajax({
+                url: BaseData.WebApiUrl + "NurseCare/saveNurseCareView",
+                type: "POST",
+                data: {
+                    '': postData
+                },
+                success: (function (data) {
+                    if (data) {
+                        //$.messager.alert("提示", data);
+                    }
+                })
+            });
+        }
+    }
+    //保存当前病人的当班交班护理信息
+    function saveData() {
+        var selAPN;
+        var postData = "";
+        var MEASURE = "";
+        var patient_id = $("#ccPatients").combobox('getValue');
+        //var visit_id = $("#ccvisitid").textbox('getValue');
+        var Recordtimes = $("#txtDate").datebox("getValue");
+        //是否同步到护理记录单
+        var flag = "0";
+        if (document.getElementById("chkSaveToCareRecord").checked == true) {
+            flag = "1";
+            synchronize(flag);
+        }
+        postData += '{';
+        if ($("#txtPatientId").textbox('getValue') == "") {
+            postData += '"Patient_id":"' + patient_id + '",';
+            postData += '"Visit_id":"' + visit_id + '",';
+            postData += '"Name":"' + $("#tabPatientInfo").find("td[field='Name']").text() + '",';
+        } else {
+            postData += '"Patient_id":"' + patientInfo.Patient_id + '",';
+            postData += '"Visit_id":"' + $("#txtVisit").combobox("getValue") + '",';
+            postData += '"Name":"' + patientInfo.Name + '",';
+        }
+        postData += 'Recordtimes:"' + Recordtimes + '",';
+        postData += 'datetimes:"' + Recordtimes + '",';
+        if ($("#txtT").val().trim().length != 0 && $("#txtP").val().trim().length != 0 && $("#txtRecordTime").val()
+            .trim().length != 0) {
+            MEASURE = "T" + $("#txtT").val().trim() + ",P" + $("#txtP").val().trim() + ",";
+            if ($("#txtHuXi").val().trim().length != 0) {
+                MEASURE += "BP" + $("#txtHuXi").val().trim() + ",";
+            } else {
+                MEASURE += ",";
+            }
+            if ($("#txtRecordTime").val().trim().length == 4) {
+                var Yu = $("#txtRecordTime").val().trim();
+                MEASURE += "于" + Yu.substring(0, 2) + ":" + Yu.substring(2, Yu.length) + "$" + $("#txtMoban").val()
+                    .trim().replace("'", " ");
+            }
+        } else {
+            MEASURE = "," + $("#txtMoban").val().trim();
+        }
+        $("#txtMoban").textbox("setValue", MEASURE);
+        if ($("#selAPN").combobox("getValue") == "A" || $("#selAPN").combobox("getValue") == "白班") {
+            selAPN = "A";
+        } else if ($("#selAPN").combobox("getValue") == "P" || $("#selAPN").combobox("getValue") == "小夜班") {
+            selAPN = "P";
+        } else {
+            selAPN = "N";
+        }
+        postData += '' + selAPN + ':"' + $("#txtMoban").textbox("getValue") + '"';
+        $("#middleTalbe").find("input[" + AttrName + "]").each(function (index, obj) {
+            var bodyChart = $(obj).attr(AttrName).split(';');
+            for (var s in bodyChart) {
+                var p = bodyChart[s].replace(/(^\s*)|(\s*$)/g, "");
+                var length = JsonPro.length;
+                if (p.substr(0, length).toLowerCase() == JsonPro) {
+                    var value;
+                    if ($(obj).hasClass("easyui-combobox")) {
+                        value = $(obj).combobox("getValue");
+                        if (value != "" && value != TurnOverOnesDutyDefaultValues.defaultValue[0].value) {
+                            value = '"' + value + '"';
+                        } else {
+                            value = 'null';
+                        }
+                    } else {
+                        value = $(obj).numberbox("getValue");
+                        if (value != "") {
+                            value = '"' + value + '"';
+                        } else {
+                            value = 'null';
+                        }
+                    }
+
+                    postData += ',"' + p.substr(length) + '":' + value;
+                }
+            }
+        });
+        postData += "}";
+        postData = "[" + postData + "]";
+        $.ajax({
+            url: BaseData.WebApiUrl + "TurnDuty/saveTurnDuty",
+            type: "POST",
+            data: {
+                '': postData
+            },
+            success: (function (data) {
+                if (data) {
+                    $.messager.alert("提示", data);
+                    patients();
+                    $("#txtPatientId").textbox('setValue', "");
+                    $("#txtVisit").combobox("setValue", "");
+                }
+            })
+        });
+    }
+
+    //清空
+    function clear() {
+        InitEasyUIInputData($("#middleTalbe"), null);
+        $("#middleTalbe").find("input[type=checkbox]").each(function (index, obj) {
+            $(obj).removeAttr("checked");
+        });
+        $("#jiaoban").find("input").each(function (index, obj) {
+            $(obj).val("");
+        });
+        $("#txtMoban").textbox("setValue", null);
+    }
+
+    function search() {
+        clear();
+        InitInputData();
+    }
+    //获取该病人当班信息
+    function InitInputData() {
+        var banci = "";
+        var JiaoBan;
+
+        var patient_id = $("#ccPatients").combobox('getValue');
+        var recording_Date = $("#txtDate").datebox("getValue");
+        $.ajax({
+            url: BaseData.WebApiUrl + "TurnDuty/getData",
+            data: "recording_Date=" + recording_Date,
+            type: "get",
+            success: (function (data) {
+                if (data && data != "null") {
+                    var jsonData = $.parseJSON(data);
+                    for (var i in jsonData) {
+                        for (var key in jsonData[i]) {
+                            if (key.indexOf('(') > -1 && key.indexOf(')') > -1) {
+                                var newkey = key.replace('(', '').replace(')', '');
+                                jsonData[i][newkey] = jsonData[i][key];
+                            }
+                        }
+                    }
+                    $("#tbCareList").datagrid("loadData", jsonData);
+                } else {
+                    clearDataGrid("tbCareList");
+                }
+            })
+        });
+        //$("#middleTalbe").find("input[type=text]").val("");
+        //清空
+
+        $.ajax({
+            url: BaseData.WebApiUrl + "TurnDuty/getPatientData",
+            data: "patient_id=" + patient_id + "&visit_id=" + visit_id + "&recording_Date=" + recording_Date,
+            type: "get",
+            success: (function (data) {
+                if (data && data != "null") {
+                    var jsonData = $.parseJSON(data);
+                    if (jsonData[0].A || jsonData[0].P || jsonData[0].N) {
+                        if ($("#selAPN").combobox("getValue") == "A" || $("#selAPN").combobox(
+                                "getValue") == "白班") {
+                            JiaoBan = jsonData[0].A;
+                        } else if ($("#selAPN").combobox("getValue") == "P" || $("#selAPN").combobox(
+                                "getValue") == "小夜班") {
+                            JiaoBan = jsonData[0].P;
+                        } else {
+                            JiaoBan = jsonData[0].N;
+                        }
+                        if (JiaoBan) {
+                            if (JiaoBan.length > 0 && JiaoBan.indexOf(",")) {
+                                var strT = JiaoBan.substring(1, JiaoBan.indexOf(","));
+                                $("#txtT").textbox("setValue", strT);
+                                JiaoBan = JiaoBan.substring(JiaoBan.indexOf("P"), JiaoBan.length);
+                                var strP = JiaoBan.substring(1, JiaoBan.indexOf(","));
+                                $("#txtP").textbox("setValue", strP);
+                                JiaoBan = JiaoBan.substring(JiaoBan.indexOf("BP"), JiaoBan.length);
+                                var strHuXi = JiaoBan.substring(2, JiaoBan.indexOf(","));
+                                $("#txtHuXi").textbox("setValue", strHuXi);
+                                JiaoBan = JiaoBan.substring(JiaoBan.indexOf("于"), JiaoBan.length);
+                                var strRecordTime = JiaoBan.substring(1, JiaoBan.indexOf("$"));
+                                strRecordTime = strRecordTime.replace(":", "");
+                                $("#txtRecordTime").textbox("setValue", strRecordTime);
+                                var strMoban = JiaoBan.substring(JiaoBan.indexOf("$") + 1, JiaoBan
+                                    .length);
+                                $("#txtMoban").textbox("setValue", strMoban);
+                            } else {
+                                jiaoban = JiaoBan.substring(1, JiaoBan.indexOf(","))
+                                $("#txtMoban").textbox("setValue", JiaoBan);
+                            }
+                        }
+                    }
+                    if (jsonData[0].Status.length > 0) {
+                        $("#middleTalbe").find("input[name=status]").each(function (index, obj) {
+                            if (jsonData[0].Status.indexOf($(obj).val()) >= 0) {
+                                // $(obj).attr("checked", "checked");
+                                document.getElementById($(obj).attr("id")).checked = true;
+                            }
+                        })
+                    }
+                    InitEasyUIInputData($("#middleTalbe"), jsonData[0]);
+                    //if (banci.length > 0) {
+                    //    $('#selAPN').combobox("setValue", banci);
+                    //} else {
+                    //GetDutyTime();
+                    //}
+                } else {
+                    //PatientsComboChange();
+                }
+            })
+        });
+        // InitComboData($("#middleTalbe"), null);
+        //checkSum();
+    }
+    //班次时间
+    function StatusClick(flag) {
+        var strFlag = $("#lbStatus" + flag).text() + ";";
+        var iFlag = $("#txtStatus").val().indexOf(strFlag);
+        var txtStatus = $("#txtStatus").val();
+        //chkStatus1 txtStatus
+        if (document.getElementById("chkStatus" + flag).checked) {
+            if (iFlag < 0) {
+                txtStatus += $("#lbStatus" + flag).text() + ";";
+            }
+        } else {
+            if (iFlag >= 0) {
+                txtStatus = txtStatus.replace(strFlag, "");
+            }
+        }
+        $("#txtStatus").textbox('setValue', txtStatus);
+    }
+
+    function GetDutyTime() {
+        var LoginTime = time;
+        if (checkTime(AstratT, LoginTime) == true && checkTime(LoginTime, AendT) == true) {
+            SstatT = AstratT;
+            SendT = AendT;
+            ThisDuty = "A";
+            banci = "白班";
+            $('#selAPN').combobox("setValue", banci);
+            TimeShow(AstratT, AendT);
+        } else if (checkTime(PstratT, LoginTime) == true && checkTime(LoginTime, PendT) == true) {
+            SstatT = PstratT;
+            SendT = PendT;
+            ThisDuty = "P";
+            banci = "小夜班";
+            TimeShow(SstatT, SendT);
+            $('#selAPN').combobox("setValue", banci);
+        } else if (checkTime(NstratT, LoginTime) == true && checkTime(LoginTime, NendT) == true) {
+            SstatT = NstratT;
+            SendT = NendT;
+            ThisDuty = "N";
+            banci = "大夜班";
+            $('#selAPN').combobox("setValue", banci);
+            TimeShow(SstatT, SendT);
+        }
+    }
+
+    function MobanClickUrl() {
+        if (document.getElementById("chkMoban").checked == true) {
+            window.location.href = "../Dict/NursingDict.html";
+        } else {
+            window.location.href = "../Dict/OnDutyCommon.html";
+        }
+    }
+    //载入模板选项
+    function MobanUrl(flag) {
+        //flag 0:页面初始化
+        var type = "交班内容其他选项";
+        if (flag == 1) {
+            if (document.getElementById("chkMoban").checked) {
+                type = "护理记录其他选项";
+            }
+        }
+        getMobanList(type);
+
+    }
+
+    function getMobanList(type) {
+        $.ajax({
+            url: BaseData.WebApiUrl + "TurnDuty/GetMobanList/",
+            data: "wardcode=" + getLoginUser().DeptCode + "&type=" + type,
+            type: "get",
+            success: (function (data) {
+                if (data) {
+                    $("#selMoban").combobox("loadData", $.parseJSON(data));
+                }
+            })
+        });
+    }
+
+    function MoBanComboChange() {
+        var text = $("#selMoban").combobox("getValue");
+        var mobanValue = $("#txtMoban").textbox("getValue");
+
+        $("#txtMoban").textbox("setValue", mobanValue + text);
+    }
+
+    function getTomorrow(date) {
+        var yesterday_milliseconds = date.getTime() + 1000 * 60 * 60 * 24;
+        var yesterday = new Date();
+        yesterday.setTime(yesterday_milliseconds);
+
+        var strYear = yesterday.getFullYear();
+        var strDay = yesterday.getDate();
+        var strMonth = yesterday.getMonth() + 1;
+        if (strMonth < 10) {
+            strMonth = "0" + strMonth;
+        }
+        datastr = strYear + "-" + strMonth + "-" + strDay;
+        return datastr;
+    }
+
+    function getYestoday(date) {
+        var yesterday_milliseconds = date.getTime() - 1000 * 60 * 60 * 24;
+        var yesterday = new Date();
+        yesterday.setTime(yesterday_milliseconds);
+
+        var strYear = yesterday.getFullYear();
+        var strDay = yesterday.getDate();
+        var strMonth = yesterday.getMonth() + 1;
+        if (strMonth < 10) {
+            strMonth = "0" + strMonth;
+        }
+        datastr = strYear + "-" + strMonth + "-" + strDay;
+        return datastr;
+    }
+    //时间比较
+    function checkTime(StartTime, EndTime) {
+        var start = new Date(StartTime.replace("-", "/").replace("-", "/"));
+        var end = new Date(EndTime.replace("-", "/").replace("-", "/"));
+        if (end < start) {
+            return false;
+        }
+        return true;
+    }
+
+    function tdDateFormatter(jsonObj) {
+        var date = jsonObj.Admission_Date_Time.replace(/-/g, "/").replace(/T/g, " ")
+        return dateTimeFormatter(new Date(date), "yyyy-mm-dd");
+    }
+
+    function getDefaultComboText(value) {
+        return getComboTextByValue("selAPN", value);
+    }
+
+    function printData() {
+        window.open(BaseData.WebApiUrl + "print/printTurnOverOnesDutyReport?dateprint=" + $("#txtDate").datebox(
+            "getValue") + "&wardcode=" + getLoginUser().DeptCode);
+    }
+
+    function GetShiftTime() {
+        var ward_code = getSession("ward_code") == undefined ? "null" : getSession("ward_code");
+        var Flag, date_b, hour;
+        $.ajax({
+            url: BaseData.WebApiUrl + "TurnDuty/GetShiftTime",
+            data: "code=" + ward_code,
+            type: "get",
+            success: (function (data) {
+                if (data && data != "null") {
+                    var jsonData = $.parseJSON(data);
+                    for (var i = 0; i < jsonData.length; i++) {
+                        var SHIFTNO = jsonData[i].Shift_no;
+                        if (SHIFTNO == "A") {
+                            time = dateTimeFormatter(new Date(), "yyyy-mm-dd hh:ss:mi");
+                            if (new Date(time) < new Date(dateTimeFormatter(new Date(), "yyyy-mm-dd ") +
+                                    " " + jsonData[i].Start_time + ":00")) {
+                                Flag = getYestoday(new Date());
+                            } else {
+                                Flag = dateTimeFormatter(new Date(), "yyyy-mm-dd");
+                            }
+                            date_b = new Date((Flag + " " + jsonData[i].Start_time + ":00").replace(
+                                /-/g, "/").replace(/T/g, " "));
+                            hour = date_b.getHours();
+                            AstratT = dateTimeFormatter(new Date((Flag + " " + jsonData[i].Start_time +
+                                    ":00").replace(/-/g, "/").replace(/T/g, " ")),
+                                "yyyy-mm-dd hh:ss:mi");
+                            AendT = dateTimeFormatter(new Date((Flag + " " + jsonData[i].Stop_time +
+                                    ":00").replace(/-/g, "/").replace(/T/g, " ")),
+                                "yyyy-mm-dd hh:ss:mi");
+                        } else if (SHIFTNO == "P") {
+                            PstratT = dateTimeFormatter(new Date((Flag + " " + jsonData[i].Start_time +
+                                    ":00").replace(/-/g, "/").replace(/T/g, " ")),
+                                "yyyy-mm-dd hh:ss:mi");
+                            var date_e = new Date((Flag + " " + jsonData[i].Stop_time + ":00").replace(
+                                /-/g, "/").replace(/T/g, " "));
+                            if (date_e.getHours() < hour)
+                                PendT = dateTimeFormatter(new Date(getTomorrow(new Date(Flag)) + " " +
+                                    jsonData[i].Stop_time + ":00"), "yyyy-mm-dd hh:ss:mi");
+                            else
+                                PendT = dateTimeFormatter(new Date(Flag + " " + jsonData[i].Stop_time +
+                                    ":00"), "yyyy-mm-dd hh:ss:mi");
+                        } else if (SHIFTNO == "N") {
+                            var date_s = new Date((Flag + " " + jsonData[i].Start_time + ":00").replace(
+                                /-/g, "/").replace(/T/g, " "));
+                            if (date_s.getHours() < hour)
+                                NstratT = dateTimeFormatter(new Date(getTomorrow(new Date(Flag)) + " " +
+                                    jsonData[i].Start_time + ":00"), "yyyy-mm-dd hh:ss:mi");
+                            else
+                                NstratT = dateTimeFormatter(new Date(Flag + " " + jsonData[i]
+                                    .Start_time + ":00"), "yyyy-mm-dd hh:ss:mi");
+                            var date_e = new Date((Flag + " " + jsonData[i].Stop_time + ":00").replace(
+                                /-/g, "/").replace(/T/g, " "));
+                            if (date_e.getHours() < hour)
+                                NendT = dateTimeFormatter(new Date(getTomorrow(new Date(Flag)) + " " +
+                                    jsonData[i].Stop_time + ":00"), "yyyy-mm-dd hh:ss:mi");
+                            else
+                                NendT = dateTimeFormatter(new Date(Flag + " " + jsonData[i].Stop_time +
+                                    ":00"), "yyyy-mm-dd hh:ss:mi");
+                        }
+                    }
+                } else {
+                    time = dateTimeFormatter(new Date(), "yyyy-mm-dd hh:ss:mi");
+                    if (time < dateTimeFormatter(new Date(), "yyyy-mm-dd ") + " " +
+                        TurnOverOnesDutyDefaultValues.DutyTime[0].value) {
+                        Flag = getYestoday(new Date());
+                    } else {
+                        Flag = dateTimeFormatter(new Date(), "yyyy-mm-dd");
+                    }
+                    AstratT = dateTimeFormatter(new Date((Flag + " " + TurnOverOnesDutyDefaultValues
+                            .DutyTime[0].value).replace(/-/g, "/").replace(/T/g, " ")),
+                        "yyyy-mm-dd hh:ss:mi");
+                    AendT = dateTimeFormatter(new Date((Flag + " " + TurnOverOnesDutyDefaultValues
+                            .DutyTime[1].value).replace(/-/g, "/").replace(/T/g, " ")),
+                        "yyyy-mm-dd hh:ss:mi");
+
+                    PstratT = dateTimeFormatter(new Date((Flag + " " + TurnOverOnesDutyDefaultValues
+                            .DutyTime[2].value).replace(/-/g, "/").replace(/T/g, " ")),
+                        "yyyy-mm-dd hh:ss:mi");
+                    PendT = dateTimeFormatter(new Date(getTomorrow(new Date((Flag + " " +
+                        TurnOverOnesDutyDefaultValues.DutyTime[3].value).replace(
+                        /-/g, "/").replace(/T/g, " ")))), "yyyy-mm-dd hh:ss:mi");
+
+                    NstratT = dateTimeFormatter(new Date(getTomorrow(new Date((Flag + " " +
+                        TurnOverOnesDutyDefaultValues.DutyTime[4].value).replace(
+                        /-/g, "/").replace(/T/g, " ")))), "yyyy-mm-dd hh:ss:mi");
+                    NendT = dateTimeFormatter(new Date(getTomorrow(new Date((Flag + " " +
+                        TurnOverOnesDutyDefaultValues.DutyTime[5].value).replace(
+                        /-/g, "/").replace(/T/g, " ")))), "yyyy-mm-dd hh:ss:mi");
+
+                }
+                GetDutyTime();
+            })
+
+        });
+
+    }
+</script>
+
+</html>

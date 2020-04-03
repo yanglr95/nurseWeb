@@ -1,0 +1,396 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>整点录入</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/jquerysession.js"></script>
+    <script src="../js/Common.js"></script>
+    <script src="../js/BodyChart.js"></script>
+    <script src="../js/easyui-extends.js"></script>
+    <script src="../js/publicPatient.js"></script>
+    <script src="../js/PatientInfo.js"></script>
+    <script src="../../JavaScript/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <style type="text/css" >
+        .easyui-tabs td {
+            width: 100px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <table style="width:98%">
+            <tr>
+                <td><input id="ccPatients" name="ccPatients" style="width:120px;text-align:left" class="easyui-combobox" data-options="valueField:'Patient_id',textField:'Name'" /></td>
+                <td>
+                    日期：<input id="txtDate" class="easyui-datebox" style="width:180px;" data-options="formatter:dateFormatter,parser:dateParser" />
+                    <a href="#" id="btnQuery" class="easyui-linkbutton" iconcls="icon-huayi-search">查询</a>
+                    <a href="#" id="btnSave" class="easyui-linkbutton" iconcls="icon-huayi-save">保存</a>
+                </td>
+            </tr>
+        </table>
+        <table id="tabPatientInfo" class="patientTable" style="width:98%;background: #fff;margin-top:5px;">        
+        </table>
+        <div class="easyui-tabs" style="width: 98%; " id="inputTabs">
+            <div title="0-5点" index="0" style="padding:10px;">
+                <table name="grid" style="width:98%;height:auto;align-content:space-around" id="tb_0">
+                    <thead>
+                        <tr>
+                            <th>
+                                时间
+                            </th>
+                            <th>
+                                体温
+                            </th>
+                            <th>
+                                脉搏
+                            </th>
+                            <th>
+                                呼吸
+                            </th>
+                            <th>
+                                心率
+                            </th>
+                            <th>
+                                血压
+                            </th>
+                            <th>
+                                血氧
+                            </th>
+                        </tr>
+                    </thead>
+
+                </table>
+            </div>
+            <div title="6-11点" index="1" style="padding:10px;box-sizing: border-box;">
+                <table name="grid" style="width:98%;height:auto;align-content:space-around">
+                    <thead>
+                        <tr>
+                            <th>
+                                时间
+                            </th>
+                            <th>
+                                体温
+                            </th>
+                            <th>
+                                脉搏
+                            </th>
+                            <th>
+                                呼吸
+                            </th>
+                            <th>
+                                心率
+                            </th>
+                            <th>
+                                血压
+                            </th>
+                            <th>
+                                血氧
+                            </th>
+                        </tr>
+                    </thead>
+
+                </table>
+            </div>
+            <div title="12-17点" index="2" style="padding:10px;box-sizing: border-box;">
+                <table name="grid" style="width:98%;height:auto;align-content:space-around">
+                    <thead>
+                        <tr>
+                            <th>
+                                时间
+                            </th>
+                            <th>
+                                体温
+                            </th>
+                            <th>
+                                脉搏
+                            </th>
+                            <th>
+                                呼吸
+                            </th>
+                            <th>
+                                心率
+                            </th>
+                            <th>
+                                血压
+                            </th>
+                            <th>
+                                血氧
+                            </th>
+                        </tr>
+                    </thead>
+
+                </table>
+            </div>
+            <div title="18-23点" index="3" style="padding:10px;box-sizing: border-box;">
+                <table name="grid" style="width:98%;height:auto;align-content:space-around">
+                    <thead>
+                        <tr>
+                            <th>
+                                时间
+                            </th>
+                            <th>
+                                体温
+                            </th>
+                            <th>
+                                脉搏
+                            </th>
+                            <th>
+                                呼吸
+                            </th>
+                            <th>
+                                心率
+                            </th>
+                            <th>
+                                血压
+                            </th>
+                            <th>
+                                血氧
+                            </th>
+                        </tr>
+                    </thead>
+
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script language="javascript" type="text/javascript">
+    var patient;
+    var VitalData = [];
+    var topTabTitle;
+    var tabs;
+    var BaseInputDOM = $('<tr><td></td>' +
+        '<td><input bodychart="vital_sign:体温;combo_data:hourInput" style="width:70px;" class="easyui-combobox" data-options="panelHeight:\'auto\'"></td>' +
+        '<td><input bodychart="vital_sign:脉搏 ;combo_data:hourInput" style="width:70px" class="easyui-combobox" data-options="panelHeight:\'auto\'"></td>' +
+        '<td><input bodychart="vital_sign:呼吸;combo_data:breath" style="width:70px" class="easyui-combobox" data-options="panelHeight:\'auto\'"></td>' +
+        '<td><input bodychart="vital_sign:心率;combo_data:hourInput" style="width:70px" class="easyui-combobox" data-options="panelHeight:\'auto\'"></td>' +
+        '<td><input bodychart="vital_sign:收缩压;combo_data:hourInput" style="width:70px" class="easyui-combobox" data-options="panelHeight:\'auto\'">&nbsp;-&nbsp; <input bodychart="vital_sign:舒张压;combo_data:hourInput" style="width:70px" class="easyui-combobox" data-options="panelHeight:\'auto\'"></td>' +
+        '<td><input bodychart="vital_sign:血氧" style="width:70px" class="easyui-combobox" data-options="panelHeight:\'auto\'"></td></tr>');
+    $(function () {
+        $("#ccPatients").combobox({
+            onSelect: PatientsComboChange,
+            filter: filterPatient,
+            panelHeight:document.documentElement.clientHeight
+        });
+        tabs = $('#inputTabs');
+        $("[name='grid']").addClass("inputTable");
+
+        var ward_code = getSession("ward_code") == undefined ? "null" : getSession("ward_code");
+        $.ajax({
+            url: BaseData.WebApiUrl + "nurse/getPatientListByWard/",
+            data: "ward_code=" + ward_code,
+            type: "get",
+            success: (function (data) {
+
+                var jsonData = $.parseJSON(data);
+                if (jsonData.length > 0) {
+                    for (var i = 0; i < jsonData.length; i++) {
+                        jsonData[i].Name = "(" + jsonData[i].Bed_No + ")" + jsonData[i].Name;
+                    }
+                    $("#ccPatients").combobox('loadData', jsonData);
+
+                    var patientid = getSession("Patient_Id");
+                    if (patientid != null && patientid != "null") {
+                        $("#ccPatients").combobox('setValue', patientid);
+                        PatientsComboChange();
+                    } else {
+                        setSession(jsonData[0].Patient_id);
+                        $("#ccPatients").combobox('setValue', jsonData[0].Patient_id);
+                        PatientsComboChange();
+                    }
+                    //       $("#ccPatients").combobox('setValue', jsonData[0].Patient_id);
+                    //     PatientsComboChange();
+                }
+            })
+        });
+        tabs.tabs({
+            onSelect: function (title) {
+                SelectTab(title);
+            }
+        });
+        topTabTitle = $('#inputTabs').tabs("tabs")[0].panel('options').title;
+        $('#txtDate').datebox('setValue', dateFormatter(new Date()));
+        $("#btnSave").click(saveData);
+        $("#btnQuery").click(InitData);
+        //  var inputDOM = $('');
+
+        //   $("#tb_0").find("tbody").append(inputDOM);
+        //  SetTableValue("tabPatientInfo", null);
+    });
+
+    function SelectTab(title) {
+        if (patient) {
+            //alert($(this).find("div").length)
+            var selectTab = $('#inputTabs').tabs("getTab", title)
+            var tbodyDOM;
+            if (selectTab.find("table tbody").length == 0) {
+                tbodyDOM = $("<tbody></tbody>");
+                selectTab.find("table:first").append(tbodyDOM);
+            }
+            else {
+                tbodyDOM = selectTab.find("table tbody:first");
+            }
+            var index = selectTab.attr("index");
+            for (var hour = index * 6; hour < index * 6 + 6; hour++) {
+                var inputhourDOM
+                if (tbodyDOM.find("tr[hour=" + hour + "]").length == 0) {
+
+                    inputhourDOM = BaseInputDOM.clone();
+                    inputhourDOM.attr("hour", hour);
+                    inputhourDOM.find("td").eq(0).html(hour + "点");
+                    $.parser.parse(inputhourDOM)
+                    tbodyDOM.append(inputhourDOM);
+                }
+                else {
+                    inputhourDOM = tbodyDOM.find("tr[hour=" + hour + "]");
+                }
+                var hourData = null;
+
+                for (var i in VitalData) {
+                    if (VitalData[i].Hour == hour) {
+
+                        hourData = VitalData[i];
+                        break;
+                    }
+                }
+                //     $(row).find("td input[" + AttrName + "]").each(function (index, obj) {
+
+                //   })
+                InitComboData(inputhourDOM, hourData);
+            }
+        }
+    }
+
+    function PatientsComboChange() {
+        //$("[name='grid']").find("tbody").remove();
+        $("tr[hour]").each(function (index, row) {
+            InitComboData(row, null);
+        });
+        var patient_id = $("#ccPatients").combobox('getValue');
+        $.ajax({
+            url: BaseData.WebApiUrl + "nurse/getPatientInfoByPatientID",
+            data: "patientid=" + patient_id,
+            type: "get",
+            success: (function (data) {
+                var jsonData = $.parseJSON(data);
+                if (jsonData) {
+                    patient = jsonData;
+                    SetTableValue("tabPatientInfo", jsonData);
+                    InitData();
+                  
+                    removeSession("patient_id");
+                    setSession(patient_id);
+                }
+            })
+        });
+    }
+
+    function InitData() {
+
+        var recording_Date = $("#txtDate").datebox("getValue");
+        $.ajax({
+            url: BaseData.WebApiUrl + "bodychart/getHourInputData",
+            data: "patient_id=" + patient.Patient_id + "&recording_Date=" + recording_Date,
+            type: "get",
+            success: function (data) {
+                VitalData = $.parseJSON(data);
+                if (tabs.tabs("getSelected").panel('options').title == topTabTitle)
+                {
+                    SelectTab(topTabTitle)
+                }
+                else
+                {
+                    tabs.tabs('select', 0);
+                }
+              
+                // ;
+                //$("tr[hour]").each(function (index, row) {
+                //    var hourData = null;
+                //    var inputData = $.parseJSON(data);
+                //    var hour = parseInt($(row).attr("hour"));
+
+                //    for (var i in inputData) {
+                //        if (inputData[i].Hour == hour) {
+
+                //            hourData = inputData[i];
+                //        }
+                //    }
+                //    //     $(row).find("td input[" + AttrName + "]").each(function (index, obj) {
+                //    InitComboData(row, hourData);
+                //    //   })
+                //})
+            }
+
+        });
+    }
+    function saveData() {
+        if (!patient) {
+            $.messager.alert("提示", "请选择病人！");
+            return;
+        }
+        var postData = "";
+
+        var recording_Date = $("#txtDate").datebox("getValue");
+        $("tr[hour]").each(function (index, row) {
+
+            var data = "";
+            data += ',{';
+            data += '"Patient_id":"' + patient.Patient_id + '",';
+            data += '"Visit_id":"' + patient.Visit_id + '",';
+            data += '"Recording_Date":"' + recording_Date + '",';
+            data += '"hour":' + $(row).attr("hour");
+            //data["Patient_id"] = patient_id;
+            //data["Recording_Date"] = recording_Date;
+            $(row).find("td input[" + AttrName + "]").each(function (index, obj) {
+                var bodyChart = $(obj).attr(AttrName).split(';');
+                for (var s in bodyChart) {
+                    var p = bodyChart[s].replace(/(^\s*)|(\s*$)/g, "");
+                    var length = JsonPro.length;
+                    if (p.substr(0, length).toLowerCase() == JsonPro) {
+                        // data[p.substr(length)] = $(obj).combobox("getValue");
+
+
+                        var value = $(obj).combobox("getValue");
+
+                        if (value != "" && value != BodyChartDefaultValues.defaultValue[0].value) {
+                            value = '"' + value + '"';
+                        }
+                        else {
+                            value = 'null';
+                        }
+                        data += ',"' + p.substr(length) + '":' + value;
+
+                    }
+                }
+            });
+            //postData.push($.getJSON(data));
+            data += "}";
+            postData += data;
+        });
+        postData = "[" + postData.substr(1) + "]";
+
+        $.ajax({
+            url: BaseData.WebApiUrl + "bodychart/saveHourInputData",
+            type: "POST",
+            data: { '': postData },
+            success: (function (data) {
+                $.messager.alert("提示", data);
+            })
+        });
+    }
+
+    function tdDateFormatter(jsonObj) {
+        var date = jsonObj.Admission_Date_Time.replace(/-/g, "/").replace(/T/g, " ");
+        return dateTimeFormatter(new Date(date), "yyyy-mm-dd");
+    }
+    function dateFormatter(date) {
+        return dateTimeFormatter(date, "yyyy-mm-dd");
+    }
+</script>

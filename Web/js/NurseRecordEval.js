@@ -1,0 +1,46 @@
+﻿var AttrName = "nurse_eval";
+var AttrEval= "eval_name";
+var JsonPro = "vital_sign:";
+var DefaultDataName = "combo_data:";
+var ComboDataName = "NurseRecordEvlDefaultValues";
+var NurseRecordEvlDefaultValues = {
+    defaultValue: [{ text: "未填", value: "0" }],
+    inType: [{ text: "步行", value: "1" },
+            { text: "搀扶", value: "2" },
+            { text: "轮椅", value: "3" },
+            { text: "平车", value: "4" },
+            { text: "救护车", value: "5" }],
+    patientFrom: [{ text: "家", value: "1" },
+           { text: "门诊", value: "2" },
+           { text: "急诊", value: "3" },
+           { text: "手术室", value: "4" },
+           { text: "外院转诊", value: "5" }],
+    weight: [{ value: "-14", text: "卧床" },
+       { text: "平车", value: "-20" },
+       { text: "未测", value: "-10" },
+       { text: "轮椅", value: "-30" }],
+    hourInput: [{ text: "拒测", value: "-1" }],
+    breath: [{ text: "呼吸机", value: "-300" }],
+    yesorno: [{ text: "不需要", value: "1" },
+             { text: "需要", value: "2" }],
+    admissioneducation: [{ text: "未完成", value: "1" },
+             { text: "已完成", value: "2" }],
+    ishas: [{ text: "无", value: "1" },
+            { text: "有", value: "2" }],
+    istrue:[{ text: "否", value: "1" },
+            { text: "是", value: "2" }],
+    pupil: [{ text: "灵敏", value: "1" },
+        { text: "迟钝", value: "2" },
+        { text: "消失", value: "3" }],
+    Consciousness: [{ text: "清醒", value: "1" },
+        { text: "嗜睡", value: "2" },
+        { text: "朦胧", value: "3" },
+        { text: "浅昏迷", value: "4" },
+        { text: "深昏迷", value: "5" },
+        { text: "躁动不安", value: "6" }],
+    Swallow:[{ text: "正常", value: "1"},
+            { text: "困难", value: "2"},
+            { text: "咳嗽", value: "3" }],
+    Chew: [{ text: "正常", value: "1" },
+            { text: "困难", value: "2" }]
+}

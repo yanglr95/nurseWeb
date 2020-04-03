@@ -1,0 +1,573 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>跌倒评估单</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/jquerysession.js"></script>
+    <script src="../js/Common.js"></script>
+    <script src="../js/easyui-extends.js"></script>
+    <script src="../js/publicPatient.js"></script>
+    <script src="../js/PatientInfo.js"></script>
+    <script src="../../JavaScript/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <style type="text/css">
+        .auto-style1 {
+            height: 17px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <table style="width: 98%">
+            <tr>
+                <td>
+                    <input id="ccPatients" name="ccPatients" style="width: 120px" class="easyui-combobox" data-options="valueField:'Patient_id',textField:'Name'" />
+                </td>
+                <td>日期<input id="txtDate" class="easyui-datebox" style="width: 180px;" data-options="formatter:dateFormatter,parser:dateParser" /></td>
+                <td>时间<input class="easyui-timespinner" id="dtInput" style="width: 80px" data-options="showSeconds:false" /></td>
+                <td>
+                    <a href="#" id="btnQuery" class="easyui-linkbutton" iconcls="icon-huayi-search">查询</a>
+                    <a href="#" id="btnSaveInput" class="easyui-linkbutton" iconcls="icon-huayi-save">保存</a>
+                    <a href="#" class="easyui-linkbutton" iconcls="icon-huayi-print" onclick="print()">打印</a>
+                </td>
+            </tr>
+        </table>
+        <table id="tabPatientInfo" class="patientTable" style="width: 98%;background:#fff;margin-top:5px;">
+        </table>
+        <table id="tbNurseRecordFallBed" class="easyui-datagrid" style="width: 98%; height: auto;" data-options="singleSelect:true">
+            <thead>
+                <tr>
+                    <th data-options="field:'RecordTime',width:'20%',align:'center'" class="auto-style1">
+                        记录时间
+                    </th>
+                    <th data-options="field:'Danger',width:'30%',align:'center'" class="auto-style1">
+                        危险等级
+                    </th>
+
+                    <th data-options="field:'Sum',width:'30%',align:'center'" class="auto-style1">
+                        评估分数
+                    </th>
+                    <th data-options="width:'20%', field:'Id',align:'center',formatter:InputListOperateField" class="auto-style1">
+                        操作
+                    </th>
+                </tr>
+            </thead>
+        </table>
+        <div class="easyui-tabs" style="width: 98%;margin-top:10px;" id="inputTabs">
+            <div title="评估项目" style="padding: 10px;box-sizing: border-box;">
+                <table id="First" class="inputTable" style="width: 98%; height: auto; align-content: space-around">
+                    <tr>
+                        <th colspan="2">评分</th>
+                        <th>评估项目</th>
+                        <th>评估要点</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input id="Sumcheck1" name="Sumcheck" title="0" type="checkbox" data-options="panelHeight:'auto'" value="2" />
+                        </td>
+                        <td style="width: 60px">2</td>
+                        <td>A.年龄</td>
+                        <td>65岁以上或9岁以下</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input id="Sumcheck2" name="Sumcheck" title="1" type="checkbox" data-options="panelHeight:'auto'" value="1" />
+                        </td>
+                        <td style="width: 60px">1</td>
+                        <td>B.性别</td>
+                        <td>男性</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input id="Sumcheck3" name="Sumcheck" title="2" type="checkbox" data-options="panelHeight:'auto'" value="2" />
+                        </td>
+                        <td style="width: 60px">2</td>
+                        <td>C.既往史</td>
+                        <td>曾经有跌倒跌落的经历；曾经有昏迷的经历</td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <input id="Sumcheck4" name="Sumcheck" title="3" type="checkbox" data-options="panelHeight:'auto'" value="1" />
+                        </td>
+                        <td style="width: 60px">1</td>
+                        <td>D.感觉</td>
+                        <td>存在视力障碍，存在听力障碍</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input id="Sumcheck5" name="Sumcheck" title="4" type="checkbox" data-options="panelHeight:'auto'" value="3" />
+                        </td>
+                        <td style="width: 60px">3</td>
+                        <td>E.功能障碍</td>
+                        <td>存在麻痹，有麻木感，存在骨、关节异常（挛缩、变形）</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input class="easyui-textbox" id="Fsum" data-options="panelHeight:'auto'" style="width:30px" />
+                        </td>
+                        <td style="width: 60px">4</td>
+                        <td>F.活动方面</td>
+                        <td>存在腰和腿软弱、肌力低下；正在使用轮椅、拐杖、助行器，行动不便，身体移动时需要帮助；行动蹒跚；</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input class="easyui-textbox" id="Gsum" data-options="panelHeight:'auto'" style="width:30px" />
+                        </td>
+                        <td style="width: 60px">4</td>
+                        <td>G.认知力</td>
+                        <td>意识障碍、意识不清；痴呆；判断力、理解力低下；记忆力低下、再学习困难；嗜睡</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input class="easyui-textbox" id="Hsum" data-options="panelHeight:'auto'" style="width:30px" />
+                        </td>
+                        <td style="width: 60px">各1分</td>
+                        <td>H.药物</td>
+                        <td>止痛剂、麻药、安眠药、抗帕金森药、降压利尿药、缓泻剂、化学疗法</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input class="easyui-textbox" id="Isum" data-options="panelHeight:'auto'" style="width:30px" />
+                        </td>
+                        <td style="width: 60px">各2分</td>
+                        <td>I.排泄</td>
+                        <td>大小便失禁、尿频；入厕需协助、留置尿管；夜间入厕，到卫生间有一定距离</td>
+                    </tr>
+                </table>
+            </div>
+            <div title="护理措施" style="padding: 10px;box-sizing: border-box;">
+                <table id="Second" class="inputTable" style="width: 98%; height: auto; align-content: space-around">
+                    <tr>
+                        <th colspan="2">护理措施</th>
+                    </tr>
+                    <tr>
+                        <td style="width: 60px; text-align: center">
+                            <input id="Step1" name="Step" title="0" type="checkbox" data-options="panelHeight:'auto'" />
+                        </td>
+                        <td>1.床头悬挂警示标识</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 60px; text-align: center">
+                            <input id="Step2" name="Step" title="1" type="checkbox" data-options="panelHeight:'auto'" />
+                        </td>
+                        <td>2.向患者/家属/陪护介绍病室环境及安全设施</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 60px; text-align: center">
+                            <input id="Step3" name="Step" title="2" type="checkbox" data-options="panelHeight:'auto'" />
+                        </td>
+                        <td>3.指导患者/家属/陪护使用呼叫器,并置于患者易取位置</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 60px; text-align: center">
+                            <input id="Step4" name="Step" title="3" type="checkbox" data-options="panelHeight:'auto'" />
+                        </td>
+                        <td>4.告知患者/家属/陪护预防跌倒/坠床的方法及注意事项，如避免突然改变体位，鞋子大小合适并防滑等</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 60px; text-align: center">
+                            <input id="Step5" name="Step" title="4" type="checkbox" data-options="panelHeight:'auto'" />
+                        </td>
+                        <td>5.告知患者勿跨越床档下床，偏瘫患者由健侧边床缘上下床</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 60px; text-align: center">
+                            <input id="Step6" name="Step" title="5" type="checkbox" data-options="panelHeight:'auto'" />
+                        </td>
+                        <td>6.确保病室内、浴室内灯光明亮及地板干燥</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 60px; text-align: center">
+                            <input id="Step7" name="Step" title="6" type="checkbox" data-options="panelHeight:'auto'" />
+                        </td>
+                        <td>7.保持人行道通畅，没有障碍物</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 60px; text-align: center">
+                            <input id="Step8" name="Step" title="7" type="checkbox" data-options="panelHeight:'auto'" />
+                        </td>
+                        <td>8.使用平车外出检查的患者使用安全带及床档</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 60px; text-align: center">
+                            <input id="Step9" name="Step" title="8" type="checkbox" data-options="panelHeight:'auto'" />
+                        </td>
+                        <td>9.助行器放置在患者易取用位置</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 60px; text-align: center">
+                            <input id="Step10" name="Step" title="9" type="checkbox" data-options="panelHeight:'auto'" />
+                        </td>
+                        <td>10.按医嘱陪住，夜间陪住床紧邻患者床档放置</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 60px; text-align: center">
+                            <input id="Step11" name="Step" title="10" type="checkbox" data-options="panelHeight:'auto'" />
+                        </td>
+                        <td>11. 告知患者有护士/家属/陪护协助下方可下床活动</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 60px; text-align: center">
+                            <input id="Step12" name="Step" title="11" type="checkbox" data-options="panelHeight:'auto'" />
+                        </td>
+                        <td>12.加强床上生活护理，协助擦浴、进餐、床上洗头及二便护理，加强肌肉训练</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 60px; text-align: center">
+                            <input id="Step13" name="Step" title="12" type="checkbox" data-options="panelHeight:'auto'" />
+                        </td>
+                        <td>13.患者意识不清或躁动时，遵医嘱给予约束</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 60px; text-align: center">
+                            <input id="Step14" name="Step" title="13" type="checkbox" data-options="panelHeight:'auto'" />
+                        </td>
+                        <td>14.加强用药后观察，患者有头晕乏力等不适时告知卧床休息，通知医生</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <table id="ContentSign" class="inputTable" style="width: 98%; height: auto; align-content: space-around">
+            <tr>
+                <td>危险等级:</td>
+                <td><input id="Danger" class="easyui-textbox" data-options="panelHeight:'auto',editable:false" " /></td>
+                <td>评估分数:</td>
+                <td><input id="Sum" class="easyui-textbox" data-options="panelHeight:'auto',editable:false" " /></td>
+            </tr>
+            <tr>
+                <td colspan="2">护士签名:</td>
+                <td colspan="2"><input id="Nursesign" class="easyui-textbox" data-options="panelHeight:'auto',editable:false"  /></td>
+            </tr>
+            <tr>
+                <td colspan="4" style="text-align:center;line-height: 25px;">
+                    危险程度：<br />
+                    1.低危 （0-5分），有发生跌倒/坠床的可能性；<br />
+                    2.中危（6-15分），容易发生跌倒/坠床；<br />
+                    3.高危（16分以上），经常发生跌倒/坠床。<br />
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
+<script type="text/javascript">
+    var patient;
+    var RecordSum = 0;
+    var Danger;
+    var menu_id = getUrlParam("menu_id");
+
+    $(function () {
+        //patient = getCurrentPatient();
+        $("#ccPatients").combobox({
+            onSelect: PatientsComboChange,
+            filter: filterPatient,
+            panelHeight:document.documentElement.clientHeight
+        });
+        var ward_code = getSession("ward_code") == undefined ? "null" : getSession("ward_code");
+        $.ajax({
+            url: BaseData.WebApiUrl + "nurse/getPatientListByWard/",
+            data: "ward_code=" + ward_code,
+            type: "get",
+            success: (function (data) {
+
+                var jsonData = $.parseJSON(data);
+                if (jsonData.length > 0) {
+                    for (var i = 0; i < jsonData.length; i++) {
+                        jsonData[i].Name = "(" + jsonData[i].Bed_No + ")" + jsonData[i].Name;
+                    }
+                    $("#ccPatients").combobox('loadData', jsonData);
+                    if (patient) {
+                        $("#ccPatients").combobox('setValue', patient.Patient_id);
+                        PatientsComboChange();
+                    }
+
+                    var patientid = getSession("Patient_Id");
+                    if (patientid != null && patientid != "null") {
+                        $("#ccPatients").combobox('setValue', patientid);
+                        PatientsComboChange();
+                    } else {
+                        setSession(jsonData[0].Patient_id);
+                        $("#ccPatients").combobox('setValue', jsonData[0].Patient_id);
+                        PatientsComboChange();
+                    }
+                }
+            })
+        });
+        var date = new Date();
+        $('#txtDate').datebox('setValue', dateFormatter(date));
+        $("#btnSaveInput").click(saveData);
+        $("#btnQuery").click(InitInputData);
+    })
+    function PatientsComboChange() {
+        patient_id = $("#ccPatients").combobox('getValue');
+        $.ajax({
+            url: BaseData.WebApiUrl + "nurse/getPatientInfoByPatientID",
+            data: "patientid=" + patient_id,
+            type: "get",
+            success: (function (data) {
+                var jsonData = $.parseJSON(data);
+                if (jsonData) {
+                    patient = jsonData;
+                    //setCurrentPatient(patient);
+                    SetTableValue("tabPatientInfo", jsonData);
+
+                    removeSession("patient_id");
+                    setSession(patient_id);
+                }
+            })
+        });
+        InitInputData();
+    }
+
+    function tdDateFormatter(jsonObj) {
+        var date = jsonObj.Admission_Date_Time.replace(/-/g, "/").replace(/T/g, " ");
+        return dateTimeFormatter(new Date(date), "yyyy-mm-dd");
+    }
+    function InitInputData() {
+
+        var record_date = $("#txtDate").datebox("getValue");
+        $.ajax({
+            url: BaseData.WebApiUrl + "NurseRecordFallBed/getNurseRecordFallBedList",
+            data: "patient_id=" + patient_id + "&record_date=" + record_date,
+            type: "get",
+            success: (function (data) {
+                if (data && data != "null") {
+                    var jsonData = $.parseJSON(data);
+                    InitTableData(null);
+                    $("#tbNurseRecordFallBed").datagrid("loadData", jsonData);
+                }else{
+                    $("#tbNurseRecordFallBed").datagrid("loadData",[]);
+                }
+            })
+        });
+        InitTableData(null);
+        $("#dtInput").timespinner("setValue", dateTimeFormatter(new Date(), "hh:mi"));
+    }
+    function inputListDateFormatter(date) {
+        if (date == null) return;
+        var showDate = new Date(date.replace(/-/g, "/").replace(/T/g, " "));
+        var hour = showDate.getHours() + showDate.getTimezoneOffset() / 60;
+
+        if (hour < 0) {
+
+            hour = hour + 24;
+        }
+        showDate = showDate.setHours(hour);
+        return dateTimeFormatter(new Date(showDate), "hh:mi");
+    }
+    function InputListOperateField(value, rowData, rowIndex) {
+
+        var str = "<a href='#' name='btnEdit' onclick='editInputList(\"" + value + "\",this)' >编辑</a>";
+        str += "&nbsp;&nbsp;"
+        str += "<a href='#' onclick='delInputList(\"" + value + "\")' >删除</a>";
+        return str;
+    }
+
+    var editID = null;
+    function editInputList(id, obj) {
+        var state = $(obj).html();
+        $("a[name='btnEdit']").html("编辑");
+        if (state == "编辑") {
+            editID = id;
+            $.ajax({
+                url: BaseData.WebApiUrl + "NurseRecordFallBed/getNurseRecordFallBedView",
+                data: "id=" + id,
+                type: "get",
+                success: (function (data) {
+                    if (data) {
+                        var jsonData = $.parseJSON(data);
+                        InitTableData(jsonData);
+                        var date = new Date(jsonData.Time_Point);
+                        $("#dtInput").timespinner("setValue", inputListDateFormatter(jsonData.RecordTime));
+                        $(obj).html("取消");
+                    }
+                })
+            });
+        }
+        else {
+            editID = null;
+            $(obj).html("编辑");
+            InitTableData(null);
+            $("#dtInput").timespinner("setValue", dateTimeFormatter(new Date(), "hh:mi"));
+        }
+    }
+    function delInputList(id) {
+        editID = null;
+        $.ajax({
+            url: BaseData.WebApiUrl + "NurseRecordFallBed/delNurseRecordFallBedView",
+            data: "id=" + id,
+            type: "get",
+            success: (function (data) {
+                if (data) {
+                    $.messager.alert("提示", data);
+                    InitInputData();
+                    InitTableData(null);
+                    $("#dtInput").timespinner("setValue", dateTimeFormatter(new Date(), "hh:mi"));
+                }
+            })
+        });
+    }
+    //绑定复选框
+    function setDataList(jsonData, strName) {
+        if (jsonData[strName] != null && jsonData[strName].length > 0) {
+            var Strvalue = jsonData[strName].split(";");
+            for (var data in Strvalue) {
+                $("#inputTabs").find("input[name='" + strName + "']").each(function (index, obj) {
+                    if ($(this).attr("type") == "checkbox" && Strvalue[data] != null) {
+                        if (Strvalue[data].trim() == $(this).attr("title")) {
+                            document.getElementById($(this).attr("id")).checked = true;
+                            var strVar = $(this).attr("id");
+                        }
+                    }
+                })
+            }
+        }
+    }
+    function InitTableData(jsonData) {
+        if (jsonData) {
+
+            $("#Danger").textbox("setValue", jsonData["Danger"]);
+            $("#Sum").textbox("setValue", jsonData["Sum"]);
+
+            $.ajax({
+                url: BaseData.WebApiUrl + "Nurse/getUsersByUserId",
+                type: "get",
+                data: "userId=" + jsonData["Nursesign"] + "&deptname=" + jsonData["Deptname"],
+                success: function (data) {
+                    if (data!=null) {
+                        var jsondata=$.parseJSON(data);
+                        $("#Nursesign").textbox("setValue", jsondata.UserName)
+                    }
+                }
+            })
+
+           // $("#Nursesign").textbox("setValue", jsonData["Nursesign"]);
+
+            $("#Fsum").textbox("setValue", jsonData["Fsum"]);
+            $("#Gsum").textbox("setValue", jsonData["Gsum"]);
+            $("#Hsum").textbox("setValue", jsonData["Hsum"]);
+            $("#Isum").textbox("setValue", jsonData["Isum"]);
+            setDataList(jsonData, "Sumcheck");
+            setDataList(jsonData, "Step");
+        }
+        else {
+
+            //清除复选框
+            $("#inputTabs").find("input[type='checkbox']").each(function (inputIndex) {
+                $(this).prop("checked", false);
+                $(this).removeAttr("checked");
+            });
+            $("#Danger").textbox("setValue", "");
+            $("#Sum").textbox("setValue", "");
+            $("#Nursesign").textbox("setValue", "");
+            $("#Fsum").textbox("setValue", "");
+            $("#Gsum").textbox("setValue", "");
+            $("#Hsum").textbox("setValue", "");
+            $("#Isum").textbox("setValue", "");
+            $("#dtInput").timespinner("setValue", dateTimeFormatter(new Date(), "hh:mi"));
+        }
+    }
+    //拼接字段内容
+    function splicingField(field) {
+        var Sumcheck = "";
+        var fieldArr = $("#inputTabs").find("input[name='" + field + "']");
+        for (var index = 0; index < fieldArr.length; index++) {
+            if (fieldArr[index].checked) {
+                Sumcheck += index + ";";
+                if (field == "Sumcheck") {
+                    RecordSum = RecordSum + parseInt(fieldArr[index].value);
+                }
+            }
+        }
+        if (field == "Sumcheck") {
+            if ($("#Fsum").textbox("getValue").length > 0) {
+                RecordSum = RecordSum + 4;
+            }
+            if ($("#Gsum").textbox("getValue").length > 0) {
+                RecordSum = RecordSum + 4;
+            }
+            if ($("#Hsum").textbox("getValue").length > 0) {
+                RecordSum = RecordSum + parseInt($("#Hsum").textbox("getValue"));
+            }
+            if ($("#Isum").textbox("getValue").length > 0) {
+                RecordSum = RecordSum + parseInt($("#Isum").textbox("getValue"));
+            }
+            if (RecordSum >= 0 && RecordSum <= 5) {
+                Danger = "I";
+            } else if (RecordSum > 5 && RecordSum <= 15) {
+                Danger = "II";
+            } else if (RecordSum > 15) {
+                Danger = "III";
+            }
+        }
+        return Sumcheck;
+    }
+    function saveData() {
+        if (!patient) {
+            $.messager.alert("提示", "请选择病人！");
+            return;
+        }
+
+        var jsonUser = getLoginUser();
+        var userid=null;
+        if (jsonUser) {
+            userid = jsonUser.User_id;
+        }
+
+        var postData = "";
+
+        var recordeDate = $("#txtDate").datebox("getValue");
+        var dateTime = recordeDate + " " + $("#dtInput").timespinner("getValue");
+        var postData = "";
+        postData += '{';
+        postData += '"Id":' + editID + ',';
+        postData += '"Patient_id":"' + patient.Patient_id + '",';
+        postData += '"Visit_id":"' + patient.Visit_id + '",';
+        postData += '"RecordingDate":"' + recordeDate + '",';
+        postData += '"RecordTime":"' + dateTime + '",';
+        postData += '"Name":"' + patient.Name + '",';
+        postData += '"Sex":"' + patient.Sex + '",';
+        postData += '"Age":"' + patient.Age + '",';
+        postData += '"Diagnosis":"' + patient.Diagnosis + '",';
+        postData += '"Deptname":"' + patient.Dept_name + '",';
+        postData += '"Bednum":"' + patient.Bed_Label + '",';
+        postData += '"Hospitalnum":"' + patient.Hos_Num + '",';
+        postData += '"Nursesign":"' + userid + '",';
+        postData += '"Sumcheck":"' + splicingField("Sumcheck") + '",';
+        postData += '"Fsum":"' + $("#Fsum").textbox("getValue") + '",';
+        postData += '"Gsum":"' + $("#Gsum").textbox("getValue") + '",';
+        postData += '"Hsum":"' + $("#Hsum").textbox("getValue") + '",';
+        postData += '"Isum":"' + $("#Isum").textbox("getValue") + '",';
+        postData += '"Sum":"' + RecordSum + '",';
+        postData += '"Danger":"' + Danger + '",';
+        postData += '"Step":"' + splicingField("Step") + '"';
+        postData += "}";
+        postData = "[" + postData + "]";
+        RecordSum = 0; Danger = "";
+        $.ajax({
+            url: BaseData.WebApiUrl + "NurseRecordFallBed/saveNurseRecordFallBedView",
+            type: "POST",
+            data: { '': postData },
+            success: (function (data) {
+                if (data) {
+                    $.messager.alert("提示", data);
+                    InitInputData();
+                }
+            })
+        });
+    }
+
+    function print() {
+        if (!patient) {
+            $.messager.alert("提示", "请选择病人！");
+            return;
+        }
+        $.messager.alert("提示", "没有连接打印机！");
+        //window.open(BaseData.WebApiUrl + "print/printNurseRecordFallBedReport?patient_id=" + patient.Patient_id + "&visit_id=" + patient.Visit_id);
+    }
+</script>

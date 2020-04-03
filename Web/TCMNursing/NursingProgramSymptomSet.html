@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>中医护理症状设置</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/Common.js"></script>
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <script src="../js/TCMNursing/NursingProgramSymptomSet.js"></script>
+</head>
+<body>
+    <div style="width: 790px;  float: left">
+        <div>
+            <table id="DiseaSetTable" class="blueBorderTable" style="width: 780px; position: fixed; background-color: #EFF8FF; z-index: 1000;">
+                <tr>
+                    <td width="60px">病种名称:</td>
+                    <td><input id="txtNAME" style="width:47%" class="easyui-combobox" data-options="valueField:'Id',textField:'Name',panelHeight:'auto'"></td>
+                </tr>
+                <tr>
+                    <td>症状名称:</td>
+                    <td>
+                        <textarea id="txtsymptomName" style="width:47%;height:100px;"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>状态：</td>
+                    <td>
+                        <input type="radio" name="STATUS" checked="checked" value=1 />启用
+                        <input type="radio" name="STATUS" value=0 />禁用
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="#" id="btnSave" class="easyui-linkbutton" onclick="saveData()" iconcls="icon-huayi-save">保存</a>
+                    </td>
+                    <td>
+                        <a href="#" id="btnSearch" class="easyui-linkbutton" onclick="getNuringProgramSymptomData(1)" iconcls="icon-huayi-search">查询</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div style="margin-top: 210px;">
+            <table id="DiseaSetList" class="easyui-datagrid" style="width: 98%; height: auto" data-options="singleSelect:true">
+                <thead>
+                    <tr>
+                        <th data-options="field:'DiseaseName',width:'30%',align:'center'">
+                            病种名称
+                        </th>
+                        <th data-options="field:'Name',width:'40%',align:'center'">
+                            症状名称
+                        </th>
+                        <th data-options="field:'Status',width:'10%',align:'center',formatter:formatStatus">
+                            状态
+                        </th>
+                        <th data-options="field:'aaa',width:'18%',align:'center',formatter:InputListOperateField">
+                            操作
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>

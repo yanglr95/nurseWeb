@@ -1,0 +1,158 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>护理技术统计</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/Common.js"></script>
+    <script src="../js/easyui-extends.js"></script>
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../CSS/default.css" rel="stylesheet" />
+ 
+    <script src="../../JavaScript/Highcharts-4.1.9/js/highcharts.js"></script>
+    <script src="../../JavaScript/Highcharts-4.1.9/js/themes/grid.js"></script>
+    <script src="../js/TCMNursing/TemData.js"></script>
+ 
+</head>
+<body>
+    <div>
+        <input class="easyui-datebox" id="dateStartDate" data-options="formatter:dateFormatter,parser:dateParser" />
+        <input class="easyui-datebox" id="dateEndDate" data-options="formatter:dateFormatter,parser:dateParser" />
+        <a href="#" id="BtnSearch" class="easyui-linkbutton" iconcls="icon-huayi-search">查询</a>
+    </div>
+    <div>
+        <table id="tbStatistic" class="easyui-datagrid"></table>
+    </div>
+    <div id="container" style="min-width:400px;height:400px"></div>
+</body>
+</html>
+<script type="text/javascript">
+ $(function () {
+        var date = new Date()
+        $("#dateEndDate").datebox("setValue", dateFormatter(date));
+        date = date.valueOf() - 24 * 60 * 60 * 1000;
+        $("#dateStartDate").datebox("setValue", dateFormatter(new Date(date)));
+
+        $("#tbStatistic").datagrid({
+            width: '98%',
+            style: { 'text-align': 'center' },
+
+            columns: [
+                [
+                    { field: '护理名称', title: '护理名称', width: 60, rowspan: 2 },
+                     { field: '总计', title: '总计', width: 60, rowspan: 2 },
+                    { title: '依从性统计', colspan: 3 },
+                         { title: '满意度统计', colspan: 3 }
+                ],
+                [
+
+                 { field: '依从', title: '依从', width: 60 },
+                { field: '部分依从', title: '部分依从', width: 60 },
+                { field: '不依从', title: '不依从', width: 60 },
+                 { field: '满意', title: '满意', width: 60 },
+                   { field: '部分满意', title: '部分满意', width: 60 },
+                     { field: '不满意', title: '不满意', width: 60 },
+                ]],
+            onClickRow: selectedNurse
+
+        });
+        $("#BtnSearch").click(getStatisticData);
+        getStatisticData();
+ });
+ function selectedNurse() {
+     var selectRow = $("#tbStatistic").datagrid("getSelections");
+     var selectData = new Array();
+     if (selectRow.length == 0) {
+         selectData = statisticData;
+     }
+     else {
+         selectData = selectRow;
+     }
+     InitChart(selectData, "护理名称", "container", "护理技术统计");
+ }
+ var statisticData = new Array()
+ function getStatisticData() {
+     var start_date = $("#dateStartDate").datebox("getValue");
+     var end_date = $("#dateEndDate").datebox("getValue");
+     $.ajax({
+         url: BaseData.WebApiUrl + "TCMNursingStatistics/TechnicalStatisticsData/",
+         data: "startDate=" + start_date + "&endDate=" + end_date,
+         type: "get",
+         success: (function (data) {
+             if (data) {
+                 statisticData = $.parseJSON(data);
+                 $("#tbStatistic").datagrid("loadData", statisticData);
+                 InitChart(statisticData, "护理名称", "container",  "护理技术统计");
+             }
+         })
+     });
+ }
+ function dateFormatter(date) {
+     return dateTimeFormatter(date, "yyyy-mm-dd");
+ }
+
+ function InitChart(jsonData, xColumnName, chartID,  chartTitle) {
+     var ColumnName = new Array();
+     var data = [];
+   
+     for (var i in jsonData[0]) {
+         if (i != xColumnName && i != "总计") {
+             data[i] = new Array();
+
+         } 
+     }
+     for (var i in jsonData) {
+             ColumnName.push(jsonData[i].护理名称);
+         for (var item in jsonData[i]) {
+             if (item != xColumnName && item != "总计") {
+                 data[item].push(jsonData[i][item]);
+             } 
+         }
+     }
+         var chartData = new Array();
+     for (var i in data) {
+         var arr = data[i].toString().split(',');
+         data[i] = 0;
+         for (var a in arr) {
+             data[i] = data[i] + Number(arr[a]);
+         }
+         chartData.push([i, data[i]]);
+     }
+     $('#' + chartID).highcharts({
+         chart: {
+             plotBackgroundColor: null,
+             plotBorderWidth: null,
+             plotShadow: false
+         },
+         title: {
+             text: ColumnName + chartTitle
+         },
+
+         tooltip: {
+             headerFormat: '{series.name}<br>',
+             pointFormat: '{point.name}: <b>{point.percentage:.1f}%</b>'
+         },
+         plotOptions: {
+             pie: {
+                 allowPointSelect: true,
+                 cursor: 'pointer',
+                 dataLabels: {
+                     enabled: true,
+                     format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                     style: {
+                         color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                     }
+                 },
+                 showInLegend: true
+             }
+         },
+         series: [{
+             type: 'pie',
+             name: ColumnName,
+             data: chartData
+         }]
+     });
+ }
+ </script>

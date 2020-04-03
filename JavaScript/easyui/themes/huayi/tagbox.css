@@ -1,0 +1,112 @@
+/**************************************/
+/*               TAGBOX               */
+/**************************************/
+a.tagBox-add-tag {
+    text-decoration: none;
+    display: inline-block;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    outline: none;
+    text-align: center;
+    vertical-align: middle;
+    line-height: normal;
+    color: #498edb;
+    background: #fafafa;
+    background-repeat: repeat-x;
+    border: 1px solid #b7d2ff;
+    background: -webkit-linear-gradient(top,#ffffff 0,#eeeeee 100%);
+    background: -moz-linear-gradient(top,#ffffff 0,#eeeeee 100%);
+    background: -o-linear-gradient(top,#ffffff 0,#eeeeee 100%);
+    background: linear-gradient(to bottom,#ffffff 0,#eeeeee 100%);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff,endColorstr=#eeeeee,GradientType=0);
+    -moz-border-radius: 5px 5px 5px 5px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    border-radius: 5px 5px 5px 5px;
+}
+a.tagBox-add-tag:hover {
+  border-color: #888;
+}
+
+a.tagBox-add-tag:active {
+  background: -webkit-gradient(linear, left top, left bottom, from(#CCCCCC), to(#F2F2F2));
+  background: -moz-linear-gradient(top, #CCCCCC, #F2F2F2);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#CCCCCC', endColorstr='#F2F2F2');
+}
+
+input.tagBox-input,
+select.tagBox-input {
+  border: 1px solid #CCCCCC;
+  padding: 3px;
+  margin-right: 5px;
+  vertical-align: middle;
+  background: #FFF;
+}
+span.tagBox-container {
+  display: inline-block;
+  vertical-align: middle;
+}
+span.tagBox-list {
+  padding: 0em 0;
+  font-size: 12px;
+  line-height: 1em;
+  display: block;
+}
+span.tagBox-item {
+  display: inline-block;
+  margin: 0.3em 0.25em 0.15em;
+  vertical-align: middle;
+  cursor: default;
+  white-space:nowrap;
+}
+span.tagBox-item * {
+  vertical-align: middle;
+  white-space: normal;
+}
+span.tagBox-bullet {
+  display: none;
+}
+span.tagBox-item * {
+  vertical-align: middle;
+}
+
+span.tagBox-item-content {
+  display: inline-block;
+  padding: 0.417em 0.417em;
+  font-size: 1em;
+  line-height: 1.4em;
+  text-shadow: 0.02em 0.02em 0.02em #498edb;
+  border: 0.083em solid #b7d2ff;
+  color: #498edb;
+  background: linear-gradient(to bottom,#ffffff 0,#eeeeee 100%);
+ 
+  -moz-border-radius: 0.5em;
+  -wekit-border-radius: 0.5em;
+  border-radius: 0.5em;
+}
+span.tagBox-item-content a.tagBox-remove {
+  text-decoration: none;
+  display: inline-block;
+  float: right;
+  color: #FFF;
+  text-align: center;
+  font-family: "Comic Sans MS", Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  font-weight: bold;
+  line-height: 1em;
+  
+  margin-left: 0.5em;
+  padding: 0.35em 0.35em;
+  -moz-border-radius: 1em;
+  -webkit-border-radius: 1em;
+  border-radius: 1em;
+  -moz-box-shadow: 0 0 3px #FFF;
+  -webkit-box-shadow: 0 0 3px #FFF;
+  box-shadow: 0 0 3px #FFF;
+}
+span.tagBox-item-content:hover {
+  background: #eaf2ff;
+}
+/*------------------------------------*/

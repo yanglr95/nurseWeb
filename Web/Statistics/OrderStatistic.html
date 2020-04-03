@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>治疗统计</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+
+    <script src="../js/Common.js"></script>
+
+ 
+    <script src="../js/easyui-extends.js"></script>
+    <link href="../../JavaScript/easyui/themes/metro/messager.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/default/datagrid.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/default/combobox.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/default/dialog.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+
+    <link href="../../CSS/default.css" rel="stylesheet" />
+</head>
+<body>
+    <div>
+        <input class="easyui-datebox" id="dateStartDate" data-options="formatter:dateFormatter,parser:dateParser" />
+        <input class="easyui-datebox" id="dateEndDate" data-options="formatter:dateFormatter,parser:dateParser" />
+        <a href="#" id="BtnSearch" class="easyui-linkbutton" iconcls="icon-huayi-search">查询</a>
+    </div>
+    <div>
+        <table id="tbStatistic" class="easyui-datagrid"></table>
+    </div>
+</body>
+</html>
+<script type="text/javascript">
+    $(function () {
+        var date = new Date()
+        $("#dateEndDate").datebox("setValue", dateFormatter(date));
+        date = date.valueOf() - 24 * 60 * 60 * 1000;
+        $("#dateStartDate").datebox("setValue", dateFormatter(new Date(date)));
+        $.ajax({
+            url: BaseData.WebApiUrl + "nurse/getPatientListByWard/",
+         
+            type: "get",
+            success: (function (data) {
+            })
+        });
+
+    });
+    function dateFormatter(date) {
+        return dateTimeFormatter(date, "yyyy-mm-dd");
+    }
+</script>

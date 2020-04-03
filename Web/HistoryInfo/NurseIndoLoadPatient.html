@@ -1,0 +1,133 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>出院补打</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/Common.js"></script>
+    <script src="../js/easyui-extends.js"></script>
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../CSS/default.css" rel="stylesheet" />
+</head>
+<body>
+    <div>
+        <table id="tbPatientInfo" style="width:98%;background:#fff;">
+            <tr>
+                <td>病案号：</td>
+                <td><input id="txtPatientID" class="easyui-textbox" style="width:120px" /></td>
+                <td>性别：</td>
+                <td field="Sex"></td>
+                <td>入院次数：</td>
+                <td><input id="ccVisit" class="easyui-combobox" /></td>
+                <td><a class="easyui-linkbutton" id="btnQuery" iconcls="icon-huayi-search">查询</a></td>
+
+            </tr>
+            <tr>
+                <td>姓名：</td>
+                <td field="Name"></td>
+                <td>所在科室：</td>
+                <td field="Dept_Name"></td>
+                <td>入院时间：</td>
+                <td field="Admission_Date_Time"></td>
+                <td>出院时间：</td>
+                <td field="Discharge_Date_Time"></td>
+
+            </tr>
+            <tr>
+                <td>床号：</td>
+                <td><input class="easyui-textbox" id="txtBedNum" style="width:80px" /></td>
+                <td>诊断：</td>
+                <td colspan="5"><input class="easyui-textbox" id="txtDiagnosis" style="width:380px" /></td>
+            </tr>
+        </table>
+        <div id="divOperate" style="display:none">
+            <a class="easyui-linkbutton" id="btnPrintBloodGlucoseReport">补打血糖单</a>
+            <a class="easyui-linkbutton" id="btnPrintCrlReport">补打出入量单</a>
+
+
+            <a class="easyui-linkbutton" id="btnBodyInput">补录体征</a>
+
+        </div>
+        <div>
+            <iframe id="outInputFrame" style="width:100%;height:450px" scrolling="auto"></iframe>
+        </div>
+    </div>
+</body>
+</html>
+<script type="text/javascript">
+    var patientInfo;
+    $(function () {
+        $("#ccVisit").combobox({
+            width: 80,
+            editable: false,
+            onSelect: PatientsComboChange,
+            valueField: 'Visit_id',
+            textField: 'Visit_id',
+            panelHeight: 'auto'
+        });
+        $("#btnQuery").click(searchPatient);
+        $("#btnBodyInput").click(outBodyInput);
+        $("#btnPrintCrlReport").click(printCrl);
+        $("#btnPrintBloodGlucoseReport").click(printBloodGlucoseReport);
+        HideMainMask();
+    })
+    function searchPatient() {
+        patientInfo = null;
+        $("#divOperate").css("display", "none");
+        $("#outInputFrame").css("display", "none");
+        var pid = $("#txtPatientID").textbox("getValue");
+        $.ajax({
+            url: BaseData.WebApiUrl + "HistoryInfo/getOutPatientInfo",
+            data: "pid=" + pid,
+            type: "get",
+            success: (function (data) {
+                if (data.length) {
+                    patientInfo = $.parseJSON(data);
+                    $("td[field='Name']").html(patientInfo.Name);
+                    $("td[field='Sex']").html(patientInfo.Sex);
+                    $("#ccVisit").combobox("loadData", patientInfo.VisitInfo);
+                    $("#ccVisit").combobox("setValue", patientInfo.VisitInfo[0].Visit_id);
+                    $("#divOperate").css("display", "block");
+                    PatientsComboChange();
+                }
+                else {
+                    $.messager.alert("提示", "没有查到病人！");
+                }
+            })
+        });
+    }
+    function PatientsComboChange() {
+        var vid = $("#ccVisit").combobox("getValue");
+        $("#outInputFrame").css("display", "none");
+        for (var i in patientInfo.VisitInfo) {
+            if (vid == patientInfo.VisitInfo[i].Visit_id) {
+                var visitInfo = patientInfo.VisitInfo[i];
+                $("td[field='Dept_Name']").html(visitInfo.Dept_Name);
+                $("td[field='Admission_Date_Time']").html(dateTimeFormatter(new Date(visitInfo.Admission_Date_Time), "yyyy-mm-dd"));
+                $("td[field='Discharge_Date_Time']").html(dateTimeFormatter(new Date(visitInfo.Discharge_Date_Time), "yyyy-mm-dd"));
+                break;
+            }
+        }
+    }
+    function outBodyInput() {
+        var pid = $("#txtPatientID").textbox("getValue");
+        var vid = $("#ccVisit").combobox("getValue");
+        $("#outInputFrame").css("display", "block");
+        $("#outInputFrame").attr("src", "/Web/BodyChart/BodyInput.html?LeaveInput=0&pid=" + pid + "&vid=" + vid);
+    }
+    function printCrl() {
+        var pid = $("#txtPatientID").textbox("getValue");
+        var vid = $("#ccVisit").combobox("getValue");
+        var bedNum = $("#txtBedNum").textbox("getValue");
+        window.open(BaseData.WebApiUrl + "print/printCrlReport?patient_id=" + pid + "&visit_id=" + vid + "&bedNum=" + bedNum);
+    }
+    function printBloodGlucoseReport() {
+        var pid = $("#txtPatientID").textbox("getValue");
+        var vid = $("#ccVisit").combobox("getValue");
+        var bedNum = $("#txtBedNum").textbox("getValue");
+        var Diagnosis = $("#txtDiagnosis").textbox("getValue");
+        window.open(BaseData.WebApiUrl + "print/printBloodGlucoseReport?patient_id=" + pid + "&visit_id=" + vid + "&bedNum=" + bedNum + "&Diagnosis=" + Diagnosis);
+    }
+</script>

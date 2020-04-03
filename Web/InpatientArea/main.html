@@ -1,0 +1,523 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>一览表</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/jquerysession.js"></script>
+    <script src="../js/Common.js"></script>
+    <script src="../js/PatientInfo.js"></script>
+    <script src="../js/pinyin.js"></script>
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <style type="text/css">
+        #patient {
+            width:98%;
+            margin-left: -38px;
+            margin-top: 20px;
+        }
+        #patient li{
+            width:165px;
+            height:210px;
+            overflow:hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            line-height: 32px;
+            float: left;
+            margin:0px 10px 12px 0px;
+            list-style-type: none;
+            background-repeat: no-repeat;
+            box-sizing: border-box;
+            font-size: 12px;
+            background-color: #fff;
+            border:1px solid #cddde7;
+            text-decoration: none;
+            position: relative;
+            border-radius: 3px;
+        }
+      
+        #patient li div{
+            line-height:25px;
+            box-sizing:border-box;
+            padding-left:5px;
+        }
+        #patient li div:nth-child(1){
+            font-size: 16px;
+            padding-left:0px;
+        }
+        #patient li b{
+            color:blue;
+            font-weight: normal;
+        }
+        .ownBorderTableTD{
+            color:red;
+            padding:0 8px;
+            box-sizing: border-box;
+        }
+
+        a {
+            color: black;
+            cursor: pointer;
+        }
+
+        .top {
+            position: relative;
+            width:98%;
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .top .left {
+            position: absolute;
+            left: 0;
+        }
+
+        .top .right {
+            position: absolute;
+            right: 2%;
+        }
+
+        .left a {
+            width: auto;
+            padding: 0 5px;
+            height: 30px;
+            display: inline-block;
+            border-radius:5px;
+            line-height: 30px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .right a {
+            text-decoration: none;
+            padding: 0 2px;
+        }
+
+        .right .textbox-text {
+            background: none;
+        }
+
+        .right .active {
+            color: #176ec4;
+        }
+        .selected{
+            background:#EFF8FF!important;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="width: 98%">
+        <div class="top">
+            <div class="left">
+                <table>
+                    <thead>
+                        <tr>
+                            <td>
+                                <a onclick="getPatients(ward_code, '全科','all')" style="background:#00CCCC;">
+                                    病人(<span class="group_sum_all"></span>)
+                                </a>
+                            </td>
+                            <td>
+                                <a onclick="getPatients(ward_code, 1,'cally')" style="background:red;">
+                                    病危(<span class="group_cally_1"></span>)
+                                </a>
+                            </td>
+                            <td>
+                                <a onclick="getPatients(ward_code, 2,'cally')" style="background:blue;">
+                                    病重(<span class="group_cally_2"></span>)
+                                </a>
+                            </td>
+                            <td>
+                                <a onclick="getPatients(ward_code, 0,'nurse')" style="background:#800000;">
+                                    特级(<span class="group_sum_0"></span>)
+                                </a>
+                            </td>
+                            <td>
+                                <a onclick="getPatients(ward_code, 1,'nurse')" style="background: #DC143C;">
+                                    一级(<span class="group_sum_1"></span>)
+                                </a>
+                            </td>
+                            <td>
+                                <a onclick="getPatients(ward_code, 2,'nurse')" style="background:skyblue;">
+                                    二级(<span class="group_sum_2"></span>)
+                                </a>
+                            </td>
+                            <td>
+                                <a onclick="getPatients(ward_code, 3,'nurse')" style="background:#fff;color:#000;">
+                                    三级(<span class="group_sum_3"></span>)
+                                </a>
+                            </td>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="right">
+                <input class="easyui-searchbox" data-options="prompt:'床号、姓名、病案号、医生等',searcher:doSearch"
+                    style="width:190px;height:28px;" autocomplete="off"></input>
+                <a href="#" id="aIcon" class="active" onclick="showicon()">
+                    <img src="../../Images/small-icon.png" alt="" style="vertical-align: middle;">
+                    <span style="padding-left:1px;vertical-align: middle;">图标</span>
+                </a>
+                <a href="#" id="aList" onclick="showlist()">
+                    <img src="../../Images/list.png" alt="" style="vertical-align: middle;">
+                    <span style="padding-left:1px;vertical-align: middle;">列表</span>
+                </a>
+            </div>
+        </div>
+        <!-- 图标显示 -->
+        <div class="showIcon">
+            <ul id="patient"></ul>
+        </div>
+        <!-- 列表显示 -->
+        <div class="showList easyui-panel" data-options="closed:true"
+            style="width:98%;background:none;border:none;margin-top: 10px;">
+            <table id="grid" class="easyui-datagrid" style="width:98%; height: auto;">
+                <thead>
+                    <tr>
+                        <th data-options="field:'Bed_No',width:'6%',sortable:true">
+                            床号
+                        </th>
+                        <th data-options="field:'Name',width:'10%',sortable:true">
+                            姓名
+                        </th>
+                        <th data-options="field:'Sex',width:'6%',sortable:true">
+                            性别
+                        </th>
+    
+                        <th data-options="field:'BirthDay',width:'9%',formatter:dateFormatter,sortable:true">
+                            出生年月
+                        </th>
+                        <th data-options="field:'Charge_Type',width:'9%',sortable:true">
+                            费别
+                        </th>
+                        <th data-options="field:'Patient_id',width:'10%',sortable:true">
+                            住院号
+                        </th>
+                        <th data-options="field:'Admission_Date_Time',width:'14%',formatter:inputListDateFormatter,sortable:true">
+                            入院日期
+                        </th>
+                        <th data-options="field:'Prepayments',width:'10%',sortable:true">
+                            押金
+                        </th>
+                        <th data-options="field:'Total_Costs',width:'8%',sortable:true">
+                            记账
+                        </th>
+                        <th data-options="field:'balance',width:'10%',sortable:true,formatter:getLeft">
+                            余额
+                        </th>
+                        <th data-options="field:'Doctor_In_Charge',width:'8%',sortable:true">
+                            主管医生
+                        </th>
+                        <th data-options="field:'patientSpell',width:'0%',hidden:true">
+                            
+                        </th>
+                        <th data-options="field:'doctorSpell',width:'0%',hidden:true">
+                            
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <div id="menu_test" class="easyui-menu" style="display:none;" >
+        </div>
+
+    </div>
+</body>
+
+</html>
+<script type="text/javascript">
+    var ward_code;
+    var listPatient = []
+    $(function () {
+        ward_code = getSession("ward_code");
+        $("#grid").datagrid({
+            width: '98%',
+            style: {
+                'text-align': 'center'
+            },
+            singleSelect: true,
+            sortName:'balance',
+            sortOrder:'desc',
+            remoteSort:false,
+            onClickRow:function(index,field,value){
+                window.location.href='../Order/FuelBandPrint.html?pid=' + field.Patient_id + '&vid=" + field.visitID';
+            }
+        });
+        if (ward_code != null) {
+            getPatients(ward_code, "全科", 'all');
+        } else {
+            getPatients("null", "全科", 'all');
+        }
+        $.ajax({
+            url: BaseData.WebApiUrl + "nurse/GetMenuByDept/",
+            type: "get",
+            data: "Dept_Code=" + ward_code + "&Nurse_Power=2",
+            success: (function (data) {
+                jsonData = $.parseJSON(data);
+                for (var i = 0; i < jsonData.length; i++) {
+                    $('#menu_test').menu('appendItem', {
+                        text: jsonData[i].Menu_Name,
+                        name:jsonData[i].Menu_Url
+                    });
+                }
+            })
+        });
+        $.ajax({
+            url: BaseData.WebApiUrl + "nurse/getPatientListByWard/",
+            data: "ward_code=" + ward_code,
+            type: "get",
+            success: (function (data) {
+                var jsonData = $.parseJSON(data);
+                if (jsonData) {
+                    for(var i=0;i<jsonData.length;i++){
+                        jsonData[i].patientSpell = makePy(jsonData[i].Name);
+                        jsonData[i].doctorSpell = makePy(jsonData[i].Doctor_In_Charge);
+                         var charge = getFloatValue(jsonData[i].Prepayments);
+                         var cost = getFloatValue(jsonData[i].Total_Costs);
+                         var left = charge - cost;
+                         jsonData[i].balance = Number(left.toFixed(2));
+                         listPatient.push(jsonData[i])
+                    }
+                }
+            })
+        });
+    })
+
+    function getPatients(ward_code, o, name) {
+        $("#patient").html("");
+        $("#grid").datagrid("loadData", {
+            total: 0,
+            rows: []
+        });
+        var nursingClass = o;
+        var patientCondition = o;
+        $.ajax({
+            url: BaseData.WebApiUrl + "nurse/getOperateDays/",
+            type: "get",
+            data: "ward_code=" + ward_code,
+            success: (function (data) {
+                var jsonData = data;
+                var days;
+                var groupList = {};
+                var pcList = {};
+                $(".group_sum_all").html(jsonData.length)
+                if (jsonData) {
+                    for (var i = 0; i < jsonData.length; i++) {
+                        jsonData[i].patientSpell = makePy(jsonData[i].Name);
+                        jsonData[i].doctorSpell = makePy(jsonData[i].Doctor_In_Charge);
+                        if (name == "all") {
+                            toggleData(jsonData[i])
+                        } else if (name == "nurse") {
+                            if (jsonData[i].Nursing_Class == nursingClass || isNaN(nursingClass)) {
+                                toggleData(jsonData[i])
+                            }
+                        } else {
+                            if (jsonData[i].Patient_Condition == nursingClass || isNaN(nursingClass)) {
+                                toggleData(jsonData[i])
+                            }
+                        }
+                        var nc = jsonData[i].Nursing_Class;
+                        var pc = jsonData[i].Patient_Condition;
+                        if (!groupList[nc]) groupList[nc] = [];
+                        groupList[nc].push(jsonData[i]);
+                        if (!pcList[pc]) pcList[pc] = [];
+                        pcList[pc].push(jsonData[i]);
+                    }
+                    for (var a = 0; a < 4; a++) {
+                        var data = groupList[a] || [];
+                        $(".group_sum_" + a).html(data.length);
+                        var data2 = pcList[a] || [];
+                        $(".group_cally_" + a).html(data2.length);
+                    }
+                }
+            })
+        });
+
+    }
+
+    function toggleData(obj) {
+        var diag;
+
+        if(obj.Allergy==null){
+            obj.Allergy="";
+        }
+        if (obj.Diagnosis != null && obj.Diagnosis != "" &&
+            obj.Diagnosis.length > 9)
+            diag = obj.Diagnosis.substr(0, 9);
+        else if (obj.Diagnosis == null)
+            diag = "";
+        else
+            diag = obj.Diagnosis;
+        // var patient = $("<a  onClick='toFuel("+obj.Patient_id+","+obj.Visit_id+")'><li style='width:155px;height:230px;'><div class='nurseclass" +
+        //     obj.Nursing_Class + "'>" + obj.Bed_No +
+        //     "</div>&nbsp;" + obj.Name +
+        //     "<div class='ownBorderTableTD"+obj.Patient_Condition+"'></div></br>" +
+        //     obj.Sex + "：&nbsp;" + age(obj.BirthDay) + "岁</br>" +
+        //     "病案号：" +
+        //     "<span class='pNumber'>" + obj.Patient_id + "</span>" +
+        //     "</br>" +
+        //     "诊断：" + diag +  "</br>"+
+        //     "入院：" + dateFormatter(obj.Admission_Date_Time) + "</br>" +
+        //     "医生：" + obj.Doctor_In_Charge + "</br>" +
+        //     "医保："+""+"<br/>"+
+        //     "<label style='display:none;'>" + obj.patientSpell + "</label>" + "</br>" +
+        //     "<label style='display:none;'>" + obj.doctorSpell + "</label>" +
+        //     "</li></a>");
+        var patient="<li onClick='toFuel("+obj.Patient_id+","+obj.Visit_id+",$(this))'><div><span  class='nurseclass" +obj.Nursing_Class + "'>" + obj.Bed_No +"</span>&nbsp;&nbsp;<b>" + obj.Name +"</b><span class='ownBorderTableTD'>"+getConditionTitle(obj.Patient_Condition)+"</span></div><div>"+obj.Sex+"：" + age(obj.BirthDay) + "岁</div><div>病案号：<span class='pNumber'>" + obj.Patient_id + "</span></div><div>诊断：" + diag +  "</div><div>医生：" + obj.Doctor_In_Charge + "</div><div>入院：" + dateFormatter(obj.Admission_Date_Time) + "</div><div>医保：<span class='charge'>"+obj.Charge_Type+"</span></div><div>过敏："+obj.Allergy+"</div><label style='display:none;'>" + obj.patientSpell + "</label><label style='display:none;'>" + obj.doctorSpell + "</label></li>"
+        $("#patient").append(patient);
+    }
+    function toFuel(Patient_id,Visit_id,e){
+        // $(e).siblings('li').removeClass('selected');  // 删除其他兄弟元素的样式
+        // $(e).addClass('selected');     
+        var arr=$($(".menuList",parent.document).accordion());
+        parent.setMenu("医嘱管理",$(arr[6]),'Order/FuelBandPrint.html?pid=' + Patient_id + '&vid=' + Visit_id +'');
+    }
+    function getConditionTitle(v) {
+        return conditionType[v] || "";
+
+    }
+
+    function operationDays(recordingdate) {
+        var date = getdate(new Date(recordingdate));
+        var DISPLAY_OPERATION_DAYS = 14;
+        var day = getdate(new Date());
+        var operationDays = "";
+        //取最近一次的手术时间
+        if (recordingdate != null && recordingdate != "") {
+            if (date == day) {
+                return "";
+            }
+
+            var spanDays = parseInt(Math.abs(new Date(day) - new Date(date)) / 1000 / 60 / 60 / 24); //间隔天数
+            if (spanDays > 0 && spanDays <= DISPLAY_OPERATION_DAYS) {
+                if (operationDays == "") {
+                    operationDays += spanDays;
+                } else {
+                    operationDays = spanDays + "/" + operationDays;
+                }
+            }
+        }
+
+        return operationDays;
+
+    }
+
+    function getdate(now) {
+        if (now != null && now != "") {
+            y = now.getFullYear()
+            m = now.getMonth() + 1
+            d = now.getDate()
+            m = m < 10 ? "0" + m : m
+            d = d < 10 ? "0" + d : d
+            return y + "-" + m + "-" + d
+        }
+        return "";
+    }
+
+    function dateFormatter(date) {
+        return dateTimeFormatter(new Date(date.replace(/-/g, "/").replace(/T/g, " ")), "yyyy-mm-dd");
+    }
+    function getFloatValue(value) {
+        if (typeof (value) == typeof (1.1)) return value;
+        var val = parseFloat(value);
+        return isNaN(val) ? 0 : val;
+    }
+
+    function getLeft(charges, costs) {
+        var charge = getFloatValue(costs.Prepayments);
+        var cost = getFloatValue(costs.Total_Costs);
+        var left = charge - cost;
+        left = left.toFixed(2);
+        return left < 2000 ? "<span style='color:red'>" + left + "</span>" : left;
+    }
+    function inputListDateFormatter(date) {
+        var showDate = new Date(date.replace(/-/g, "/").replace(/T/g, " "));
+        var hour = showDate.getHours() + showDate.getTimezoneOffset() / 60;
+
+        if (hour < 0) {
+
+            hour = hour + 24;
+        }
+        showDate = showDate.setHours(hour);
+        return dateTimeFormatter(new Date(showDate), "yyyy-mm-dd hh:mi");
+    }
+
+    function age(birthDay) {
+        var date = birthDay.replace(/-/g, "/").replace(/T/g, " ");
+        var year = new Date().getFullYear() - new Date(date).getFullYear();
+        if (new Date().getMonth() < new Date(date).getMonth()) {
+            year -= 1;
+        }
+        return year;
+    }
+    jQuery.expr[':'].Contains = function (a, i, m) {
+        return jQuery(a).text().toUpperCase()
+            .indexOf(m[3].toUpperCase()) >= 0;
+    };
+
+    // OVERWRITES old selecor
+    jQuery.expr[':'].contains = function (a, i, m) {
+        return jQuery(a).text().toUpperCase()
+            .indexOf(m[3].toUpperCase()) >= 0;
+    };
+    //添加模糊查询
+    function doSearch(value) {
+        $("#patient li").hide().hide()
+            .filter(":contains('" + value + "')")
+            .show();
+        $("table tr:gt(1)").hide().filter(":contains('" + $.trim(value) + "')").show()
+    }
+    //列表图标切换
+    function showlist(e) {
+        $("#grid").datagrid('loadData', listPatient);
+        $("#aIcon").removeClass("active")
+        $("#aList").addClass("active")
+        $(".showList").panel("open");
+        $(".showIcon").hide();
+    }
+
+    function showicon() {
+        $("#aList").removeClass("active")
+        $("#aIcon").addClass("active")
+        $(".showList").panel("close");
+        $(".showIcon").show();
+    }
+
+    //右键菜单
+    $("#patient").bind("contextmenu", function (e) {
+        e.preventDefault();
+        var num = $(e.target)[0].parentNode;
+        var id = "";
+        if ($(e.target)[0].tagName == 'SPAN') {
+            id = $(e.target)[0].innerHTML;
+        } else {
+            id = $(num).find($(".pNumber"))[0].innerHTML;
+        }
+        $("#menu_test").menu("show", {
+            left: e.pageX,
+            top: e.pageY,
+            onClick:function(item){
+                $.session.set('Patient_Id', id);
+                var arr=$($(".menuList",parent.document).accordion());
+                var menu = $("#divMenu",parent.document);
+                for(var i=0;i<arr.length;i++){
+                    var strl=arr[i].innerHTML.length;
+                    var txt = arr[i].innerHTML.substr(2,strl-2);
+                    var title="";
+                    if(item.text==txt){
+                        var a=$(arr[i])[0].parentElement.parentElement.parentElement;
+                        title=$(a)[0].innerText;
+                        parent.setMenu(title,$(arr[i]),item.name);
+                    }
+                 }
+                
+            }
+        })
+    })
+</script>

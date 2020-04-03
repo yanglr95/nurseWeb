@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>翻身记录单</title>
+    <script src="../../JavaScript/easyui/jquery.min.js"></script>
+    <script src="../../JavaScript/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/jquerysession.js"></script>
+    <script src="../js/Common.js"></script>
+    <script src="../js/easyui-extends.js"></script>
+    <script src="../js/NursingCare/NurseRecordTrunOver.js"></script>
+    <script src="../js/publicPatient.js"></script>
+    <script src="../js/PatientInfo.js"></script>
+    <script src="../../JavaScript/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <link href="../../CSS/default.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../JavaScript/easyui/themes/huayi/easyui.css" rel="stylesheet" />
+</head>
+<body>
+    <div>
+        <table style="width:98%">
+            <tr>
+                <td><input id="ccPatients" name="ccPatients" style="width:120px" class="easyui-combobox" data-options="valueField:'Patient_id',textField:'Name'" /></td>
+                <td>
+                    日期<input id="txtDate" class="easyui-datebox" style="width:180px;" data-options="formatter:dateFormatter,parser:dateParser" />
+                    <a href="#" id="btnQuery" class="easyui-linkbutton" iconcls="icon-huayi-search">查询</a>
+                    <a href="#" class="easyui-linkbutton" iconcls="icon-huayi-print" onclick="print()">打印</a>
+                </td>
+            </tr>
+        </table>
+        <table id="tabPatientInfo" class="patientTable" style="width:98%;background: #fff;margin-top:5px;">
+        </table>
+        <div>
+            <table id="tbList" class="easyui-datagrid" style="width:98%;height:auto" data-options="singleSelect:true">
+                <thead>
+                    <tr>
+                        <th data-options="field:'Record_Time',width:'12%',align:'center',formatter:inputListDateFormatter">
+                            时间
+                        </th>
+
+                        <th data-options="field:'Skin_Damage',width:'15%',align:'center'">
+                            皮肤(有无发红、破溃)
+                        </th>
+                       
+                        <th data-options="field:'Nurse_Name',width:'15%',align:'center'">
+                            签名
+                        </th>
+                       
+                        <th data-options="width:'15%', field:'Id',align:'center',formatter:InputListOperateField">
+                            操作
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+            <table id="tbTable" class="inputTable" style="width:98%;height:auto;">
+                <tr>
+                    <td colspan="5">
+                        录入时间
+
+                        <input class="easyui-timespinner" id="dtInput" style="width:80px" data-options="showSeconds:false" />
+
+                        <a href="#" id="btnSaveInput" style="float:right;margin-right:30px" class="easyui-linkbutton" iconcls="icon-huayi-save">保存</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="width:120px">
+                        皮肤(有无发红、破溃)<input class="easyui-textbox" id="Skin_Damage" style="width:100px" />
+                    </td>
+                    <td>
+                        <select id="Drop1" class="easyui-combobox" name="dept" style="width:80px;" data-options="valueField:'Drop3',textField:'Drop3',panelHeight:'auto'">
+                            <option value=""></option>
+                            <option value="左">左</option>
+                            <option value="右">右</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select id="Drop2" class="easyui-combobox" name="dept" style="width:80px;" data-options="valueField:'Drop3',textField:'Drop3',panelHeight:'auto'">
+                            <option value=""></option>
+                            <option value="骶尾部">骶尾部</option>
+                            <option value="脚踝">脚踝</option>
+                            <option value="髋关节">髋关节</option>
+                            <option value="耳廓">耳廓</option>
+                            <option value="肩胛骨">肩胛骨</option>
+                        </select>
+                    </td>
+                    <td><select id="Drop3" class="easyui-combobox" name="dept" style="width:80px;" data-options="valueField:'Drop3',textField:'Drop3',panelHeight:'auto'">
+    <option value=""></option>
+    <option value="水泡">水泡</option>
+    <option value="破溃">破溃</option>
+    <option value="发红">发红</option>
+    <option value="糜烂">糜烂</option>
+    <option value="擦伤">擦伤</option>
+</select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5">
+                        签名人：
+                        <input class="easyui-textbox" id="NurseName" readonly="readonly" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>
